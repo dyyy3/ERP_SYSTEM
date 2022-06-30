@@ -6,6 +6,8 @@ import java.awt.event.*;
 public class Test extends WindowAdapter implements ActionListener {
 	
 	public static void main(String[] args) {
+		// github commit test
+		
 		Frame main = new Frame();
 		main.setSize(1000, 700);
 		main.addWindowListener(new Test());
