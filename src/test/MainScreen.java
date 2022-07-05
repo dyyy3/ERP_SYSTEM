@@ -1,14 +1,18 @@
-package mainScreen;
+package test;
 
 import java.awt.*;
 import java.awt.event.*;
 
-public class MainScreenMenuTest extends WindowAdapter implements ActionListener {
+
+public class MainScreen extends WindowAdapter implements ActionListener {
 	
 	public static void main(String[] args) {
+		Login login = new Login();
+		
+		
 		Frame main = new Frame();
 		main.setSize(1200, 800);
-		main.addWindowListener(new MainScreenMenuTest());
+		main.addWindowListener(new MainScreen());
 		main.setVisible(true);
 		
 		MenuBar mb = new MenuBar();
@@ -24,7 +28,7 @@ public class MainScreenMenuTest extends WindowAdapter implements ActionListener 
 		};
 		for(int i=0; i<menu.length; i++) {
 			mb.add(menu[i]);
-			menu[i].addActionListener(new MainScreenMenuTest());
+			menu[i].addActionListener(new MainScreen());
 		}
 		
 		// 하위 메뉴
@@ -33,15 +37,16 @@ public class MainScreenMenuTest extends WindowAdapter implements ActionListener 
 		};
 		for(int i=0; i<item.length; i++) {
 			menu[0].add(item[i]);
-			item[i].addActionListener(new MainScreenMenuTest());
+			item[i].addActionListener(new MainScreen());
 		}
 
 		MenuItem[] trade = {
+				new MenuItem("수입offer 등록"),
 				new MenuItem("수입원가 등록")
 		};
 		for(int i=0; i<trade.length; i++) {
 			menu[1].add(trade[i]);
-			trade[i].addActionListener(new MainScreenMenuTest());
+			trade[i].addActionListener(new MainScreen());
 		}
 		
 		MenuItem[] material = {
@@ -51,7 +56,7 @@ public class MainScreenMenuTest extends WindowAdapter implements ActionListener 
 		};
 		for(int i=0; i<material.length; i++) {
 			menu[2].add(material[i]);
-			material[i].addActionListener(new MainScreenMenuTest());
+			material[i].addActionListener(new MainScreen());
 		}
 		
 		MenuItem[] costAccounting = {
@@ -60,14 +65,14 @@ public class MainScreenMenuTest extends WindowAdapter implements ActionListener 
 		};
 		for(int i=0; i<costAccounting.length; i++) {
 			menu[3].add(costAccounting[i]);
-			costAccounting[i].addActionListener(new MainScreenMenuTest());
+			costAccounting[i].addActionListener(new MainScreen());
 		}
 		MenuItem[] personnelManagement = {
 				new MenuItem("인사관리")
 		};
 		for(int i=0; i<personnelManagement.length; i++) {
 			menu[4].add(personnelManagement[i]);
-			personnelManagement[i].addActionListener(new MainScreenMenuTest());
+			personnelManagement[i].addActionListener(new MainScreen());
 		}
 	}
 	

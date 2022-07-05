@@ -1,11 +1,13 @@
-package login;
+package erp;
 
 import java.awt.*;
 import java.awt.event.*;
 
 public class Login extends WindowAdapter implements ActionListener {
 
-	public static void main(String[] args) {
+//	public static void main(String[] args) {
+	
+	public Login() {
 		Frame loginFrame = new Frame("Login");
 		loginFrame.setSize(500, 300);
 		loginFrame.setBackground(Color.DARK_GRAY);
