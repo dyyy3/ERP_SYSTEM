@@ -74,7 +74,6 @@ public class Login extends WindowAdapter implements ActionListener {
 		
 		// Frame을 보이게 함
 		loginFrame.setVisible(true);
-		
 	}
 	
 	public void windowClosing(WindowEvent e) {
@@ -93,7 +92,10 @@ public class Login extends WindowAdapter implements ActionListener {
 			boolean b = dao.loginTest(loginVo); // 로그인 결과 true/false를 받는다
 			if(String.valueOf(b).equals("true")) {
 				new LoginDialog(loginFrame, "로그인 성공");
-				
+				loginFrame.dispose(); // 로그인 성공 후 로그인 프레임을 닫는다
+				Main main = new Main();
+				main.createMainScreen(loginVo.getId()); // 로그인에 성공한 ID를 넘겨준다
+				// 로그인 성공시 메인 프레임 setvisible true
 			} else if(String.valueOf(b).equals("false")) {
 				new LoginDialog(loginFrame, "아이디 또는 비밀번호가 일치하지않습니다.");
 			}
