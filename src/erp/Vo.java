@@ -1,15 +1,18 @@
-package test;
+package erp;
 
-public class Vo_Login {
+public class Vo {
 	private String tableName;
 	private String id;
 	private String password;
+	private String tx1;
+	private String tx2;
+	private String tx3;
 
-	public Vo_Login() {
+	public Vo() {
 
 	}
 
-	public Vo_Login(String tableName, String id, String password) {
+	public Vo(String tableName, String id, String password) {
 		this.tableName = tableName;
 		this.id = id;
 		this.password = password;

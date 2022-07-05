@@ -1,22 +1,18 @@
-package test;
+package loginTest;
 
 import java.awt.*;
 import java.awt.event.*;
 
 public class Login extends WindowAdapter implements ActionListener {
+	Frame loginFrame;
 	TextField tfid;
 	TextField tfpw;
 	
-	public static void main(String[] args) throws ClassNotFoundException {
-		Login login = new Login();
-	}
-	
 	public Login() {
-		
-		Frame loginFrame = new Frame("Login");
+		loginFrame = new Frame("Login");
 		loginFrame.setSize(500, 300);
 		loginFrame.setBackground(Color.DARK_GRAY);
-		loginFrame.addWindowListener(new Login());
+		loginFrame.addWindowListener(this);
 		loginFrame.setResizable(false); // frame 크기 변경 불가능
 		
 		Toolkit tk = Toolkit.getDefaultToolkit();
@@ -66,7 +62,7 @@ public class Login extends WindowAdapter implements ActionListener {
 		
 		loginButton.setSize(100, 70);
 		loginButton.setLocation(320, 60);
-		loginButton.addActionListener(new Login());
+		loginButton.addActionListener(this);
 		
 		p.add(lid);
 		p.add(tfid);
@@ -74,7 +70,7 @@ public class Login extends WindowAdapter implements ActionListener {
 		p.add(tfpw);
 		p.add(loginButton);
 		
-		loginFrame.add(p);
+		loginFrame.add(p, "Center");
 		
 		// Frame을 보이게 함
 		loginFrame.setVisible(true);
@@ -88,35 +84,19 @@ public class Login extends WindowAdapter implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if(tfid.getText().equals("")) { // ID 미입력
-			// 다이얼로그 생성해서 "ID를 입력하세요." 출력
+			new LoginDialog(loginFrame, "ID를 입력하세요."); // 다이얼로그 생성해서 "ID를 입력하세요." 출력
 		} else if(tfpw.getText().equals("")) { // Password 미입력
-			// 다이얼로그 생성해서 "Password를 입력하세요." 출력
+			new LoginDialog(loginFrame, "Password를 입력하세요."); // 다이얼로그 생성해서 "Password를 입력하세요." 출력
 		} else { // 모두 입력되었을때
-			Vo_Login vo = new Vo_Login("user", tfid.getText(), tfpw.getText());
+			Vo loginVo = new Vo("user_info", tfid.getText(), tfpw.getText());
 			Dao dao = new Dao();
-			boolean b = dao.loginTest(vo); // 로그인 결과 true/false를 받는다
-			// 다이얼로그 생성해서 로그인 성공 안내
+			boolean b = dao.loginTest(loginVo); // 로그인 결과 true/false를 받는다
+			if(String.valueOf(b).equals("true")) {
+				new LoginDialog(loginFrame, "로그인 성공");
+				
+			} else if(String.valueOf(b).equals("false")) {
+				new LoginDialog(loginFrame, "아이디 또는 비밀번호가 일치하지않습니다.");
+			}
 		}
 	}
-	
-	public void loginMessage() {
-		
-	}
-	
-	
-//	public void actionPerformed(ActionEvent e) {
-//		if (id.getText().equals("")) {
-//			tfMsg.setText("ID를 입력하세요.");
-//		} else if (pwd.getText().equals("")) {
-//			tfMsg.setText("Password를 입력하세요.");
-//		} else {
-//			System.out.println(id.getText());
-//			System.out.println(pwd.getText( ));
-//			
-//			MemberVo vo = new MemberVo(id.getText(), pwd.getText());
-//			boolean b = dao.list(vo);
-//			tfMsg.setText(String.valueOf(b));
-//		}
 }
-
-

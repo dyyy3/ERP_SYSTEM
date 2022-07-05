@@ -4,14 +4,15 @@ import java.awt.*;
 import java.awt.event.*;
 
 public class Login extends WindowAdapter implements ActionListener {
-
-//	public static void main(String[] args) {
+	Frame loginFrame;
+	TextField tfid;
+	TextField tfpw;
 	
 	public Login() {
-		Frame loginFrame = new Frame("Login");
+		loginFrame = new Frame("Login");
 		loginFrame.setSize(500, 300);
 		loginFrame.setBackground(Color.DARK_GRAY);
-		loginFrame.addWindowListener(new Login());
+		loginFrame.addWindowListener(this);
 		loginFrame.setResizable(false); // frame 크기 변경 불가능
 		
 		Toolkit tk = Toolkit.getDefaultToolkit();
@@ -24,8 +25,8 @@ public class Login extends WindowAdapter implements ActionListener {
 		Label lid = new Label("ID :", Label.RIGHT);
 		Label lpw = new Label("Password : ", Label.RIGHT);
 		
-		TextField tfid = new TextField(10);
-		TextField tfpw = new TextField(10);
+		tfid = new TextField(10);
+		tfpw = new TextField(10);
 		tfpw.setEchoChar('*');
 		
 		Button loginButton = new Button("Log in");
@@ -61,7 +62,7 @@ public class Login extends WindowAdapter implements ActionListener {
 		
 		loginButton.setSize(100, 70);
 		loginButton.setLocation(320, 60);
-		loginButton.addActionListener(new Login());
+		loginButton.addActionListener(this);
 		
 		p.add(lid);
 		p.add(tfid);
@@ -69,7 +70,7 @@ public class Login extends WindowAdapter implements ActionListener {
 		p.add(tfpw);
 		p.add(loginButton);
 		
-		loginFrame.add(p);
+		loginFrame.add(p, "Center");
 		
 		// Frame을 보이게 함
 		loginFrame.setVisible(true);
@@ -82,9 +83,20 @@ public class Login extends WindowAdapter implements ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		// TODO Auto-generated method stub
-		
+		if(tfid.getText().equals("")) { // ID 미입력
+			new LoginDialog(loginFrame, "ID를 입력하세요."); // 다이얼로그 생성해서 "ID를 입력하세요." 출력
+		} else if(tfpw.getText().equals("")) { // Password 미입력
+			new LoginDialog(loginFrame, "Password를 입력하세요."); // 다이얼로그 생성해서 "Password를 입력하세요." 출력
+		} else { // 모두 입력되었을때
+			Vo loginVo = new Vo("user_info", tfid.getText(), tfpw.getText());
+			Dao dao = new Dao();
+			boolean b = dao.loginTest(loginVo); // 로그인 결과 true/false를 받는다
+			if(String.valueOf(b).equals("true")) {
+				new LoginDialog(loginFrame, "로그인 성공");
+				
+			} else if(String.valueOf(b).equals("false")) {
+				new LoginDialog(loginFrame, "아이디 또는 비밀번호가 일치하지않습니다.");
+			}
+		}
 	}
 }
-
-
