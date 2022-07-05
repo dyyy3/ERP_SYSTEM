@@ -3,7 +3,7 @@ package test;
 import java.awt.*;
 import java.awt.event.*;
 
-import loginTest.Login;
+import erp.Login;
 
 public class MainScreen extends WindowAdapter implements ActionListener {
 	
