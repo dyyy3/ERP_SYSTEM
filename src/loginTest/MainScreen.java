@@ -1,34 +1,31 @@
-package erp;
+package loginTest;
 
 import java.awt.*;
 import java.awt.event.*;
-import javax.swing.*;
-//import javax.swing.event.*;
 
 public class MainScreen extends WindowAdapter implements ActionListener {
-	JFrame main;
-	JMenuBar mb;
-	JMenu[] menu = {
-			new JMenu("품목"),
-			new JMenu("무역"),
-			new JMenu("자재"),
-			new JMenu("원가계산"), 
-			new JMenu("인사")
+	Frame main;
+	MenuBar mb;
+	Menu[] menu = {
+			new Menu("품목"),
+			new Menu("무역"),
+			new Menu("자재"),
+			new Menu("원가계산"), 
+			new Menu("인사")
 	};
 	String dept_id;
 	
 	public void setMenu(int startIndex, int endIndex) {
 		// 메뉴 : 품목,무역,자재,결산,인사
 		for(int i=startIndex; i<=endIndex; i++) {
-			menu[i].setBackground(new Color(214, 221, 228));
 			mb.add(menu[i]);
 			menu[i].addActionListener(this);
 		}
 	}
 	
 	public void setMenuItemItem(int startIndex, int endIndex) {
-		JMenuItem[] item = {
-				new JMenuItem("품목코드 등록")
+		MenuItem[] item = {
+				new MenuItem("품목코드 등록")
 		};
 		for(int i=startIndex; i<=endIndex; i++) {
 			menu[0].add(item[i]);
@@ -37,9 +34,9 @@ public class MainScreen extends WindowAdapter implements ActionListener {
 	}
 	
 	public void setMenuItemTrade(int startIndex, int endIndex) {
-		JMenuItem[] trade = {
-				new JMenuItem("수입offer 등록"),
-				new JMenuItem("수입원가 등록")
+		MenuItem[] trade = {
+				new MenuItem("수입offer 등록"),
+				new MenuItem("수입원가 등록")
 		};
 		for(int i=startIndex; i<=endIndex; i++) {
 			menu[1].add(trade[i]);
@@ -48,10 +45,10 @@ public class MainScreen extends WindowAdapter implements ActionListener {
 	}
 	
 	public void setMenuItemMaterial(int startIndex, int endIndex) {
-		JMenuItem[] material = {
-				new JMenuItem("입고 등록"),
-				new JMenuItem("출고 등록"),
-				new JMenuItem("재고 현황")
+		MenuItem[] material = {
+				new MenuItem("입고 등록"),
+				new MenuItem("출고 등록"),
+				new MenuItem("재고 현황")
 		};
 		for(int i=startIndex; i<=endIndex; i++) {
 			menu[2].add(material[i]);
@@ -60,9 +57,9 @@ public class MainScreen extends WindowAdapter implements ActionListener {
 	}
 	
 	public void setMenuItemCostAccounting(int startIndex, int endIndex) {
-		JMenuItem[] costAccounting = {
-				new JMenuItem("원가 계산"),
-				new JMenuItem("품목수불부")
+		MenuItem[] costAccounting = {
+				new MenuItem("원가 계산"),
+				new MenuItem("품목수불부")
 		};
 		for(int i=startIndex; i<=endIndex; i++) {
 			menu[3].add(costAccounting[i]);
@@ -71,8 +68,8 @@ public class MainScreen extends WindowAdapter implements ActionListener {
 	}
 	
 	public void setMenuItemPersonnelManagement(int startIndex, int endIndex) {
-		JMenuItem[] personnelManagement = {
-				new JMenuItem("인사관리")
+		MenuItem[] personnelManagement = {
+				new MenuItem("인사관리")
 		};
 		for(int i=0; i<personnelManagement.length; i++) {
 			menu[4].add(personnelManagement[i]);
@@ -141,13 +138,11 @@ public class MainScreen extends WindowAdapter implements ActionListener {
 	public MainScreen(String dept_id) {
 		this.dept_id = dept_id;
 		
-		main = new JFrame();
-		main.setBackground(new Color(214, 221, 228));
+		main = new Frame();
 		main.setSize(1200, 800);
 		main.addWindowListener(this);
 		
-		mb = new JMenuBar();
-		mb.setBackground(new Color(214, 221, 228));
+		mb = new MenuBar();
 		
 		// dept_id에 따라 menu 및 menuitem 구성
 		switch(dept_id) {
@@ -170,8 +165,8 @@ public class MainScreen extends WindowAdapter implements ActionListener {
 			deptId_50_Menu();
 			break;
 		}
-		
-		main.setJMenuBar(mb);
+
+		main.setMenuBar(mb);
 		main.setVisible(true);
 	}
 	
