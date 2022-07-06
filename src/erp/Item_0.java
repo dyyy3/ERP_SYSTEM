@@ -5,18 +5,19 @@ import java.awt.event.*;
 import javax.swing.*;
 //import javax.swing.event.*;
 
-public class itemMenu implements ActionListener {
-	static Choice[] ch = null;
+public class Item_0 implements ActionListener {
+//	static Choice[] ch = null;
 	
-//	public itemMenu() {
-	public static void main(String[] args) {
+	JPanel p;
+	
+	public Item_0() {
+//	public static void main(String[] args) {
 		//
-		Frame test = new Frame();
-		test.setSize(500,500);
+//		Frame test = new Frame();
+//		test.setSize(500,500);
 		//
 		
-		
-		JPanel p = new JPanel();
+		p = new JPanel();
 		
 		// label 추가
 		Label lpc = new Label("품목코드");
@@ -49,7 +50,7 @@ public class itemMenu implements ActionListener {
 		
 		// choice 추가
 		
-		ch = new Choice[7];
+		Choice[] ch = new Choice[7];
 		
 		for(int i=0; i<ch.length; i++) {
 			ch[i] = new Choice();
@@ -62,8 +63,8 @@ public class itemMenu implements ActionListener {
 
 		
 		//
-		test.add(p);
-		test.setVisible(true);
+//		test.add(p);
+//		test.setVisible(true);
 		//
 	}
 	

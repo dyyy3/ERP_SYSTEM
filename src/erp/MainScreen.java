@@ -15,6 +15,10 @@ public class MainScreen extends WindowAdapter implements ActionListener {
 			new JMenu("원가계산"), 
 			new JMenu("인사")
 	};
+	
+	JPanel mainP; // tab을 붙일 panel
+	int count = 0; // tabbedpane과 panel을 최초 한번만 생성하기 위한 변수
+	
 	String dept_id;
 	
 	public void setMenu(int startIndex, int endIndex) {
@@ -22,7 +26,7 @@ public class MainScreen extends WindowAdapter implements ActionListener {
 		for(int i=startIndex; i<=endIndex; i++) {
 			menu[i].setBackground(new Color(214, 221, 228));
 			mb.add(menu[i]);
-			menu[i].addActionListener(this);
+//			menu[i].addActionListener(this); // 메뉴에는 굳이 필요하지않다
 		}
 	}
 	
@@ -181,7 +185,23 @@ public class MainScreen extends WindowAdapter implements ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		// TODO Auto-generated method stub
+		String menuItem = e.getActionCommand(); // 클릭된 menu item
+		JTabbedPane t = null;
 		
+		if(count++ == 0) {
+			mainP = new JPanel(); // tabbedpane을 붙일 panel 생성
+			t = new JTabbedPane(); // MenuBar와 같은 기능
+			
+			mainP.add(t); // main 프레임에 tabbedpane을 붙인다
+			main.add(mainP); // frame에 panel 추가
+//			main.setVisible(true);
+		}
+		
+		CreateTab tab = new CreateTab(menuItem);
+		t.addTab(menuItem, tab);
 	}
 }
+
+
+
+
