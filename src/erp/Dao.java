@@ -45,4 +45,22 @@ public class Dao {
 		}
 		return false; // 로그인 실패
 	}
+
+	public String mainFrameMenu(String id) {
+		String dept_id = "";
+		
+		checkConException();
+		try {
+			String select = "SELECT dept_id FROM user_info WHERE user_id = '" + id + "'";
+			// SELECT dept_id FROM user_info WHERE user_id = ''
+			rs = stmt.executeQuery(select);
+
+			while(rs.next()) {
+				dept_id = rs.getString("dept_id");
+			}
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		return dept_id;
+	}
 }
