@@ -4,8 +4,11 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 //import javax.swing.event.*;
+import javax.swing.table.*;
 
-public class Tab_1501 implements ActionListener {
+import tabTest.TableCheckBoxTest2.TableCell2;
+
+public class Tab_1501_table implements ActionListener {
 //	폴더 그림 : 40, 40
 //	Label 사이즈 : 150, 30
 //	TextField 사이즈 : 200, 30
@@ -14,7 +17,7 @@ public class Tab_1501 implements ActionListener {
 	
 	JPanel p;
 	
-	public Tab_1501() {
+	public Tab_1501_table() {
 		p = new JPanel();
 		p.setLayout(null);
 		
@@ -106,52 +109,68 @@ public class Tab_1501 implements ActionListener {
 		p.add(sp1);
 
 		//권한 table
-		
-		// 대메뉴 열 : 200, 30
-		// 중메뉴 열 : 400, 30
-		// 읽기, 쓰기, 수정, 삭제 열 : 100, 30
-		Label[] label2 = new Label[20];
-		String[] labelName2 = {
-			"대메뉴", "중메뉴", // 0~1
-			"읽기", "쓰기", "수정", "삭제", // 2~5
-			"품목", "무역", "자재", "결산", "인사", // 6~10
-			"품목코드 등록", "수입offer 등록", "수입원가 등록", // 11~13
-			"입고 등록", "출고 등록", "재고 현황", // 14~16
-			"원가 계산", "품목수불부", "계정 및 권한 관리" // 17~19
+		String[] header2 = {"대메뉴", "중메뉴", "읽기", "쓰기", "수정", "삭제"};
+		String[][] contents2 = {
+				{"품목","품목코드 등록","","","",""},
+				{"무역","수입offer 등록","","","",""},
+				{"","수입원가 등록","","","",""},
+				{"","입고 등록","","","",""},
+				{"자재","출고 등록","","","",""},
+				{"","자재 현황","","","",""},
+				{"결산","원가 계산","","","",""},
+				{"","품목수불부","","","",""},
+				{"인사","계정 및 권한 관리","","","",""}
 		};
+		DefaultTableModel dtm = new DefaultTableModel(contents2, header2);
+		JTable table2 = new JTable(dtm);
+//		JTable table2 = new JTable(contents2, header2);
+		JScrollPane sp2 = new JScrollPane(table2);
 		
-		for(int i=0; i<label2.length; i++){
-			label2[i] = new Label(labelName2[i]);
-			p.add(label2[i]);
-		}
-		
-		label2[0].setBounds(10, 300, 200, 30);
-		label2[1].setBounds(210, 300, 400, 30);
-		
-		label2[2].setBounds(610, 300, 100, 30);
-		label2[3].setBounds(710, 300, 100, 30);
-		label2[4].setBounds(810, 300, 100, 30);
-		label2[5].setBounds(910, 300, 100, 30);
-		
-		label2[6].setBounds(10, 330, 200, 30);
-		label2[7].setBounds(10, 360, 200, 60);
-		label2[8].setBounds(10, 420, 200, 90);
-		label2[9].setBounds(10, 510, 200, 30);
-		label2[10].setBounds(10, 570, 200, 30);
+		table2.getColumnModel().getColumn(2).setCellRenderer(new AddCheckBox());
+		table2.getColumnModel().getColumn(2).setCellEditor(new AddCheckBox());
 
-		label2[11].setBounds(210, 330, 400, 30);
-		label2[12].setBounds(210, 360, 400, 30);
-		label2[13].setBounds(210, 390, 400, 30);
+		table2.getColumnModel().getColumn(3).setCellRenderer(new AddCheckBox());
+		table2.getColumnModel().getColumn(3).setCellEditor(new AddCheckBox());
 		
-		label2[14].setBounds(210, 420, 400, 30);
-		label2[15].setBounds(210, 450, 400, 30);
-		label2[16].setBounds(210, 480, 400, 30);
+		table2.getColumnModel().getColumn(4).setCellRenderer(new AddCheckBox());
+		table2.getColumnModel().getColumn(4).setCellEditor(new AddCheckBox());
+
+		table2.getColumnModel().getColumn(5).setCellRenderer(new AddCheckBox());
+		table2.getColumnModel().getColumn(5).setCellEditor(new AddCheckBox());
 		
-		label2[17].setBounds(210, 510, 400, 30);
-		label2[18].setBounds(210, 540, 400, 30);
-		label2[19].setBounds(210, 570, 400, 30);
+		sp2.setBounds(10, 270, 1000, 200);
+		p.add(sp2);
+		
+		
 	}
 
+	class AddCheckBox extends AbstractCellEditor implements TableCellEditor, TableCellRenderer {
+
+		JCheckBox cb;
+		
+		public AddCheckBox() {
+			cb = new JCheckBox();
+		}
+		
+		@Override
+		public Object getCellEditorValue() {
+			return null;
+		}
+
+		@Override
+		public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus,
+				int row, int column) {
+			return cb;
+		}
+
+		@Override
+		public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row,
+				int column) {
+			return cb;
+		}
+		
+	}
+	
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		

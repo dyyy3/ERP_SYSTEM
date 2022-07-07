@@ -31,6 +31,11 @@ public class MainScreenTapTest extends WindowAdapter implements ActionListener {
 		main.setSize(1200, 800);
 		main.addWindowListener(new MainScreenTapTest());
 		
+		// 윈도우 창 위쪽 아이콘 바꾸기
+		Toolkit toolkit = Toolkit.getDefaultToolkit();
+		Image img = toolkit.getImage("images/folder-icon_34416.png");
+		main.setIconImage(img);
+		
 		mb = new JMenuBar();
 		mb.setBackground(new Color(214, 221, 228));
 		
@@ -99,18 +104,21 @@ public class MainScreenTapTest extends WindowAdapter implements ActionListener {
 //		tp.addChangeListener(cl); // JTabbedPane에 ChangeListener 추가
 	}
 	
+	
+	
 	public void windowClosing(WindowEvent e) {
 		System.exit(0);
 	}
 	
-	public boolean checkAddTab (String menuItem) {
+	public int checkAddTab (String menuItem) {
 		int i = tp.indexOfTab(menuItem);
 		System.out.println(i);
-		if(i == -1) {
-			return true;
-		}else {
-			return false;
-		}
+//		if(i == -1) {
+//			return true;
+//		}else {
+//			return false;
+//		}
+		return i;
 	}
 	
 	@Override
@@ -119,10 +127,12 @@ public class MainScreenTapTest extends WindowAdapter implements ActionListener {
 		
 		switch(menuItem) {
 		case "품목코드 등록" :
-			boolean b = checkAddTab(menuItem);
-			if(String.valueOf(b).equals("true")) {
+			int i = checkAddTab(menuItem);
+			if(i == -1) {
 				Tab_1101 tab1101 = new Tab_1101();
 				tp.addTab(menuItem, tab1101.p);
+			}else {
+				tp.setSelectedIndex(i);
 			}
 			break;
 		case "수입offer 등록" : 

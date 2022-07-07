@@ -6,6 +6,10 @@ import javax.swing.*;
 //import javax.swing.event.*;
 
 public class tab1Test implements ActionListener {
+//	폴더 그림부분 Label 및 TextField의 y값 : 40
+//	Label 사이즈 : 150, 30
+//	TextField 사이즈 : 200, 30
+//	가로 여백 30, 세로 여백 10
 	static JTabbedPane tp;
 	
 	public static void main(String[] args) {
@@ -48,6 +52,16 @@ public class tab1Test implements ActionListener {
 //		Panel mainP = new Panel();
 //		mainP.add(tp);
 //		f.add(mainP);
+		
+		// button 추가는 가능하나 tab 이름이 가려짐
+		Button eb1 = new Button("x");
+		tp.setTabComponentAt(0, eb1);
+
+		Button eb2 = new Button("x");
+		tp.setTabComponentAt(1, eb2);
+		
+		Button eb3 = new Button("x");
+		tp.setTabComponentAt(2, eb3);
 		
 		f.setVisible(true);
 	}

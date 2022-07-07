@@ -185,115 +185,90 @@ public class MainScreen extends WindowAdapter implements ActionListener {
 	}
 	
 	// tab의 중복 추가를 방지하기 위해 중복 체크하는 메서드
-	public boolean checkAddTab (String menuItem) {
+	public int checkAddTab (String menuItem) {
 		int i = tp.indexOfTab(menuItem);
-		if(i == -1) {
-			return true;
-		}else {
-			return false;
-		}
+		return i;
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		String menuItem = e.getActionCommand(); // 클릭된 menu item
-		boolean b = checkAddTab(menuItem);
+		int i = checkAddTab(menuItem);
 		
 		switch(menuItem) {
 		case "품목코드 등록" :
-			if(String.valueOf(b).equals("true")) {
+			if(i == -1) {
 				Tab_1101 tab1101 = new Tab_1101();
 				tp.addTab(menuItem, tab1101.p);
+			}else {
+				tp.setSelectedIndex(i);
 			}
 			break;
 		case "수입offer 등록" : 
-			if(String.valueOf(b).equals("true")) {
+			if(i == -1) {
 				Tab_1201 tab1201 = new Tab_1201();
 				tp.addTab(menuItem, tab1201.p);
+			}else {
+				tp.setSelectedIndex(i);
 			}
 			break;
 		case "수입원가 등록" : 
-			if(String.valueOf(b).equals("true")) {
+			if(i == -1) {
 				Tab_1202 tab1202 = new Tab_1202();
 				tp.addTab(menuItem, tab1202.p);
+			}else {
+				tp.setSelectedIndex(i);
 			}
 			break;
 		case "입고 등록" : 
-			if(String.valueOf(b).equals("true")) {
+			if(i == -1) {
 				Tab_1301 tab1301 = new Tab_1301();
 				tp.addTab(menuItem, tab1301.p);
+			}else {
+				tp.setSelectedIndex(i);
 			}
 			break;
 		case "출고 등록" : 
-			if(String.valueOf(b).equals("true")) {
+			if(i == -1) {
 				Tab_1302 tab1302 = new Tab_1302();
 				tp.addTab(menuItem, tab1302.p);
+			}else {
+				tp.setSelectedIndex(i);
 			}
 			break;
 		case "재고 현황" : 
-			if(String.valueOf(b).equals("true")) {
+			if(i == -1) {
 				Tab_1303 tab1303 = new Tab_1303();
 				tp.addTab(menuItem, tab1303.p);
+			}else {
+				tp.setSelectedIndex(i);
 			}
 			break;
 		case "원가 계산" : 
-			if(String.valueOf(b).equals("true")) {
+			if(i == -1) {
 				Tab_1401 tab1401 = new Tab_1401();
 				tp.addTab(menuItem, tab1401.p);
+			}else {
+				tp.setSelectedIndex(i);
 			}
 			break;
 		case "품목수불부" : 
-			if(String.valueOf(b).equals("true")) {
+			if(i == -1) {
 				Tab_1402 tab1402 = new Tab_1402();
 				tp.addTab(menuItem, tab1402.p);
+			}else {
+				tp.setSelectedIndex(i);
 			}
 			break;
 		case "인사관리" : 
-			if(String.valueOf(b).equals("true")) {
+			if(i == -1) {
 				Tab_1501 tab1501 = new Tab_1501();
 				tp.addTab(menuItem, tab1501.p);
+			}else {
+				tp.setSelectedIndex(i);
 			}
 			break;
 		}
-		
-//		switch(menuItem) {
-//		case "품목코드 등록" :
-//			Panel p1 = new Panel();
-//			tp.addTab("p1", p1);
-//			break;
-//		case "수입offer 등록" : 
-//			Panel p2 = new Panel();
-//			tp.addTab("p2", p2);
-//			break;
-//		case "수입원가 등록" : 
-//			Panel p3 = new Panel();
-//			tp.addTab("p3", p3);
-//			break;
-//		case "입고 등록" : 
-//			Panel p4 = new Panel();
-//			tp.addTab("p4", p4);
-//			break;
-//		case "출고 등록" : 
-//			Panel p5 = new Panel();
-//			tp.addTab("p5", p5);
-//			break;
-//		case "재고 현황" : 
-//			Panel p6 = new Panel();
-//			tp.addTab("p6", p6);
-//			break;
-//		case "원가 계산" : 
-//			Panel p7 = new Panel();
-//			tp.addTab("p7", p7);
-//			break;
-//		case "품목수불부" : 
-//			Panel p8 = new Panel();
-//			tp.addTab("p8", p8);
-//			break;
-//		case "인사관리" : 
-//			Panel p9 = new Panel();
-//			tp.addTab("p9", p9);
-//			break;
-//		}
 		
 		main.add(tp);
 		main.setVisible(true);

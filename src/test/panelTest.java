@@ -5,6 +5,7 @@ package test;
 import java.awt.Color;
 import java.awt.Frame;
 import java.awt.Panel;
+import javax.swing.*;
 
 public class panelTest {
 
@@ -13,8 +14,8 @@ public class panelTest {
 		f1.setSize(1200, 800);
 		f1.setLayout(null);
 		
-		Panel p1 = new Panel();
-		Panel p2 = new Panel();
+		JPanel p1 = new JPanel();
+		JPanel p2 = new JPanel();
 		
 		p1.setSize(600, 800);
 		p1.setLocation(0, 0);
@@ -35,9 +36,6 @@ public class panelTest {
 		p1.getSize();
 		p2.getSize();
 		
-		System.out.println(f1);
-		System.out.println(p1);
-		System.out.println(p2);
+		
 	}
-
 }
