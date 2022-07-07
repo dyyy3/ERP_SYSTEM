@@ -5,18 +5,13 @@ import java.awt.event.*;
 import javax.swing.*;
 //import javax.swing.event.*;
 
-public class Item_0 implements ActionListener {
+public class Tab_1101 implements ActionListener {
 //	static Choice[] ch = null;
-	
 	JPanel p;
+	Choice[] ch = null;
 	
-	public Item_0() {
+	public Tab_1101() {
 //	public static void main(String[] args) {
-		//
-//		Frame test = new Frame();
-//		test.setSize(500,500);
-		//
-		
 		p = new JPanel();
 		
 		// label Ãß°¡
@@ -60,12 +55,6 @@ public class Item_0 implements ActionListener {
 		for(int i=0; i<ch.length; i++) {
 			ch[0].add(Integer.toString(i));
 		}
-
-		
-		//
-//		test.add(p);
-//		test.setVisible(true);
-		//
 	}
 	
 	@Override
