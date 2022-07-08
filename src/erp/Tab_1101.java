@@ -4,6 +4,8 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 //import javax.swing.event.*;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 public class Tab_1101 implements ActionListener {
 //	폴더 그림 : 40, 40
@@ -85,13 +87,17 @@ public class Tab_1101 implements ActionListener {
 			ch[i] = new Choice();
 			p.add(ch[i]);
 		}
+
+		String[] tableName = {"asset", "stone_type", "stone_name", "slab_type", "country", "surface", "thickness"};
+		String[] fieldName = {"asset", "stone_type", "stone_name", "slab_type", "country", "surface", "t"};
 		
-		/*
-		각 choice마다 값을 불러오는 코드 작성 필요
-		*/
-		
-		for(int i=0; i<ch.length; i++) {
-			ch[0].add(Integer.toString(i));
+		Dao dao = new Dao();
+		for(int i=0; i<fieldName.length; i++) {
+			Vo vo = new Vo(tableName[i], fieldName[i]);
+			String[] result = dao.select(vo);
+			for(int j=0; j<result.length; j++) {
+				ch[i].add(result[j]);
+			}
 		}
 		
 		ch[0].setBounds(170, 130, 200, 30);

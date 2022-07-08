@@ -1,4 +1,4 @@
-package erp;
+package tabTest;
 
 public class Vo {
 	private String tableName;
