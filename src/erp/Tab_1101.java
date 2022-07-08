@@ -11,15 +11,28 @@ public class Tab_1101 implements ActionListener {
 //	TextField 사이즈 : 200, 30
 //	가로 여백 30, 세로 여백 10
 	
-//	static Choice[] ch = null;
 	JPanel p;
-	Choice[] ch = null;
 	
 	public Tab_1101() {
-//	public static void main(String[] args) {
 		p = new JPanel();
 		p.setLayout(null);
 		
+		// icon
+		JLabel imageLabel = new JLabel(); // ImageIcon 을 담을 Label 생성
+
+		ImageIcon folder = new ImageIcon("src/images/folder-icon_34416.png");
+		Image img = folder.getImage(); // image 크기가 512, 512이므로 40, 40으로 바꾸기 위해 ImageIcon -> Image로 변경
+		Image changeimg = img.getScaledInstance(30, 30, Image.SCALE_SMOOTH);
+		ImageIcon changefolder = new ImageIcon(changeimg);
+
+		imageLabel.setIcon(changefolder);
+		p.add(imageLabel);
+		imageLabel.setBounds(10, 10, 30, 30);
+		
+		Label l1 = new Label("품목정보");
+		l1.setBounds(50, 10, 150, 30);
+		p.add(l1);
+
 		// label 추가
 		Label lpc = new Label("품목코드");
 		Label lpn = new Label("품목명");
@@ -72,6 +85,10 @@ public class Tab_1101 implements ActionListener {
 			ch[i] = new Choice();
 			p.add(ch[i]);
 		}
+		
+		/*
+		각 choice마다 값을 불러오는 코드 작성 필요
+		*/
 		
 		for(int i=0; i<ch.length; i++) {
 			ch[0].add(Integer.toString(i));

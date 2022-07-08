@@ -11,12 +11,9 @@ public class Tab_1101 implements ActionListener {
 //	TextField 사이즈 : 200, 30
 //	가로 여백 30, 세로 여백 10
 	
-//	static Choice[] ch = null;
 	JPanel p;
-	Choice[] ch = null;
 	
 	public Tab_1101() {
-//	public static void main(String[] args) {
 		p = new JPanel();
 		p.setLayout(null);
 		
@@ -88,6 +85,10 @@ public class Tab_1101 implements ActionListener {
 			ch[i] = new Choice();
 			p.add(ch[i]);
 		}
+		
+		/*
+		각 choice마다 값을 불러오는 코드 작성 필요
+		*/
 		
 		for(int i=0; i<ch.length; i++) {
 			ch[0].add(Integer.toString(i));

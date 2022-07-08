@@ -3,9 +3,7 @@ package tabTest;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
-//import javax.swing.event.*;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
+import javax.swing.event.*;
 
 public class MainScreenTapTest extends WindowAdapter implements ActionListener {
 	JPanel mainP; // tab¿ª ∫Ÿ¿œ panel
@@ -112,12 +110,6 @@ public class MainScreenTapTest extends WindowAdapter implements ActionListener {
 	
 	public int checkAddTab (String menuItem) {
 		int i = tp.indexOfTab(menuItem);
-		System.out.println(i);
-//		if(i == -1) {
-//			return true;
-//		}else {
-//			return false;
-//		}
 		return i;
 	}
 	
