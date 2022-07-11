@@ -3,7 +3,18 @@ package tabTest;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
+
+import java.util.Calendar;
 //import javax.swing.event.*;
+import java.util.Date;
+import java.text.SimpleDateFormat;
+import com.toedter.calendar.JDateChooser;
+
+import net.sourceforge.jdatepicker.impl.*;
+import com.toedter.calendar.JYearChooser;
+import com.toedter.calendar.JMonthChooser;
+import com.toedter.calendar.JDayChooser;
+import com.toedter.calendar.JCalendar;
 
 public class Tab_1201 implements ActionListener {
 //	폴더 그림 : 40, 40
@@ -12,6 +23,9 @@ public class Tab_1201 implements ActionListener {
 //	가로 여백 30, 세로 여백 10
 	
 	JPanel p;
+//	JDateChooser dateChooser;
+	UtilDateModel model;
+	Button b;
 	
 	public Tab_1201() {
 		p = new JPanel();
@@ -53,23 +67,69 @@ public class Tab_1201 implements ActionListener {
 		tf.setBounds(170, 50, 200, 30);
 		p.add(tf);
 		
+		// DateChooser를 대신할 choice
+		Choice chYear = new Choice();
+		Choice chMonth = new Choice();
+		Choice chDay = new Choice();
+		
+		for(int i=1; i<13; i++) {
+			f({
+				
+			})
+			chMonth.add("0" + i);
+		}
+		
+		chYear.setBounds(170, 90, 80, 30);
+		chMonth.setBounds(260, 90, 50, 30);
+		chDay.setBounds(320, 90, 50, 30);
+		// 세개의 choice 총 길이 (170, 90, 200, 30)
+		
+		p.add(chYear);
+		p.add(chMonth);
+		p.add(chDay);
+		
+		// DateChooser 추가
+//		dateChooser = new JDateChooser();
+//		dateChooser.setBounds(10, 250, 150, 30);
+//		dateChooser.setDateFormatString("yyyy-mm-dd");
+//		Date now = new Date();
+//		dateChooser.setDate(now);
+//		p.add(dateChooser);
+
+		// 날짜 선택 버튼
+//		b = new Button("선택");
+//		b.setBounds(400, 250, 50, 30);
+//		b.addActionListener(this);
+//		p.add(b);
 		
 		// Choice 추가
-		Choice[] ch = new Choice[4];
+		Choice[] ch = new Choice[3];
 		
 		for(int i=0; i<ch.length; i++) {
 			ch[i] = new Choice();
 			p.add(ch[i]);
+//			ch[i].addItemListener((ItemListener)this); // 에러
 		}
+		
+		Dao dao = new Dao();
 		
 		/*
 		각 choice마다 값을 불러오는 코드 작성 필요
 		*/
 		
-		ch[0].setBounds(170, 90, 200, 30);
-		ch[1].setBounds(540, 50, 200, 30);
-		ch[2].setBounds(540, 90, 200, 30);
-		ch[3].setBounds(170, 130, 200, 30);
+//		Dao dao = new Dao();
+//		
+//		for(int i=0; i<tableName.length; i++) {
+//			Vo vo = new Vo(tableName[i]);
+//			String[] result = dao.select(vo);
+//			for(int j=0; j<result.length; j++) {
+//				ch[i].add(result[j]);
+//			}
+//		}
+		
+		ch[0].setBounds(540, 50, 200, 30);
+		ch[1].setBounds(540, 90, 200, 30);
+		ch[2].setBounds(170, 130, 200, 30);
 		
 		// Table 추가
 		String[] header = {"", "순번", "품목코드", "품목명", "단위", "수량", "단가", "금액"};
@@ -85,14 +145,15 @@ public class Tab_1201 implements ActionListener {
 		sp.setBounds(10, 170, 1000, 50);
 		p.add(sp);
 		
-//		// Button -> 버튼과 테이블 위치가 겹치면 테이블이 더 위에 올라온다
-//		Button b1 = new Button("+");
-//		b1.setBounds(50, 200, 30, 30);
-//		p.add(b1);
+
+		
+		
 	}
 	
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		
+//		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd");
+//		String theDate = dateFormat.format(Calendar.getInstance());
+//		System.out.println(theDate);
 	}
 }

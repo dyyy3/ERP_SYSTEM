@@ -28,6 +28,7 @@ public class Dao {
 		}
 	}
 	
+	// Login
 	public boolean loginTest(Vo loginVo) {
 		checkConException();
 		try {
@@ -50,7 +51,6 @@ public class Dao {
 
 	public String mainFrameMenu(String id) {
 		String dept_id = "";
-		
 		checkConException();
 		try {
 			String select = "SELECT dept_id FROM user_info WHERE user_id = '" + id + "'";
@@ -66,14 +66,14 @@ public class Dao {
 		return dept_id;
 	}
 	
-	
+	// Tab_1101
 	public String[] select(Vo vo) {
 		List<String> list = new ArrayList<>(); // 쿼리문으로 얻은 값을 저장. 행의 길이를 모르므로 list로 받는다
 		String[] result = null; // list로 받은 값을 String 배열로 바꿔서 return
 
 		checkConException();
 		try {
-			String select = "SELECT " + vo.getField1() + " FROM " + vo.getTable1();
+			String select = "SELECT " + vo.getTableName() + " FROM " + vo.getTableName();
 			// SELECT asset_code FROM asset
 			rs = stmt.executeQuery(select);
 			
@@ -86,5 +86,43 @@ public class Dao {
 			e.printStackTrace();
 		}
 		return result;
+	}
+	
+	// Tab_1101
+	public String getCode(String table, String field, String record) {
+		String code ="";
+		checkConException();
+		try {
+			String select = "SELECT " + field + " FROM " + table + " WHERE " + table + " = '" + record + "'";
+			// SELECT STONE_NAME_CODE FROM STONE_NAME WHERE STONE_NAME = ''
+			rs = stmt.executeQuery(select);
+			
+			while(rs.next()){
+				code = rs.getString(field);
+			}
+			
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		return code;
+	}
+	
+	public boolean insertProductList(Vo vo) {
+		boolean b2 = true;
+		checkConException();
+		try {
+			String insert = "INSERT INTO PRODUCT_LIST (PRODUCT_CODE, PRODUCT_NAME, ASSET_CODE,"
+					+ "STONE_TYPE_CODE, STONE_NAME_CODE, SLAB_TYPE_CODE,"
+					+ "COUNTRY_CODE, SURFACE_CODE, THICKNESS_CODE)"
+					+ " VALUES('" + vo.getField_1() + "', '" + vo.getField_2() + "', '" + vo.getField_3() + "',"
+					+ " '" + vo.getField_4() + "', '" + vo.getField_5() + "', '" + vo.getField_6() + "',"
+					+ " '" + vo.getField_7() + "', '" + vo.getField_8() + "', '" + vo.getField_9() + "')";
+			stmt.executeQuery(insert);
+//			rs = stmt.executeQuery(insert);
+		}catch(Exception e) {
+			e.printStackTrace();
+			b2 = false;
+		}
+		return b2;
 	}
 }
