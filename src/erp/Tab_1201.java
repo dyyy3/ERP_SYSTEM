@@ -4,6 +4,9 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 //import javax.swing.event.*;
+import net.sourceforge.jdatepicker.impl.*;
+import java.text.*;
+import java.util.*;
 
 public class Tab_1201 implements ActionListener {
 //	폴더 그림 : 40, 40
@@ -12,6 +15,8 @@ public class Tab_1201 implements ActionListener {
 //	가로 여백 30, 세로 여백 10
 	
 	JPanel p;
+	UtilDateModel model;
+	Button b;
 	
 	public Tab_1201() {
 		p = new JPanel();
@@ -53,24 +58,60 @@ public class Tab_1201 implements ActionListener {
 		tf.setBounds(170, 50, 200, 30);
 		p.add(tf);
 		
+		// JDatePicker
+		model = new UtilDateModel();
+		JDatePanelImpl datePanel = new JDatePanelImpl(model);
+		JDatePickerImpl datePicker = new JDatePickerImpl(datePanel);
+		datePicker.setBounds(170, 90, 200, 30);
+		
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-mm-dd");
+		Date todayDate = new Date();
+		String today = sdf.format(todayDate);
+		
+		String[] date = today.split("-");
+		int dateY = Integer.parseInt(date[0]);
+		int dateM = Integer.parseInt(date[1]) - 2;
+		int dateD = Integer.parseInt(date[2]);
+		model.setDate(dateY, dateM, dateD);
+		model.setSelected(true);
+		
+		p.add(datePicker);
 		
 		// Choice 추가
-		Choice[] ch = new Choice[4];
+		Choice[] ch = new Choice[3];
 		
 		for(int i=0; i<ch.length; i++) {
 			ch[i] = new Choice();
 			p.add(ch[i]);
+//			ch[i].addItemListener((ItemListener)this); // 에러
 		}
+		
+		Dao dao = new Dao();
 		
 		/*
 		각 choice마다 값을 불러오는 코드 작성 필요
 		*/
 		
-		ch[0].setBounds(170, 90, 200, 30);
-		ch[1].setBounds(540, 50, 200, 30);
-		ch[2].setBounds(540, 90, 200, 30);
-		ch[3].setBounds(170, 130, 200, 30);
+//		Dao dao = new Dao();
+//		
+//		for(int i=0; i<tableName.length; i++) {
+//			Vo vo = new Vo(tableName[i]);
+//			String[] result = dao.select(vo);
+//			for(int j=0; j<result.length; j++) {
+//				ch[i].add(result[j]);
+//			}
+//		}
 		
+		ch[0].setBounds(540, 50, 200, 30);
+		ch[1].setBounds(540, 90, 200, 30);
+		ch[2].setBounds(170, 130, 200, 30);
+		
+		// Button
+		b = new Button("저장");
+		b.setBounds(750, 50, 50, 30);
+		b.addActionListener(this);
+		p.add(b);
+
 		// Table 추가
 		String[] header = {"", "순번", "품목코드", "품목명", "단위", "수량", "단가", "금액"};
 		String[][] contents = {
@@ -85,14 +126,12 @@ public class Tab_1201 implements ActionListener {
 		sp.setBounds(10, 170, 1000, 50);
 		p.add(sp);
 		
-//		// Button -> 버튼과 테이블 위치가 겹치면 테이블이 더 위에 올라온다
-//		Button b1 = new Button("+");
-//		b1.setBounds(50, 200, 30, 30);
-//		p.add(b1);
+		
 	}
 	
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		
+		String selectedDate = model.getYear() + "-" + (model.getMonth() + 1) + "-" + model.getDay();
+//		System.out.println(selectedDate);
 	}
 }
