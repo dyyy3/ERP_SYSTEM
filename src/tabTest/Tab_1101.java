@@ -243,7 +243,6 @@ public class Tab_1101 implements ActionListener, ItemListener {
 			}else{
 				new ErrorMessageDialog("이미 등록된 코드입니다.", "품목코드 등록");
 			}
-			
 		}
 		productName.delete(0, productName.capacity() + 1);
 	}

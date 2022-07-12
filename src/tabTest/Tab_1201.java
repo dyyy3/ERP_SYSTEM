@@ -4,6 +4,7 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 //import javax.swing.event.*;
+import javax.swing.table.*;
 import net.sourceforge.jdatepicker.impl.*;
 import java.text.*;
 import java.util.*;
@@ -17,8 +18,13 @@ public class Tab_1201 implements ActionListener, ItemListener {
 	JPanel p;
 	TextField tf;
 	UtilDateModel model;
+	DefaultTableModel dtm;
 	Choice[] ch;
-	Button b;
+	Button saveButton;
+	Button searchButton;
+	Button addButton;
+	Button deleteButton;
+	Dao dao;
 	
 	public Tab_1201() {
 		p = new JPanel();
@@ -60,19 +66,19 @@ public class Tab_1201 implements ActionListener, ItemListener {
 		tf.setBounds(170, 50, 200, 30);
 		p.add(tf);
 		
-		// JDatePicker
+		// JDatePicker 추가
 		model = new UtilDateModel();
 		JDatePanelImpl datePanel = new JDatePanelImpl(model);
 		JDatePickerImpl datePicker = new JDatePickerImpl(datePanel);
 		datePicker.setBounds(170, 90, 200, 30);
 		
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-mm-dd");
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		Date todayDate = new Date();
 		String today = sdf.format(todayDate);
 		
 		String[] date = today.split("-");
 		int dateY = Integer.parseInt(date[0]);
-		int dateM = Integer.parseInt(date[1]) - 2;
+		int dateM = Integer.parseInt(date[1]) - 1;
 		int dateD = Integer.parseInt(date[2]);
 		model.setDate(dateY, dateM, dateD);
 		model.setSelected(true);
@@ -87,9 +93,13 @@ public class Tab_1201 implements ActionListener, ItemListener {
 			p.add(ch[i]);
 			ch[i].addItemListener((ItemListener)this);
 		}
+
+		ch[0].setBounds(540, 50, 200, 30);
+		ch[1].setBounds(540, 90, 200, 30);
+		ch[2].setBounds(170, 130, 200, 30);
 		
 		// ch[0] : 거래처
-		Dao dao = new Dao();
+		dao = new Dao();
 		
 		Vo clientVo = new Vo("client", "client_name");
 		String[] clientList = dao.selectOneField(clientVo);
@@ -105,36 +115,46 @@ public class Tab_1201 implements ActionListener, ItemListener {
 		}
 		
 		// ch[2] : 통화
-		Vo currencyVo = new Vo("country", "ISO_4217");
+		Vo currencyVo = new Vo("country", "currency");
 		String[] currencyList = dao.selectOneFieldDistinct(currencyVo);
 		for(int i=0; i<currencyList.length; i++) {
 			ch[2].add(currencyList[i]);
 		}
 		
-		ch[0].setBounds(540, 50, 200, 30);
-		ch[1].setBounds(540, 90, 200, 30);
-		ch[2].setBounds(170, 130, 200, 30);
-		
 		// Button
-		b = new Button("저장");
-		b.setBounds(750, 50, 50, 30);
-		b.addActionListener(this);
-		p.add(b);
+		saveButton = new Button("저장");
+		saveButton.setBounds(750, 50, 50, 30);
+		saveButton.addActionListener(this);
+		p.add(saveButton);
 
+		searchButton = new Button("조회");
+		searchButton.setBounds(750, 90, 50, 30);
+		searchButton.addActionListener(this);
+		p.add(searchButton);
+		
+		addButton = new Button("+");
+		addButton.setBounds(1000, 130, 50, 30);
+		addButton.addActionListener(this);
+		p.add(addButton);
+
+		addButton = new Button("-");
+		addButton.setBounds(1060, 130, 50, 30);
+		addButton.addActionListener(this);
+		p.add(addButton);
+		
+		
 		// Table 추가
-		String[] header = {"", "순번", "품목코드", "품목명", "단위", "수량", "단가", "금액"};
-		String[][] contents = {
-				{"", "", "", "", "", "", "", ""}
-		};
-		/*
-		'+'버튼이 클릭될떄마다 table의 행이 추가되어야하므로, String 2차원 배열 대신 객체 배열로 넣을수 있는지 테스트해보기
-		*/
-		JTable table = new JTable(contents, header);
+		String[] header = {"순번", "품목코드", "품목명", "단위", "수량", "단가", "금액"};
+		dtm = new DefaultTableModel(header, 0);		
+		JTable table = new JTable(dtm);
 		
 		JScrollPane sp = new JScrollPane(table);
-		sp.setBounds(10, 170, 1000, 50);
+		sp.setBounds(10, 170, 1000, 500);
 		p.add(sp);
 		
+//		String[][] contents = {
+//				{"", "", "", "", "", "", ""}
+//		};
 		
 	}
 	
@@ -148,17 +168,90 @@ public class Tab_1201 implements ActionListener, ItemListener {
 	
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		String offerNum = tf.getText();
-		if(offerNum.equals("")) {
-			System.out.println("offer번호를 입력하세요.");
-			new ErrorMessageDialog("offer번호를 입력하세요.", "수입offer 등록");
-		}else {
-			System.out.println(offerNum);
-		}
+		int rowCount = dtm.getRowCount(); // 행 갯수를 구하는 메서드
+//		String[][] insertOfferList;
 		
-		String selectedDate = model.getYear() + "-" + (model.getMonth() + 1) + "-" + model.getDay();
-//		System.out.println(selectedDate);
-		
-	}
+		switch(e.getActionCommand()) {
+		case "저장" :
+			if(rowCount == 0) { // table에 행이 하나도 없을때 -> offer정보 저장
+				if(tf.getText().equals("")) {
+					new ErrorMessageDialog("offer번호를 입력하세요.", "수입offer 등록");
+				}else {
+//				offer table에 데이터 저장
+					String offer_num = tf.getText();
+					String client_name = ch[0].getSelectedItem();
+					String offer_date = model.getYear() + "-" + (model.getMonth() + 1) + "-" + model.getDay();
+					String incoterms = ch[1].getSelectedItem();
+					String currency = ch[2].getSelectedItem();
+					
+					boolean b = true;
+					Vo vo = new Vo(offer_num, client_name, offer_date, incoterms, currency);
+					b = dao.insertOffer(vo);
+					if(b == true) {
+						new ErrorMessageDialog("수입offer가 등록되었습니다.", "수입offer 등록");
+					}else{
+						new ErrorMessageDialog("이미 등록된 offer번호입니다.", "수입offer 등록");
+					}
+				}
+			}else { // table에 행이 하나라도 있을때 -> offer상세정보 저장
+			/*
+			 첫번째 등록이 아닌 추가 등록 또는 수정일때 데이터가 수정되도록 코드 작성 필요
+			 -> offer번호 값을 읽어서 이미 등록되어있을때 : num 마지막 번호를 체크
+			 -> 등록되어있지않을때 -> 성공
+			 
+			 insert 실패할 경우
+			 1) 품목코드 미등록(부모키가 없습니다)
+			 2) offer_num 미등록(부모키가 없습니다)
+			 3) int 타입 데이터에 varchar2 타입 데이터를 넣는 등의 타입불일치(수치가 부적합합니다)
+			 위 경우에 대한 에러코드를 반환받아서 상황에 적절한 에러메시지를 출력하도록 수정 필요
+			 */
+				boolean b2 = true;
+				String[] grv = new String[7];
+				for(int i=0; i<dtm.getRowCount(); i++) { // 행 index : 0 ~ rowCount - 1까지
+					for(int j=0; j<grv.length; j++) {
+						grv[j] = String.valueOf(dtm.getValueAt(i, j));
+					}
+					Vo offerListVo = new Vo(tf.getText(), grv[0], grv[1], grv[2], grv[3], grv[4], grv[5], grv[6]); // 열 길이 8. 첫번째는 OFFER_NUM, 나머지는 TABLE 값 읽어오기
+					b2 = dao.insertOfferList(offerListVo);
+					if(b2 == false) {
+						String message = "" + i + "행의 번호 또는 입력 형식이 잘못되었습니다.";
+						new ErrorMessageDialog(message, "수입offer 등록");
+						break;
+					}
+				}
+				if(b2 == true) {
+					new ErrorMessageDialog("저장되었습니다.", "수입offer 등록");
+				}
+			}
+			break;
+		case "조회" :
+			if(tf.getText() == null) {
+				new ErrorMessageDialog("offer번호를 입력하세요.", "수입offer 등록");
+			}else {
+				
+			}
 
+			break;
+		case "+" :
+			String[] addRow = {String.valueOf(rowCount + 1), "", "", "", "", "", ""};
+			dtm.addRow(addRow);
+			break;
+		case "-" :
+			/*
+			 삭제 클릭시 실제 데이터도 삭제되도록 작성 필요
+			 */
+			if(rowCount == 0) {
+				new ErrorMessageDialog("삭제할 행이 없습니다.", "수입offer 등록");
+			}else {
+				DeleteConfirmDialog d = new DeleteConfirmDialog("삭제하시겠습니까?", "수입offer 등록");
+				boolean b = d.response();
+				if(b == true) {
+					dtm.removeRow(dtm.getRowCount() - 1);
+				}
+			}
+			break;
+		case "…" :
+			break;
+		}
+	}
 }

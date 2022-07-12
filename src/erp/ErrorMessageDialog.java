@@ -27,7 +27,7 @@ public class ErrorMessageDialog implements ActionListener {
 		loginRsMsg.setBackground(Color.WHITE);
 		loginRsMsg.setBounds(25, 50, 250, 50);
 		
-		Button ok = new Button("OK");
+		Button ok = new Button("Ok");
 		ok.setBounds(115, 140, 70, 30);
 		ok.addActionListener(this);
 		

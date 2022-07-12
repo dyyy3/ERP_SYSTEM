@@ -18,6 +18,17 @@ public class Vo {
 
 	}
 	
+	// Tab_1101
+	public Vo(String tableName) {
+		this.tableName = tableName;
+	}
+
+	// Tab_1201
+	public Vo(String tableName, String field_1) {
+		this.tableName = tableName;
+		this.field_1 = field_1;
+	}
+
 	// login
 	public Vo(String tableName, String id, String password) {
 		this.tableName = tableName;
@@ -25,18 +36,33 @@ public class Vo {
 		this.password = password;
 	}
 	
-	// Tab_1101
-	public Vo(String tableName) {
-		this.tableName = tableName;
+	// Tab_1201
+	public Vo(String field_1, String field_2, String field_3,
+			String field_4, String field_5)
+	{
+		this.field_1 = field_1;
+		this.field_2 = field_2;
+		this.field_3 = field_3;
+		this.field_4 = field_4;
+		this.field_5 = field_5;
 	}
 	
 	// Tab_1201
-	public Vo(String tableName, String field_1) {
-		this.tableName = tableName;
+	public Vo(String field_1, String field_2, String field_3,
+			String field_4, String field_5, String field_6,
+			String field_7, String field_8)
+	{
 		this.field_1 = field_1;
+		this.field_2 = field_2;
+		this.field_3 = field_3;
+		this.field_4 = field_4;
+		this.field_5 = field_5;
+		this.field_6 = field_6;
+		this.field_7 = field_7;
+		this.field_8 = field_8;
 	}
 	
-	// Tab_1101
+	// Tab_1201
 	public Vo(String field_1, String field_2, String field_3,
 			String field_4, String field_5, String field_6,
 			String field_7, String field_8, String field_9)
@@ -51,6 +77,7 @@ public class Vo {
 		this.field_8 = field_8;
 		this.field_9 = field_9;
 	}
+	
 	
 	public String getTableName() {
 		return tableName;

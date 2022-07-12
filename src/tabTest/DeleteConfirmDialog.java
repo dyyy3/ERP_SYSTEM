@@ -3,12 +3,13 @@ package tabTest;
 import java.awt.*;
 import java.awt.event.*;
 
-public class ErrorMessageDialog implements ActionListener {
+public class DeleteConfirmDialog implements ActionListener {
 	private String message;
 	private String title;
 	private Dialog result;
+	private boolean b = true;
 	
-	public ErrorMessageDialog(String massage, String title) {
+	public DeleteConfirmDialog(String massage, String title) {
 		this.message = massage;
 		this.title = title;
 		
@@ -28,17 +29,31 @@ public class ErrorMessageDialog implements ActionListener {
 		loginRsMsg.setBounds(25, 50, 250, 50);
 		
 		Button ok = new Button("Ok");
-		ok.setBounds(115, 140, 70, 30);
+		ok.setBounds(75, 140, 70, 30);
 		ok.addActionListener(this);
+		
+		Button cancel = new Button("Cancel");
+		cancel.setBounds(155, 140, 70, 30);
+		cancel.addActionListener(this);
 		
 		result.add(loginRsMsg);
 		result.add(ok);
+		result.add(cancel);
 		
 		result.setVisible(true);
-		
+	}
+	
+	public boolean response() {
+		return b;
 	}
 
 	public void actionPerformed(ActionEvent e) {
+		String r = e.getActionCommand();
+		if(r.equals("Ok")) {
+			b = true;
+		}else if(r.equals("Cancel")) {
+			b = false;
+		}
 		result.dispose();
 	}
 }

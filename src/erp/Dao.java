@@ -151,6 +151,7 @@ public class Dao {
 		return code;
 	}
 	
+	// Tab_1101
 	public boolean insertProductList(Vo vo) {
 		boolean b2 = true;
 		checkConException();
@@ -168,5 +169,38 @@ public class Dao {
 			b2 = false;
 		}
 		return b2;
+	}
+	
+	// Tab_1201
+	public boolean insertOffer(Vo vo) {
+		boolean b = true;
+		checkConException();
+		try {
+			String insert = "INSERT INTO OFFER (OFFER_NUM, CLIENT_NAME, OFFER_DATE, INCOTERMS, CURRENCY)"
+					+ " VALUES('" + vo.getField_1() + "', '" + vo.getField_2() + "', '" + vo.getField_3() + "',"
+					+ " '" + vo.getField_4() + "', '" + vo.getField_5() + "')";
+			stmt.executeQuery(insert);
+		}catch(Exception e) {
+			e.printStackTrace();
+			b = false;
+		}
+		return b;
+	}
+	
+	// Tab_1201
+	public boolean insertOfferList(Vo vo) {
+		boolean b = true;
+		checkConException();
+		try {
+			String insert = "INSERT INTO OFFER_LIST (OFFER_NUM, NUM, PRODUCT_CODE, PRODUCT_NAME, UNIT, QUANTITY, UNIT_PRICE, AMOUNT)"
+					+ " VALUES('" + vo.getField_1() + "', '" + vo.getField_2() + "', '" + vo.getField_3() + "',"
+					+ " '" + vo.getField_4() + "', '" + vo.getField_5() + "', '" + vo.getField_6() + "',"
+					+ " '" + vo.getField_7() + "', '" + vo.getField_8() + "')";
+			stmt.executeQuery(insert);
+		}catch(Exception e) {
+			e.printStackTrace();
+			b = false;
+		}
+		return b;
 	}
 }
