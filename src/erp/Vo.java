@@ -30,6 +30,12 @@ public class Vo {
 		this.tableName = tableName;
 	}
 	
+	// Tab_1201
+	public Vo(String tableName, String field_1) {
+		this.tableName = tableName;
+		this.field_1 = field_1;
+	}
+	
 	// Tab_1101
 	public Vo(String field_1, String field_2, String field_3,
 			String field_4, String field_5, String field_6,

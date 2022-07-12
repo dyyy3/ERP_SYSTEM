@@ -1,16 +1,18 @@
-package tabTest;
+package erp;
 
 import java.awt.*;
 import java.awt.event.*;
 
-public class Tab_1101_Dialog implements ActionListener {
+public class ErrorMessageDialog implements ActionListener {
 	private String message;
+	private String title;
 	private Dialog result;
 	
-	public Tab_1101_Dialog(String massage) {
+	public ErrorMessageDialog(String massage, String title) {
 		this.message = massage;
+		this.title = title;
 		
-		result = new Dialog(result, "품목코드 등록", true);
+		result = new Dialog(result, title, true);
 		result.setBackground(Color.WHITE);
 		result.setSize(300, 200);
 		result.setResizable(false); // frame 크기 변경 불가능
@@ -35,7 +37,8 @@ public class Tab_1101_Dialog implements ActionListener {
 		result.setVisible(true);
 		
 	}
-		public void actionPerformed(ActionEvent e) {
-			result.dispose();
-		}
+
+	public void actionPerformed(ActionEvent e) {
+		result.dispose();
+	}
 }

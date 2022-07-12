@@ -8,14 +8,16 @@ import net.sourceforge.jdatepicker.impl.*;
 import java.text.*;
 import java.util.*;
 
-public class Tab_1201 implements ActionListener {
+public class Tab_1201 implements ActionListener, ItemListener {
 //	폴더 그림 : 40, 40
 //	Label 사이즈 : 150, 30
 //	TextField 사이즈 : 200, 30
 //	가로 여백 30, 세로 여백 10
 	
 	JPanel p;
+	TextField tf;
 	UtilDateModel model;
+	Choice[] ch;
 	Button b;
 	
 	public Tab_1201() {
@@ -49,12 +51,12 @@ public class Tab_1201 implements ActionListener {
 		
 		label[0].setBounds(10, 50, 150, 30);
 		label[1].setBounds(10, 90, 150, 30);
-		label[2].setBounds(380, 50, 150, 30);
-		label[3].setBounds(380, 90, 150, 30);
-		label[4].setBounds(10, 130, 150, 30);
+		label[2].setBounds(10, 130, 150, 30);
+		label[3].setBounds(380, 50, 150, 30);
+		label[4].setBounds(380, 90, 150, 30);
 		
 		// TextField 추가
-		TextField tf = new TextField();
+		tf = new TextField();
 		tf.setBounds(170, 50, 200, 30);
 		p.add(tf);
 		
@@ -78,29 +80,36 @@ public class Tab_1201 implements ActionListener {
 		p.add(datePicker);
 		
 		// Choice 추가
-		Choice[] ch = new Choice[3];
+		ch = new Choice[3];
 		
 		for(int i=0; i<ch.length; i++) {
 			ch[i] = new Choice();
 			p.add(ch[i]);
-//			ch[i].addItemListener((ItemListener)this); // 에러
+			ch[i].addItemListener((ItemListener)this);
 		}
 		
+		// ch[0] : 거래처
 		Dao dao = new Dao();
 		
-		/*
-		각 choice마다 값을 불러오는 코드 작성 필요
-		*/
+		Vo clientVo = new Vo("client", "client_name");
+		String[] clientList = dao.selectOneField(clientVo);
+		for(int i=0; i<clientList.length; i++ ) {
+			ch[0].add(clientList[i]);
+		}
 		
-//		Dao dao = new Dao();
-//		
-//		for(int i=0; i<tableName.length; i++) {
-//			Vo vo = new Vo(tableName[i]);
-//			String[] result = dao.select(vo);
-//			for(int j=0; j<result.length; j++) {
-//				ch[i].add(result[j]);
-//			}
-//		}
+		// ch[1] : 가격조건
+		String[] incoterms = {"CFR", "CIF", "CIP", "CPT", "DAP", "DPU", "DDP", "EXW", "FAS", "FCA", "FOB"};
+		
+		for(int i=0; i<11; i++) {
+			ch[1].add(incoterms[i]);
+		}
+		
+		// ch[2] : 통화
+		Vo currencyVo = new Vo("country", "ISO_4217");
+		String[] currencyList = dao.selectOneFieldDistinct(currencyVo);
+		for(int i=0; i<currencyList.length; i++) {
+			ch[2].add(currencyList[i]);
+		}
 		
 		ch[0].setBounds(540, 50, 200, 30);
 		ch[1].setBounds(540, 90, 200, 30);
@@ -130,8 +139,26 @@ public class Tab_1201 implements ActionListener {
 	}
 	
 	@Override
+	public void itemStateChanged(ItemEvent e) {
+		for(int i=0; i<ch.length; i++) {
+			System.out.println(ch[i].getSelectedItem());
+		}
+		System.out.println();
+	}
+	
+	@Override
 	public void actionPerformed(ActionEvent e) {
+		String offerNum = tf.getText();
+		if(offerNum.equals("")) {
+			System.out.println("offer번호를 입력하세요.");
+			new ErrorMessageDialog("offer번호를 입력하세요.", "수입offer 등록");
+		}else {
+			System.out.println(offerNum);
+		}
+		
 		String selectedDate = model.getYear() + "-" + (model.getMonth() + 1) + "-" + model.getDay();
 //		System.out.println(selectedDate);
+		
 	}
+
 }

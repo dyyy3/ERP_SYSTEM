@@ -67,7 +67,7 @@ public class Dao {
 	}
 	
 	// Tab_1101
-	public String[] select(Vo vo) {
+	public String[] selectAll(Vo vo) {
 		List<String> list = new ArrayList<>(); // 쿼리문으로 얻은 값을 저장. 행의 길이를 모르므로 list로 받는다
 		String[] result = null; // list로 받은 값을 String 배열로 바꿔서 return
 
@@ -82,6 +82,50 @@ public class Dao {
 			}
 			result = list.toArray(new String[list.size()]); // list의 size와 동일한 길이의 String 배열을 만든다
 		
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
+	
+	// Tab_1201
+	public String[] selectOneField(Vo vo) {
+		List<String> list = new ArrayList<>(); // 쿼리문으로 얻은 값을 저장. 행의 길이를 모르므로 list로 받는다
+		String[] result = null; // list로 받은 값을 String 배열로 바꿔서 return
+		
+		checkConException();
+		try {
+			String select = "SELECT " + vo.getField_1() + " FROM " + vo.getTableName();
+			// SELECT client_name FROM CLIENT
+			rs = stmt.executeQuery(select);
+			
+			while(rs.next()) {
+				list.add(rs.getString(1));
+			}
+			result = list.toArray(new String[list.size()]); // list의 size와 동일한 길이의 String 배열을 만든다
+			
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
+	
+	// Tab_1201
+	public String[] selectOneFieldDistinct(Vo vo) {
+		List<String> list = new ArrayList<>(); // 쿼리문으로 얻은 값을 저장. 행의 길이를 모르므로 list로 받는다
+		String[] result = null; // list로 받은 값을 String 배열로 바꿔서 return
+		
+		checkConException();
+		try {
+			String select = "SELECT DISTINCT " + vo.getField_1() + " FROM " + vo.getTableName();
+			// SELECT DISTINCT iso_4217 FROM COUNTRY
+			rs = stmt.executeQuery(select);
+			
+			while(rs.next()) {
+				list.add(rs.getString(1));
+			}
+			result = list.toArray(new String[list.size()]); // list의 size와 동일한 길이의 String 배열을 만든다
+			
 		}catch(Exception e) {
 			e.printStackTrace();
 		}

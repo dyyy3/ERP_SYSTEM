@@ -98,15 +98,14 @@ public class Tab_1101 implements ActionListener, ItemListener {
 		for(int i=0; i<ch.length; i++) {
 			ch[i] = new Choice();
 			p.add(ch[i]);
-			
-			ch[i].addItemListener((ItemListener) this);
+			ch[i].addItemListener((ItemListener)this);
 		}
 
 		Dao dao = new Dao();
 		
 		for(int i=0; i<tableName.length; i++) {
 			Vo vo = new Vo(tableName[i]);
-			String[] result = dao.select(vo);
+			String[] result = dao.selectAll(vo);
 			for(int j=0; j<result.length; j++) {
 				ch[i].add(result[j]);
 			}
@@ -222,7 +221,7 @@ public class Tab_1101 implements ActionListener, ItemListener {
 		boolean b = checkProductNameArrayisEmpty();
 		
 		if(b == false) {
-			new Tab_1101_Dialog("모든 항목을 선택해주세요.");
+			new ErrorMessageDialog("모든 항목을 선택해주세요.", "품목코드 등록");
 		}else {
 			for(int j=0; j<pn.length; j++) {
 				if(j==pn.length-1) {
@@ -240,9 +239,9 @@ public class Tab_1101 implements ActionListener, ItemListener {
 			Dao dao = new Dao();
 			b2 = dao.insertProductList(vo);
 			if(b2 == true) {
-				new Tab_1101_Dialog("품목코드가 등록되었습니다.");
+				new ErrorMessageDialog("품목코드가 등록되었습니다.", "품목코드 등록");
 			}else{
-				new Tab_1101_Dialog("이미 등록된 코드입니다.");
+				new ErrorMessageDialog("이미 등록된 코드입니다.", "품목코드 등록");
 			}
 			
 		}
