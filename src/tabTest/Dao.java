@@ -75,7 +75,8 @@ public class Dao {
 		
 		checkConException();
 		try {
-			String select = "SELECT * FROM " + vo.getTableName() + " WHERE " + vo.getField_1() + " = '" + vo.getField_2() + "'";
+			String select = "SELECT * FROM " + vo.getTableName() + " WHERE " + vo.getField_1() + " = '" + vo.getField_2() + "'"
+					+ " ORDER BY " + vo.getField_3();
 			rs = stmt.executeQuery(select);
 			
 			while(rs.next()) {
@@ -87,45 +88,16 @@ public class Dao {
 				list.add(rs.getString(6));
 				list.add(rs.getString(7));
 				list.add(rs.getString(8));
-				
-//				System.out.print(rs.getString(1) + " " + rs.getString(2) + " " 
-//								+ rs.getString(3) + " " + rs.getString(4) + " " 
-//								+ rs.getString(5) + " " + rs.getString(6) + " " 
-//								+ rs.getString(7) + " " + rs.getString(8));
-//				System.out.println();
 			}
-			
-			// list 출력
-//			for(int i=0; i<list.size(); i++) { // 0~7, 8~15, 16~23
-//				if(i != 0 && i % 8 == 0) {
-//					System.out.println();
-//					System.out.print(list.get(i) + " ");
-//				}else {
-//					System.out.print(list.get(i) + " ");
-//				}
-//			}
-			
 			// list를 String[][] result로
 			result = new String[list.size() / 8][8]; // [3][8]. 3행 8열. 행 : 0~2, 열 : 0~7
-			
 			int a = 0; // 0~23
-			
 			for(int i=0; i<list.size()/8; i++) {
 				for(int j=0; j<8; j++) {
 					result[i][j] = list.get(a);
 					a++;
 				}
 			}
-			
-			// String[][] result 출력
-			
-//			for(int i=0; i<result.length; i++) {
-//				for(int g=0; g<result[i].length; g++) {
-//					System.out.print(result[i][g] + " ");
-//				}
-//				System.out.println();
-//			}
-			
 		}catch(Exception e) {
 			e.printStackTrace();
 		}
@@ -203,17 +175,17 @@ public class Dao {
 		return result;
 	}
 	
-	// Tab_1101
-	public String getCode(String table, String field, String record) {
+	// Tab_1101, Tab_1201
+	public String selectOneFieldWhere(Vo vo) {
 		String code ="";
 		checkConException();
 		try {
-			String select = "SELECT " + field + " FROM " + table + " WHERE " + table + " = '" + record + "'";
+			String select = "SELECT " + vo.getField_1() + " FROM " + vo.getTableName() + " WHERE " + vo.getField_2() + " = '" + vo.getField_3() + "'";
 			// SELECT STONE_NAME_CODE FROM STONE_NAME WHERE STONE_NAME = ''
 			rs = stmt.executeQuery(select);
 			
 			while(rs.next()){
-				code = rs.getString(field);
+				code = rs.getString(vo.getField_1());
 			}
 			
 		}catch(Exception e) {
@@ -268,6 +240,21 @@ public class Dao {
 					+ " '" + vo.getField_4() + "', '" + vo.getField_5() + "', '" + vo.getField_6() + "',"
 					+ " '" + vo.getField_7() + "', '" + vo.getField_8() + "')";
 			stmt.executeQuery(insert);
+		}catch(Exception e) {
+			e.printStackTrace();
+			b = false;
+		}
+		return b;
+	}
+	
+	// Tab_1201
+	public boolean delete(Vo vo) {
+		boolean b = true;
+		checkConException();
+		try {
+			String delete = "DELETE FROM " + vo.getTableName() + " WHERE " + vo.getField_1() + " = '" + vo.getField_2() + "'";
+			// DELETE FROM OFFER_LIST WHERE num = ''
+			rs = stmt.executeQuery(delete);
 		}catch(Exception e) {
 			e.printStackTrace();
 			b = false;

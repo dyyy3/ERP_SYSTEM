@@ -27,11 +27,19 @@ public class Vo {
 		this.field_1 = field_1;
 	}
 	
-	// login, Tab_1201
+	// login
 	public Vo(String tableName, String field_1, String field_2) {
 		this.tableName = tableName;
 		this.field_1 = field_1;
 		this.field_2 = field_2;
+	}
+	
+	// Tab_1101, Tab_1201
+	public Vo(String tableName, String field_1, String field_2, String field_3) {
+		this.tableName = tableName;
+		this.field_1 = field_1;
+		this.field_2 = field_2;
+		this.field_3 = field_3;
 	}
 	
 	// Tab_1201

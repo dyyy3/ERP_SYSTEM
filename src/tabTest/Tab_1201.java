@@ -160,10 +160,10 @@ public class Tab_1201 implements ActionListener, ItemListener {
 	
 	@Override
 	public void itemStateChanged(ItemEvent e) {
-		for(int i=0; i<ch.length; i++) {
-			System.out.println(ch[i].getSelectedItem());
-		}
-		System.out.println();
+//		for(int i=0; i<ch.length; i++) {
+//			System.out.println(ch[i].getSelectedItem());
+//		}
+//		System.out.println();
 	}
 	
 	@Override
@@ -197,13 +197,23 @@ public class Tab_1201 implements ActionListener, ItemListener {
 					ch[2].select(result[4]);
 					
 					// offer_list테이블 데이터 출력
-					Vo searchOfferList = new Vo("offer_list", "offer_num", "1");
+					Vo searchOfferList = new Vo("offer_list", "offer_num", "1", "num");
 					String[][] result2 = dao.selectAllOfferListWhere(searchOfferList);
 					
+					int deleteRowCount = rowCount; // 데이터 출력전에 현재 추가되어있는 모든 행을 삭제한다
+					if(deleteRowCount == 0) {
+						
+					}else {
+						while(deleteRowCount != 0){
+							dtm.removeRow(deleteRowCount - 1);
+							deleteRowCount--;
+						}
+					}
+					
 					for(int i=0; i<result2.length; i++) {
-						String[] addRow = new String[8];
-						for(int j=0; j<result2[i].length; j++) {
-							addRow[j] = result2[i][j];
+						String[] addRow = new String[7];
+						for(int j=0; j<result2[i].length - 1; j++) { 
+							addRow[j] = result2[i][j+1]; // 0번에는 offer_num 값이 있으므로 넣지않음 
 						}
 						dtm.addRow(addRow);
 					}
@@ -215,17 +225,36 @@ public class Tab_1201 implements ActionListener, ItemListener {
 			break;
 		
 		case "저장" :
-			if(rowCount == 0) { // table에 행이 하나도 없을때 -> offer정보 저장
-				if(tfText.equals("")) {
-					new ErrorMessageDialog("offer번호를 입력하세요.", "수입offer 등록");
-				}else {
-//				offer table에 데이터 저장
-					String offer_num = tfText;
-					String client_name = ch[0].getSelectedItem();
-					String offer_date = model.getYear() + "-" + (model.getMonth() + 1) + "-" + model.getDay();
-					String incoterms = ch[1].getSelectedItem();
-					String currency = ch[2].getSelectedItem();
-					
+			// 7/13 작성 코드
+			String offer_num = tfText;
+			String client_name = ch[0].getSelectedItem(); // 거래처
+			String offer_date = model.getYear() + "-" + (model.getMonth() + 1) + "-" + model.getDay();
+			String incoterms = ch[1].getSelectedItem(); // 가격조건
+			String currency = ch[2].getSelectedItem(); // 통화
+			
+			// offer 번호, 거래처, 일자, 가격조건, 통화 빈칸 유무 체크
+			boolean checkNull = true;
+
+			if(offer_num.equals("")) { // 일자는 오늘 날짜로 default값이 정해져 있어 빈칸인 경우가 없으므로 조건에 미포함
+				new ErrorMessageDialog("offer번호를 입력하세요.", "수입 offer 등록");
+				checkNull = false;
+			}else if(client_name.equals("")) {
+				new ErrorMessageDialog("거래처를 입력하세요.", "수입 offer 등록");
+				checkNull = false;
+			}else if(incoterms.equals("")) {
+				new ErrorMessageDialog("가격조건을 입력하세요.", "수입 offer 등록");
+				checkNull = false;
+			}else if(currency.equals("")) {
+				new ErrorMessageDialog("통화를 입력하세요.", "수입 offer 등록");
+				checkNull = false;
+			}
+			
+			// 빈칸 없을때 -> 미등록이면 insert, 기등록이면 alter
+			if(checkNull == true) {
+				Vo checkOfferNum = new Vo("offer", "offer_num", "offer_num", tfText);
+				String selectedOfferNum = dao.selectOneFieldWhere(checkOfferNum);
+				if(selectedOfferNum.equals("")) {
+					// 미등록 -> insert
 					boolean b = true;
 					Vo vo = new Vo(offer_num, client_name, offer_date, incoterms, currency);
 					b = dao.insertOffer(vo);
@@ -234,37 +263,64 @@ public class Tab_1201 implements ActionListener, ItemListener {
 					}else{
 						new ErrorMessageDialog("이미 등록된 offer번호입니다.", "수입offer 등록");
 					}
-				}
-			}else { // table에 행이 하나라도 있을때 -> offer상세정보 저장
-			/*
-			 첫번째 등록이 아닌 추가 등록 또는 수정일때 데이터가 수정되도록 코드 작성 필요
-			 -> offer번호 값을 읽어서 이미 등록되어있을때 : num 마지막 번호를 체크
-			 -> 등록되어있지않을때 -> 성공
-			 
-			 insert 실패할 경우
-			 1) 품목코드 미등록(부모키가 없습니다)
-			 2) offer_num 미등록(부모키가 없습니다)
-			 3) int 타입 데이터에 varchar2 타입 데이터를 넣는 등의 타입불일치(수치가 부적합합니다)
-			 위 경우에 대한 에러코드를 반환받아서 상황에 적절한 에러메시지를 출력하도록 수정 필요
-			 */
-				boolean b2 = true;
-				String[] grv = new String[7];
-				for(int i=0; i<dtm.getRowCount(); i++) { // 행 index : 0 ~ rowCount - 1까지
-					for(int j=0; j<grv.length; j++) {
-						grv[j] = String.valueOf(dtm.getValueAt(i, j));
-					}
-					Vo offerListVo = new Vo(tfText, grv[0], grv[1], grv[2], grv[3], grv[4], grv[5], grv[6]); // 열 길이 8. 첫번째는 OFFER_NUM, 나머지는 TABLE 값 읽어오기
-					b2 = dao.insertOfferList(offerListVo);
-					if(b2 == false) {
-						String message = "" + i + "행의 번호 또는 입력 형식이 잘못되었습니다.";
-						new ErrorMessageDialog(message, "수입offer 등록");
-						break;
-					}
-				}
-				if(b2 == true) {
-					new ErrorMessageDialog("저장되었습니다.", "수입offer 등록");
+				}else {
+					System.out.println("기등록");
+					// 기등록 -> alter
 				}
 			}
+			
+			
+			// 7/12 작성 코드
+//			if(rowCount == 0) { // table에 행이 하나도 없을때 -> offer정보 저장
+//				if(tfText.equals("")) {
+//					new ErrorMessageDialog("offer번호를 입력하세요.", "수입offer 등록");
+//				}else {
+////				offer table에 데이터 저장
+//					String offer_num = tfText;
+//					String client_name = ch[0].getSelectedItem();
+//					String offer_date = model.getYear() + "-" + (model.getMonth() + 1) + "-" + model.getDay();
+//					String incoterms = ch[1].getSelectedItem();
+//					String currency = ch[2].getSelectedItem();
+//					
+//					boolean b = true;
+//					Vo vo = new Vo(offer_num, client_name, offer_date, incoterms, currency);
+//					b = dao.insertOffer(vo);
+//					if(b == true) {
+//						new ErrorMessageDialog("수입offer가 등록되었습니다.", "수입offer 등록");
+//					}else{
+//						new ErrorMessageDialog("이미 등록된 offer번호입니다.", "수입offer 등록");
+//					}
+//				}
+//			}else { // table에 행이 하나라도 있을때 -> offer상세정보 저장
+//			/*
+//			 첫번째 등록이 아닌 추가 등록 또는 수정일때 데이터가 수정되도록 코드 작성 필요
+//			 -> offer번호 값을 읽어서 이미 등록되어있을때 : num 마지막 번호를 체크
+//			 -> 등록되어있지않을때 -> 성공
+//			 
+//			 insert 실패할 경우
+//			 1) 품목코드 미등록(부모키가 없습니다)
+//			 2) offer_num 미등록(부모키가 없습니다)
+//			 3) int 타입 데이터에 varchar2 타입 데이터를 넣는 등의 타입불일치(수치가 부적합합니다)
+//			 위 경우에 대한 에러코드를 반환받아서 상황에 적절한 에러메시지를 출력하도록 수정 필요
+//			 */
+//				boolean b2 = true;
+//				String[] grv = new String[7];
+//				for(int i=0; i<dtm.getRowCount(); i++) { // 행 index : 0 ~ rowCount - 1까지
+//					for(int j=0; j<grv.length; j++) {
+//						grv[j] = String.valueOf(dtm.getValueAt(i, j));
+//					}
+//					Vo offerListVo = new Vo(tfText, grv[0], grv[1], grv[2], grv[3], grv[4], grv[5], grv[6]); // 열 길이 8. 첫번째는 OFFER_NUM, 나머지는 TABLE 값 읽어오기
+//					b2 = dao.insertOfferList(offerListVo);
+//					if(b2 == false) {
+//						String message = "" + i + "행의 번호 또는 입력 형식이 잘못되었습니다.";
+//						new ErrorMessageDialog(message, "수입offer 등록");
+//						break;
+//					}
+//				}
+//				if(b2 == true) {
+//					new ErrorMessageDialog("저장되었습니다.", "수입offer 등록");
+//				}
+//			}
 			break;
 
 		case "+" :
@@ -282,7 +338,14 @@ public class Tab_1201 implements ActionListener, ItemListener {
 				DeleteConfirmDialog d = new DeleteConfirmDialog("삭제하시겠습니까?", "수입offer 등록");
 				boolean b = d.response();
 				if(b == true) {
+					String deleteRow = String.valueOf(dtm.getValueAt(rowCount - 1, 0)); // 삭제할 행의 순번(num)을 읽어온다
 					dtm.removeRow(dtm.getRowCount() - 1);
+					boolean b3 = true;
+					Vo deleteVo = new Vo("offer_list", "num", deleteRow);
+					b3 = dao.delete(deleteVo);
+					if(b3 == true) {
+						new ErrorMessageDialog("삭제되었습니다.", "수입offer 등록");
+					}
 				}
 			}
 			break;

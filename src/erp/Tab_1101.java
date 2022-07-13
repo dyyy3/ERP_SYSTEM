@@ -161,8 +161,9 @@ public class Tab_1101 implements ActionListener, ItemListener {
 		
 		String record = String.valueOf(e.getItem());
 		String code;
+		Vo vo = new Vo(tableName[i], fieldName[i], tableName[i], record);
 		Dao dao = new Dao();
-		code = dao.getCode(tableName[i], fieldName[i], record);
+		code = dao.selectOneFieldWhere(vo);
 		
 		switch(i) {
 		case 0 : 
