@@ -104,8 +104,10 @@ public class Tab_1101 implements ActionListener, ItemListener {
 		Dao dao = new Dao();
 		
 		for(int i=0; i<tableName.length; i++) {
-			Vo vo = new Vo(tableName[i]);
-			String[] result = dao.selectAll(vo);
+			Vo vo = new Vo(tableName[i], tableName[i]);
+			String[] result = dao.selectOneField(vo);
+//			Vo vo = new Vo(tableName[i]);
+//			String[] result = dao.selectAll(vo);
 			for(int j=0; j<result.length; j++) {
 				ch[i].add(result[j]);
 			}

@@ -104,8 +104,10 @@ public class Tab_1101 implements ActionListener, ItemListener {
 		Dao dao = new Dao();
 		
 		for(int i=0; i<tableName.length; i++) {
-			Vo vo = new Vo(tableName[i]);
-			String[] result = dao.selectAll(vo);
+			Vo vo = new Vo(tableName[i], tableName[i]);
+			String[] result = dao.selectOneField(vo);
+//			Vo vo = new Vo(tableName[i]);
+//			String[] result = dao.selectAll(vo);
 			for(int j=0; j<result.length; j++) {
 				ch[i].add(result[j]);
 			}
@@ -243,7 +245,6 @@ public class Tab_1101 implements ActionListener, ItemListener {
 			}else{
 				new ErrorMessageDialog("이미 등록된 코드입니다.", "품목코드 등록");
 			}
-			
 		}
 		productName.delete(0, productName.capacity() + 1);
 	}

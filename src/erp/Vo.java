@@ -2,8 +2,6 @@ package erp;
 
 public class Vo {
 	private String tableName;
-	private String id;
-	private String password;
 	private String field_1;
 	private String field_2;
 	private String field_3;
@@ -23,17 +21,17 @@ public class Vo {
 		this.tableName = tableName;
 	}
 
-	// Tab_1201
+	// Tab_1101, Tab_1201
 	public Vo(String tableName, String field_1) {
 		this.tableName = tableName;
 		this.field_1 = field_1;
 	}
-
-	// login
-	public Vo(String tableName, String id, String password) {
+	
+	// login, Tab_1201
+	public Vo(String tableName, String field_1, String field_2) {
 		this.tableName = tableName;
-		this.id = id;
-		this.password = password;
+		this.field_1 = field_1;
+		this.field_2 = field_2;
 	}
 	
 	// Tab_1201
@@ -83,14 +81,6 @@ public class Vo {
 		return tableName;
 	}
 
-	public String getId() {
-		return id;
-	}
-
-	public String getPassword() {
-		return password;
-	}
-	
 	public String getField_1() {
 		return field_1;
 	}

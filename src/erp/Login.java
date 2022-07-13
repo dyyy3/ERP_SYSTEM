@@ -94,7 +94,7 @@ public class Login extends WindowAdapter implements ActionListener {
 				new LoginDialog(loginFrame, "로그인 성공");
 				loginFrame.dispose(); // 로그인 성공 후 로그인 프레임을 닫는다
 				Main main = new Main();
-				main.createMainScreen(loginVo.getId()); // 로그인에 성공한 ID를 넘겨준다
+				main.createMainScreen(loginVo.getField_1()); // 로그인에 성공한 ID를 넘겨준다
 				// 로그인 성공시 메인 프레임 setvisible true
 			} else if(String.valueOf(b).equals("false")) {
 				new LoginDialog(loginFrame, "아이디 또는 비밀번호가 일치하지않습니다.");

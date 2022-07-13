@@ -20,8 +20,8 @@ public class Tab_1201 implements ActionListener, ItemListener {
 	UtilDateModel model;
 	DefaultTableModel dtm;
 	Choice[] ch;
-	Button saveButton;
 	Button searchButton;
+	Button saveButton;
 	Button addButton;
 	Button deleteButton;
 	Dao dao;
@@ -122,16 +122,16 @@ public class Tab_1201 implements ActionListener, ItemListener {
 		}
 		
 		// Button
+		searchButton = new Button("조회");
+		searchButton.setBounds(750, 50, 50, 30);
+		searchButton.addActionListener(this);
+		p.add(searchButton);
+
 		saveButton = new Button("저장");
-		saveButton.setBounds(750, 50, 50, 30);
+		saveButton.setBounds(750, 90, 50, 30);
 		saveButton.addActionListener(this);
 		p.add(saveButton);
 
-		searchButton = new Button("조회");
-		searchButton.setBounds(750, 90, 50, 30);
-		searchButton.addActionListener(this);
-		p.add(searchButton);
-		
 		addButton = new Button("+");
 		addButton.setBounds(1000, 130, 50, 30);
 		addButton.addActionListener(this);
@@ -169,16 +169,58 @@ public class Tab_1201 implements ActionListener, ItemListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		int rowCount = dtm.getRowCount(); // 행 갯수를 구하는 메서드
-//		String[][] insertOfferList;
+		String tfText = tf.getText();
 		
 		switch(e.getActionCommand()) {
+		
+		case "조회" :
+			if(tfText == null) {
+				new ErrorMessageDialog("offer번호를 입력하세요.", "수입offer 등록");
+			}else {
+				Vo searchOffer = new Vo("offer", "offer_num", tfText);
+				String[] result = dao.selectAllOfferWhere(searchOffer);
+				if(result.length == 0) {
+					new ErrorMessageDialog("등록되지않은 offer번호입니다.", "수입offer 등록");
+				}else {
+					// offer테이블 데이터 출력
+					System.out.println(Arrays.toString(result));
+					tf.setText(result[0]);
+					ch[0].select(result[1]);
+					
+					String[] date = result[2].split("-");
+					int dateY = Integer.parseInt(date[0]);
+					int dateM = Integer.parseInt(date[1]) - 1;
+					int dateD = Integer.parseInt(date[2]);
+					model.setDate(dateY, dateM, dateD);
+					
+					ch[1].select(result[3]);
+					ch[2].select(result[4]);
+					
+					// offer_list테이블 데이터 출력
+					Vo searchOfferList = new Vo("offer_list", "offer_num", "1");
+					String[][] result2 = dao.selectAllOfferListWhere(searchOfferList);
+					
+					for(int i=0; i<result2.length; i++) {
+						String[] addRow = new String[8];
+						for(int j=0; j<result2[i].length; j++) {
+							addRow[j] = result2[i][j];
+						}
+						dtm.addRow(addRow);
+					}
+					
+				}
+				// offer, offer_list 테이블 select
+			}
+			
+			break;
+		
 		case "저장" :
 			if(rowCount == 0) { // table에 행이 하나도 없을때 -> offer정보 저장
-				if(tf.getText().equals("")) {
+				if(tfText.equals("")) {
 					new ErrorMessageDialog("offer번호를 입력하세요.", "수입offer 등록");
 				}else {
 //				offer table에 데이터 저장
-					String offer_num = tf.getText();
+					String offer_num = tfText;
 					String client_name = ch[0].getSelectedItem();
 					String offer_date = model.getYear() + "-" + (model.getMonth() + 1) + "-" + model.getDay();
 					String incoterms = ch[1].getSelectedItem();
@@ -211,7 +253,7 @@ public class Tab_1201 implements ActionListener, ItemListener {
 					for(int j=0; j<grv.length; j++) {
 						grv[j] = String.valueOf(dtm.getValueAt(i, j));
 					}
-					Vo offerListVo = new Vo(tf.getText(), grv[0], grv[1], grv[2], grv[3], grv[4], grv[5], grv[6]); // 열 길이 8. 첫번째는 OFFER_NUM, 나머지는 TABLE 값 읽어오기
+					Vo offerListVo = new Vo(tfText, grv[0], grv[1], grv[2], grv[3], grv[4], grv[5], grv[6]); // 열 길이 8. 첫번째는 OFFER_NUM, 나머지는 TABLE 값 읽어오기
 					b2 = dao.insertOfferList(offerListVo);
 					if(b2 == false) {
 						String message = "" + i + "행의 번호 또는 입력 형식이 잘못되었습니다.";
@@ -224,18 +266,12 @@ public class Tab_1201 implements ActionListener, ItemListener {
 				}
 			}
 			break;
-		case "조회" :
-			if(tf.getText() == null) {
-				new ErrorMessageDialog("offer번호를 입력하세요.", "수입offer 등록");
-			}else {
-				
-			}
 
-			break;
 		case "+" :
 			String[] addRow = {String.valueOf(rowCount + 1), "", "", "", "", "", ""};
 			dtm.addRow(addRow);
 			break;
+			
 		case "-" :
 			/*
 			 삭제 클릭시 실제 데이터도 삭제되도록 작성 필요
@@ -250,8 +286,10 @@ public class Tab_1201 implements ActionListener, ItemListener {
 				}
 			}
 			break;
+			
 		case "…" :
 			break;
+			
 		}
 	}
 }
