@@ -68,7 +68,7 @@ public class Dao {
 		return dept_id;
 	}
 	
-	// Tab_1201
+	// Tab_1201, Tab_1202
 	public String[][] selectAllOfferListWhere(Vo vo) {
 		ArrayList<String> list = new ArrayList<String>();
 		String[][] result = null; // list로 받은 값을 String 2차원 배열로 바꿔서 return
@@ -127,6 +127,31 @@ public class Dao {
 		return result;
 	}
 	
+	// Tab_1202
+		public String[] selectOneFieldWhereOrderBy(Vo vo) {
+			List<String> list = new ArrayList<>(); // 쿼리문으로 얻은 값을 저장. 행의 길이를 모르므로 list로 받는다
+			String[] result = null; // list로 받은 값을 String 배열로 바꿔서 return
+			
+			checkConException();
+			try {
+				// new Vo("offer_list", "num", "offer_num", tfText, "num");
+				String select = "SELECT " + vo.getField_2() + " FROM " + vo.getField_1()
+						+ " WHERE " + vo.getField_3() + " = '" + vo.getField_4() + "'"
+						+ " ORDER BY " + vo.getField_5();
+				// SELECT NUM FROM OFFER_LIST WHERE OFFER_NUM = '22-7-2' ORDER BY num
+				rs = stmt.executeQuery(select);
+				
+				while(rs.next()) {
+					list.add(rs.getString(vo.getField_2())); // num
+				}
+				result = list.toArray(new String[list.size()]); // list의 size와 동일한 길이의 String 배열을 만든다
+				
+			}catch(Exception e) {
+				e.printStackTrace();
+			}
+			return result;
+		}
+	
 	// Tab_1201
 	public String[] selectOneFieldDistinct(Vo vo) {
 		List<String> list = new ArrayList<>(); // 쿼리문으로 얻은 값을 저장. 행의 길이를 모르므로 list로 받는다
@@ -175,7 +200,8 @@ public class Dao {
 		return result;
 	}
 	
-	// Tab_1101, Tab_1201
+	
+	// Tab_1101, Tab_1201, Tab_1202
 	public String selectOneFieldWhere(Vo vo) {
 		String code ="";
 		checkConException();
@@ -309,8 +335,6 @@ public class Dao {
 			String delete = "DELETE FROM " + vo.getField_1() + " WHERE " + vo.getField_2() + " = '" + vo.getField_3() + "'"
 					+ " AND " + vo.getField_4() + " = '" + vo.getField_5() + "'";
 			// DELETE FROM OFFER_LIST WHERE offer_num = '' AND num = '';
-			
-			System.out.println(delete);
 			rs = stmt.executeQuery(delete);
 		}catch(Exception e) {
 			e.printStackTrace();
@@ -327,7 +351,6 @@ public class Dao {
 				String select = "SELECT COUNT(*) FROM " + vo.getTableName() + " WHERE " + vo.getField_1() + " = '" + vo.getField_2() + "'";
 				// SELECT COUNT(*) FROM OFFER_LIST WHERE OFFER_NUM = '22-7-1' 
 				rs = stmt.executeQuery(select);
-				
 				while(rs.next()){
 					count = rs.getInt(1);
 				}
