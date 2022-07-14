@@ -20,10 +20,7 @@ public class Tab_1201 implements ActionListener, ItemListener {
 	UtilDateModel model;
 	DefaultTableModel dtm;
 	Choice[] ch;
-	Button searchButton;
-	Button saveButton;
-	Button addButton;
-	Button deleteButton;
+	Button searchButton, saveButton, addButton, deleteButton;
 	Dao dao;
 	
 	public Tab_1201() {
@@ -151,19 +148,11 @@ public class Tab_1201 implements ActionListener, ItemListener {
 		JScrollPane sp = new JScrollPane(table);
 		sp.setBounds(10, 170, 1000, 500);
 		p.add(sp);
-		
-//		String[][] contents = {
-//				{"", "", "", "", "", "", ""}
-//		};
-		
 	}
 	
 	@Override
 	public void itemStateChanged(ItemEvent e) {
-//		for(int i=0; i<ch.length; i++) {
-//			System.out.println(ch[i].getSelectedItem());
-//		}
-//		System.out.println();
+		
 	}
 	
 	@Override
@@ -183,7 +172,6 @@ public class Tab_1201 implements ActionListener, ItemListener {
 					new ErrorMessageDialog("등록되지않은 offer번호입니다.", "수입offer 등록");
 				}else {
 					// offer테이블 데이터 출력
-					System.out.println(Arrays.toString(result));
 					tf.setText(result[0]);
 					ch[0].select(result[1]);
 					
@@ -197,7 +185,7 @@ public class Tab_1201 implements ActionListener, ItemListener {
 					ch[2].select(result[4]);
 					
 					// offer_list테이블 데이터 출력
-					Vo searchOfferList = new Vo("offer_list", "offer_num", "1", "num");
+					Vo searchOfferList = new Vo("offer_list", "offer_num", tfText, "num");
 					String[][] result2 = dao.selectAllOfferListWhere(searchOfferList);
 					
 					int deleteRowCount = rowCount; // 데이터 출력전에 현재 추가되어있는 모든 행을 삭제한다
@@ -221,11 +209,9 @@ public class Tab_1201 implements ActionListener, ItemListener {
 				}
 				// offer, offer_list 테이블 select
 			}
-			
 			break;
 		
 		case "저장" :
-			// 7/13 작성 코드
 			String offer_num = tfText;
 			String client_name = ch[0].getSelectedItem(); // 거래처
 			String offer_date = model.getYear() + "-" + (model.getMonth() + 1) + "-" + model.getDay();
@@ -233,94 +219,185 @@ public class Tab_1201 implements ActionListener, ItemListener {
 			String currency = ch[2].getSelectedItem(); // 통화
 			
 			// offer 번호, 거래처, 일자, 가격조건, 통화 빈칸 유무 체크
-			boolean checkNull = true;
+			boolean checkNull = false;
 
 			if(offer_num.equals("")) { // 일자는 오늘 날짜로 default값이 정해져 있어 빈칸인 경우가 없으므로 조건에 미포함
 				new ErrorMessageDialog("offer번호를 입력하세요.", "수입 offer 등록");
-				checkNull = false;
+				checkNull = true;
 			}else if(client_name.equals("")) {
 				new ErrorMessageDialog("거래처를 입력하세요.", "수입 offer 등록");
-				checkNull = false;
+				checkNull = true;
 			}else if(incoterms.equals("")) {
 				new ErrorMessageDialog("가격조건을 입력하세요.", "수입 offer 등록");
-				checkNull = false;
+				checkNull = true;
 			}else if(currency.equals("")) {
 				new ErrorMessageDialog("통화를 입력하세요.", "수입 offer 등록");
-				checkNull = false;
+				checkNull = true;
 			}
 			
-			// 빈칸 없을때 -> 미등록이면 insert, 기등록이면 alter
-			if(checkNull == true) {
+			// 빈칸 없을때 -> 미등록이면 insert, 기등록이면 update
+			boolean tryInsertOffer = false; // offer번호 미등록
+			boolean tryUpdateOffer = false; // offer번호 기등록
+			
+			// offer 테이블
+			if(checkNull == false) {
 				Vo checkOfferNum = new Vo("offer", "offer_num", "offer_num", tfText);
 				String selectedOfferNum = dao.selectOneFieldWhere(checkOfferNum);
 				if(selectedOfferNum.equals("")) {
 					// 미등록 -> insert
-					boolean b = true;
 					Vo vo = new Vo(offer_num, client_name, offer_date, incoterms, currency);
-					b = dao.insertOffer(vo);
-					if(b == true) {
-						new ErrorMessageDialog("수입offer가 등록되었습니다.", "수입offer 등록");
+					tryInsertOffer = dao.insertOffer(vo);
+					if(tryInsertOffer == true) {
+						new ErrorMessageDialog("offer정보가 등록되었습니다.", "수입offer 등록");
 					}else{
 						new ErrorMessageDialog("이미 등록된 offer번호입니다.", "수입offer 등록");
 					}
 				}else {
-					System.out.println("기등록");
-					// 기등록 -> alter
+					// 기등록 -> update
+					Vo vo = new Vo("offer", "client_name", client_name, "offer_date", offer_date,
+							"incoterms", incoterms, "currency", currency, "offer_num", offer_num);
+					tryUpdateOffer = dao.updateFourFieldsWhere(vo);
+					if(tryUpdateOffer == true) {
+						new ErrorMessageDialog("offer정보가 수정되었습니다.", "수입offer 등록");
+					}else{
+						new ErrorMessageDialog("offer정보 수정 실패하였습니다.\n관리자에게 문의하세요.", "수입offer 등록");
+					}
 				}
 			}
 			
-			
-			// 7/12 작성 코드
-//			if(rowCount == 0) { // table에 행이 하나도 없을때 -> offer정보 저장
-//				if(tfText.equals("")) {
-//					new ErrorMessageDialog("offer번호를 입력하세요.", "수입offer 등록");
-//				}else {
-////				offer table에 데이터 저장
-//					String offer_num = tfText;
-//					String client_name = ch[0].getSelectedItem();
-//					String offer_date = model.getYear() + "-" + (model.getMonth() + 1) + "-" + model.getDay();
-//					String incoterms = ch[1].getSelectedItem();
-//					String currency = ch[2].getSelectedItem();
-//					
-//					boolean b = true;
-//					Vo vo = new Vo(offer_num, client_name, offer_date, incoterms, currency);
-//					b = dao.insertOffer(vo);
-//					if(b == true) {
-//						new ErrorMessageDialog("수입offer가 등록되었습니다.", "수입offer 등록");
-//					}else{
-//						new ErrorMessageDialog("이미 등록된 offer번호입니다.", "수입offer 등록");
-//					}
-//				}
-//			}else { // table에 행이 하나라도 있을때 -> offer상세정보 저장
-//			/*
-//			 첫번째 등록이 아닌 추가 등록 또는 수정일때 데이터가 수정되도록 코드 작성 필요
-//			 -> offer번호 값을 읽어서 이미 등록되어있을때 : num 마지막 번호를 체크
-//			 -> 등록되어있지않을때 -> 성공
-//			 
-//			 insert 실패할 경우
-//			 1) 품목코드 미등록(부모키가 없습니다)
-//			 2) offer_num 미등록(부모키가 없습니다)
-//			 3) int 타입 데이터에 varchar2 타입 데이터를 넣는 등의 타입불일치(수치가 부적합합니다)
-//			 위 경우에 대한 에러코드를 반환받아서 상황에 적절한 에러메시지를 출력하도록 수정 필요
-//			 */
-//				boolean b2 = true;
-//				String[] grv = new String[7];
-//				for(int i=0; i<dtm.getRowCount(); i++) { // 행 index : 0 ~ rowCount - 1까지
-//					for(int j=0; j<grv.length; j++) {
-//						grv[j] = String.valueOf(dtm.getValueAt(i, j));
-//					}
-//					Vo offerListVo = new Vo(tfText, grv[0], grv[1], grv[2], grv[3], grv[4], grv[5], grv[6]); // 열 길이 8. 첫번째는 OFFER_NUM, 나머지는 TABLE 값 읽어오기
-//					b2 = dao.insertOfferList(offerListVo);
-//					if(b2 == false) {
-//						String message = "" + i + "행의 번호 또는 입력 형식이 잘못되었습니다.";
-//						new ErrorMessageDialog(message, "수입offer 등록");
-//						break;
-//					}
-//				}
-//				if(b2 == true) {
-//					new ErrorMessageDialog("저장되었습니다.", "수입offer 등록");
-//				}
-//			}
+			// offer_list 테이블
+			if(tryInsertOffer == true || tryUpdateOffer == true) { // offer번호 미등록, 기등록 상태 중 하나로 insert 또는 update가 성공하였을때
+				if(rowCount == 0) {
+					new ErrorMessageDialog("저장할 데이터가 없습니다.","수입offer 등록");
+				}
+				else {
+					Vo vo = new Vo("offer_list", "offer_num", tfText);
+					int count = dao.countAllWhere(vo);
+					int tableFirstNum = Integer.parseInt(dtm.getValueAt(0, 0).toString());
+					
+					if(tryInsertOffer == true && tryUpdateOffer == false) {
+						if(count + 1 == tableFirstNum) { // true : DB에 저장된 순번에 이어서 현재 테이블의 순번을 붙일 수 있음
+							if(count == 0) { // insert
+								boolean tryInsetOfferList = false;
+								String[] grv = new String[7];
+								for(int i=0; i<rowCount; i++) { // 행 index : 0 ~ rowCount - 1까지
+									for(int j=0; j<grv.length; j++) {
+										grv[j] = String.valueOf(dtm.getValueAt(i, j));
+									}
+									Vo offerListVo = new Vo(tfText, grv[0], grv[1], grv[2], grv[3], grv[4], grv[5], grv[6]); // 열 길이 8. 첫번째는 OFFER_NUM, 나머지는 TABLE 값 읽어오기
+									tryInsetOfferList = dao.insertOfferList(offerListVo);
+									if(tryInsetOfferList == false) {
+										String message = "" + i + "행의 번호 또는 입력 형식이 잘못되었습니다.";
+										new ErrorMessageDialog(message, "수입offer 등록");
+										break;
+									}
+								}
+								if(tryInsetOfferList == true) {
+									new ErrorMessageDialog("저장되었습니다.", "수입offer 등록");
+								}
+							} // if(count == 0)문의 끝
+							else { // 1부터 offer_list 마지막 레코드 갯수까지는 update, dtm.getValueAt(0, 0)부터 마지막까지는 insert
+								// 1부터 offer_list 마지막 레코드 갯수까지 update
+								boolean tryInsertOfferList = false;
+								boolean tryUpdateOfferList = false;
+								
+								String[] grv = new String[7];
+								
+								for(int i=0; i<rowCount; i++) { // 행 index : 0 ~ rowCount - 1까지
+									for(int j=0; j<grv.length; j++) {
+										grv[j] = String.valueOf(dtm.getValueAt(i, j));
+									}
+									if(i < count) { // update : 0 ~ count-1까지
+										Vo offerListVo1 = new Vo("offer_list", "product_code", grv[1], "product_name", grv[2],
+												"unit", grv[3], "quantity", grv[4], "unit_price", grv[5],
+												"amount", grv[6], "offer_num", tfText, "num", grv[0]);
+										tryUpdateOfferList = dao.updateSixFieldsWhereTwoField(offerListVo1);
+									}else { // insert : count ~ rowCount-1까지
+										Vo offerListVo1 = new Vo(tfText, grv[0], grv[1], grv[2], grv[3], grv[4], grv[5], grv[6]); // 열 길이 8. 첫번째는 OFFER_NUM, 나머지는 TABLE 값 읽어오기
+										tryInsertOfferList = dao.insertOfferList(offerListVo1);
+									}
+									
+									System.out.println(tryInsertOfferList);
+									System.out.println(tryUpdateOfferList);
+									
+									if(tryInsertOfferList == false || tryUpdateOfferList == false) {
+										String message = "" + i + "행의 번호 또는 입력 형식이 잘못되었습니다.";
+										new ErrorMessageDialog(message, "수입offer 등록");
+										break;
+									}
+								}
+							} // else문의 끝
+						} // if(count + 1 == tableFirstNum)문의 끝
+						else {
+							new ErrorMessageDialog("순번을 확인해주세요.", "수입offer 등록");
+						}
+					} // if(tryInsertOffer == true && tryUpdateOffer == false)문의 끝
+					
+					else if(tryInsertOffer == false && tryUpdateOffer == true) {
+						boolean checkFirstNum = false;
+						if(Integer.valueOf(dtm.getValueAt(0, 0).toString()) == 1) {
+							checkFirstNum = true;
+						}else {
+							new ErrorMessageDialog("순번을 1부터 순서대로 입력해주세요.", "수입offer 등록");
+						}
+						
+						if(checkFirstNum == true && count == 0) { // insert
+							boolean tryInsetOfferList = false;
+							String[] grv = new String[7];
+							for(int i=0; i<rowCount; i++) { // 행 index : 0 ~ rowCount - 1까지
+								for(int j=0; j<grv.length; j++) {
+									grv[j] = String.valueOf(dtm.getValueAt(i, j));
+								}
+								Vo offerListVo = new Vo(tfText, grv[0], grv[1], grv[2], grv[3], grv[4], grv[5], grv[6]); // 열 길이 8. 첫번째는 OFFER_NUM, 나머지는 TABLE 값 읽어오기
+								tryInsetOfferList = dao.insertOfferList(offerListVo);
+								if(tryInsetOfferList == false) {
+									String message = "" + i + "행의 번호 또는 입력 형식이 잘못되었습니다.";
+									new ErrorMessageDialog(message, "수입offer 등록");
+									break;
+								}
+							}
+							if(tryInsetOfferList == true) {
+								new ErrorMessageDialog("저장되었습니다.", "수입offer 등록");
+							}
+						}else if(checkFirstNum == true && count != 0) { // 전체 delete후 insert
+							DeleteConfirmDialog d = new DeleteConfirmDialog("이미 등록된 내용이있습니다. 수정하시겠습니까?", "수입offer 등록");
+							boolean b = d.response();
+							if(b == true) {
+								// delete
+								int deleteRow = count; // 테이블의 현재 레코드 갯수를 대입
+								boolean deleteResult = false; 
+										
+								while(true) {
+									if(deleteRow == 0) {
+										break;
+									}
+									Vo deleteVo = new Vo("offer_list", "offer_num", tfText, "num", String.valueOf(deleteRow));
+									deleteResult = dao.deleteWhereTwoFiled(deleteVo);
+									deleteRow--;
+								}
+								// insert
+								boolean tryInsetOfferList = false;
+								String[] grv = new String[7];
+								for(int i=0; i<rowCount; i++) { // 행 index : 0 ~ rowCount - 1까지
+									for(int j=0; j<grv.length; j++) {
+										grv[j] = String.valueOf(dtm.getValueAt(i, j));
+									}
+									Vo offerListVo = new Vo(tfText, grv[0], grv[1], grv[2], grv[3], grv[4], grv[5], grv[6]); // 열 길이 8. 첫번째는 OFFER_NUM, 나머지는 TABLE 값 읽어오기
+									tryInsetOfferList = dao.insertOfferList(offerListVo);
+									if(tryInsetOfferList == false) {
+										String message = "" + i + "행의 번호 또는 입력 형식이 잘못되었습니다.";
+										new ErrorMessageDialog(message, "수입offer 등록");
+										break;
+									}
+								}
+								if(tryInsetOfferList == true) {
+									new ErrorMessageDialog("저장되었습니다.", "수입offer 등록");
+								}
+							} //if(b == true)문의 끝
+						} // else if(checkFirstNum == true && count != 0)
+					} // else if(tryInsertOffer == false && tryUpdateOffer == true)문의 끝
+				} // else문의 끝
+			} // if(tryInsertOffer == true || tryUpdateOffer == true)문의 끝
 			break;
 
 		case "+" :
@@ -329,9 +406,6 @@ public class Tab_1201 implements ActionListener, ItemListener {
 			break;
 			
 		case "-" :
-			/*
-			 삭제 클릭시 실제 데이터도 삭제되도록 작성 필요
-			 */
 			if(rowCount == 0) {
 				new ErrorMessageDialog("삭제할 행이 없습니다.", "수입offer 등록");
 			}else {

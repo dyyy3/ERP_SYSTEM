@@ -248,6 +248,45 @@ public class Dao {
 	}
 	
 	// Tab_1201
+	public boolean updateFourFieldsWhere(Vo vo) {
+		boolean b = true;
+		checkConException();
+		try {
+			String update = "UPDATE " + vo.getTableName() + " SET " + vo.getField_1() + " = '" + vo.getField_2() + "', "
+					+ vo.getField_3() + " = '" + vo.getField_4() + "', " + vo.getField_5() + " = '" + vo.getField_6() + "', "
+					+ vo.getField_7() + " = '" + vo.getField_8() + "' WHERE " + vo.getField_9() + " = '" + vo.getField_10() + "'";
+			stmt.executeQuery(update);
+		}catch(Exception e) {
+			e.printStackTrace();
+			b = false;
+		}
+		return b;
+	}
+	
+	// Tab_1201
+	public boolean updateSixFieldsWhereTwoField(Vo vo) {
+		boolean b = true;
+		checkConException();
+		try {
+			String update = "UPDATE " + vo.getTableName() + " SET "
+					+ vo.getField_1() + " = '" + vo.getField_2() + "', " + vo.getField_3() + " = '" + vo.getField_4() + "', "
+					+ vo.getField_5() + " = '" + vo.getField_6() + "', " + vo.getField_7() + " = '" + vo.getField_8() + "', "
+					+ vo.getField_9() + " = '" + vo.getField_10() + "', " + vo.getField_11() + " = '" + vo.getField_12()
+					+ "' WHERE " + vo.getField_13() + " = '" + vo.getField_14() + "' AND " + vo.getField_15() + " = '" + vo.getField_16() + "'";
+			// UPDATE OFFER_LIST SET
+			// PRODUCT_CODE = '1-G031-CCN006-020', PRODUCT_NAME = '상품-G355-완제품-중국-연마-20T',
+			// UNIT = 'M2', QUANTITY = '50',
+			// UNIT_PRICE ='20', AMOUNT = '1000'
+			// WHERE OFFER_NUM = '1' AND NUM = '1'
+			stmt.executeQuery(update);
+		}catch(Exception e) {
+			e.printStackTrace();
+			b = false;
+		}
+		return b;
+	}
+	
+	// Tab_1201
 	public boolean delete(Vo vo) {
 		boolean b = true;
 		checkConException();
@@ -261,4 +300,40 @@ public class Dao {
 		}
 		return b;
 	}
+	
+	// Tab_1201
+	public boolean deleteWhereTwoFiled(Vo vo) {
+		boolean b = true;
+		checkConException();
+		try {
+			String delete = "DELETE FROM " + vo.getField_1() + " WHERE " + vo.getField_2() + " = '" + vo.getField_3() + "'"
+					+ " AND " + vo.getField_4() + " = '" + vo.getField_5() + "'";
+			// DELETE FROM OFFER_LIST WHERE offer_num = '' AND num = '';
+			
+			System.out.println(delete);
+			rs = stmt.executeQuery(delete);
+		}catch(Exception e) {
+			e.printStackTrace();
+			b = false;
+		}
+		return b;
+	}
+	
+	// Tab_1201
+		public int countAllWhere(Vo vo) {
+			int count = 0;
+			checkConException();
+			try {
+				String select = "SELECT COUNT(*) FROM " + vo.getTableName() + " WHERE " + vo.getField_1() + " = '" + vo.getField_2() + "'";
+				// SELECT COUNT(*) FROM OFFER_LIST WHERE OFFER_NUM = '22-7-1' 
+				rs = stmt.executeQuery(select);
+				
+				while(rs.next()){
+					count = rs.getInt(1);
+				}
+			}catch(Exception e) {
+				e.printStackTrace();
+			}
+			return count;
+		}
 }
