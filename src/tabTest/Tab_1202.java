@@ -2,11 +2,10 @@ package tabTest;
 
 import java.awt.*;
 import java.awt.event.*;
-import java.util.Arrays;
-
 import javax.swing.*;
 //import javax.swing.event.*;
 import javax.swing.table.DefaultTableModel;
+import java.util.*;
 
 public class Tab_1202 implements ActionListener {
 //	폴더 그림 : 40, 40
@@ -17,6 +16,7 @@ public class Tab_1202 implements ActionListener {
 	JPanel p;
 	TextField ontf;
 	Label[] label;
+	Button b1, b2;
 	TextField[] tf;
 	DefaultTableModel dtm;
 	Dao dao = new Dao();
@@ -85,12 +85,12 @@ public class Tab_1202 implements ActionListener {
 		tf[5].setBounds(540, 190, 200, 30);
 		
 		// Button 추가
-		Button b1 = new Button("조회");
+		b1 = new Button("조회");
 		b1.addActionListener(this);
 		b1.setBounds(380, 50, 50, 30);
 		p.add(b1);
 
-		Button b2 = new Button("등록");
+		b2 = new Button("등록");
 		b2.addActionListener(this);
 		b2.setBounds(750, 110, 50, 30);
 		p.add(b2);
@@ -111,10 +111,10 @@ public class Tab_1202 implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		int rowCount = dtm.getRowCount(); // 현재 테이블의 행 갯수
-		
+		String tfText = ontf.getText();
 		switch(e.getActionCommand()) {
 		case "조회" :
-			String tfText = ontf.getText();
+			
 			if(tfText == null) {
 				new ErrorMessageDialog("offer번호를 입력하세요.", "수입원가 등록");
 			}else {
@@ -167,35 +167,59 @@ public class Tab_1202 implements ActionListener {
 					
 					for(int i=0; i<selectResult3.length; i++) {
 						String[] addRow = new String[6];
-						for(int j=0; j<selectResult3[i].length - 2; j++) {
+						for(int j=0; j<selectResult3[i].length - 3; j++) {
 							addRow[j] = selectResult3[i][j+2];
 							dtm.setValueAt(addRow[j], i, j+2);
 						}
 					}
+					// 수량을 list에 저장
+//					for(int i=0; i<selectResult3.length; i++) {
+//						quantities.add(selectResult3[i][5]);
+//					}
 				}
 			}
-			
 			break;
 			
 		case "등록" :
 			if(tf[0].getText().equals("")) {
 				new ErrorMessageDialog("송금환율은 필수 입력값입니다.", "수입원가 등록");
 			}else {
-				// textField의 모든값을 읽어온다
-				int currency_exchange = Integer.parseInt(tf[0].getText());
-				int remittance_charge;
-				int custom_clearance_fee;
-				int freight_charge;
-				int other_cost;
-				int amount_krw;
-
-//				tf[0].setBounds(170, 110, 200, 30);
-//				tf[1].setBounds(170, 150, 200, 30);
-//				tf[2].setBounds(170, 190, 200, 30);
-//				tf[3].setBounds(540, 110, 200, 30);
-//				tf[4].setBounds(540, 150, 200, 30);
-//				tf[5].setBounds(540, 190, 200, 30);
+				// 총금액을 제외한 모든 TextField의 입력값을 읽어와서 offer_cost에 저장
+				int currency_exchange = Integer.parseInt(tf[0].getText()); // 송금환율
+				int remittance_charge = Integer.parseInt(tf[3].getText()); // 송금수수료
+				int custom_clearance_fee = Integer.parseInt(tf[1].getText()); // 통관비
+				int freight_charge = Integer.parseInt(tf[4].getText()); // 운반비
+				int other_cost = Integer.parseInt(tf[2].getText()); // 기타비용
 				
+				// 총 금액(KRW)을 구해서 TextField와 table의 (n,9)에 출력
+				Vo vo = new Vo("offer_list", "amount");
+				int amount = dao.sum(vo);
+				int amount_krw = amount * currency_exchange + remittance_charge + custom_clearance_fee + freight_charge + other_cost; // 총 금액 = 금액 * 송금환율 + 송금수수료 + 통관비 + 운반비 + 기타비용
+				tf[5].setText(String.valueOf(amount_krw));
+				
+				for(int i=0; i<rowCount; i++) {
+					dtm.setValueAt(amount_krw, i, 8);
+				}
+				
+				// 단가(KRW)을 구해서 table의 (n,10)에 출력하고, offer_list의 9열(unit_price_krw)에 저장
+				Vo vo2 = new Vo("offer_list", "quantity", "offer_num", tfText, "num");
+				String[] quantities = dao.selectOneFieldWhereOrderBy(vo2);
+				
+				// UPDATE OFFER_LIST SET UNIT_PRICE_KRW = '20000' WHERE num = '1'
+				int unit_price_krw;
+				Vo vo3;
+				boolean tryUpdateUnitPriceKrw = false;
+				for(int i=0; i<rowCount; i++) {
+					unit_price_krw = amount_krw / Integer.parseInt(quantities[i]);
+					dtm.setValueAt(unit_price_krw, i, 9);
+					vo3 = new Vo("offer_list", "unit_price_krw", unit_price_krw, "num", String.valueOf(i+1));
+					tryUpdateUnitPriceKrw = dao.updateOneIntFieldWhere(vo3);
+				}
+				if(tryUpdateUnitPriceKrw == true) {
+					new ErrorMessageDialog("원가 정보가 등록되었습니다.", "수입원가 등록");
+				}else {
+					new ErrorMessageDialog("원가 정보 등록에 실패하였습니다.", "수입원가 등록");
+				}
 			}
 			break;
 		}

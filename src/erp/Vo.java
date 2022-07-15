@@ -18,6 +18,7 @@ public class Vo {
 	private String field_14;
 	private String field_15;
 	private String field_16;
+	private int value_1;
 
 	public Vo() {
 
@@ -58,6 +59,17 @@ public class Vo {
 		this.field_3 = field_3;
 		this.field_4 = field_4;
 		this.field_5 = field_5;
+	}
+	
+	// Tab_1202
+	public Vo(String tableName, String field_1, int value_1,
+			String field_2, String field_3)
+	{
+		this.tableName = tableName;
+		this.field_1 = field_1;
+		this.value_1 = value_1;
+		this.field_2 = field_2;
+		this.field_3 = field_3;
 	}
 	
 	// Tab_1201
@@ -204,6 +216,10 @@ public class Vo {
 	
 	public String getField_16() {
 		return field_16;
+	}
+	
+	public int getValue_1() {
+		return value_1;
 	}
 	
 }

@@ -1,9 +1,7 @@
 package erp;
 
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 public class Dao {
 	String driver = "oracle.jdbc.driver.OracleDriver";
@@ -88,12 +86,13 @@ public class Dao {
 				list.add(rs.getString(6));
 				list.add(rs.getString(7));
 				list.add(rs.getString(8));
+				list.add(rs.getString(9));
 			}
 			// list를 String[][] result로
-			result = new String[list.size() / 8][8]; // [3][8]. 3행 8열. 행 : 0~2, 열 : 0~7
+			result = new String[list.size() / 9][9]; // [3][8]. 3행 8열. 행 : 0~2, 열 : 0~7
 			int a = 0; // 0~23
-			for(int i=0; i<list.size()/8; i++) {
-				for(int j=0; j<8; j++) {
+			for(int i=0; i<list.size()/9; i++) {
+				for(int j=0; j<9; j++) {
 					result[i][j] = list.get(a);
 					a++;
 				}
@@ -273,6 +272,23 @@ public class Dao {
 		return b;
 	}
 	
+	// Tab_1202
+	public boolean updateOneIntFieldWhere(Vo vo) {
+		boolean b = true;
+		checkConException();
+		try {
+			String update = "UPDATE " + vo.getTableName() + " SET " + vo.getField_1() + " = '" + vo.getValue_1() + "'"
+					+ " WHERE " + vo.getField_2() + " = '" + vo.getField_3() + "'";
+			// UPDATE OFFER_LIST SET UNIT_PRICE_KRW = '20000' WHERE num = '1'
+			stmt.executeQuery(update);
+			System.out.println(update);
+		}catch(Exception e) {
+			e.printStackTrace();
+			b = false;
+		}
+		return b;
+	}
+	
 	// Tab_1201
 	public boolean updateFourFieldsWhere(Vo vo) {
 		boolean b = true;
@@ -358,5 +374,22 @@ public class Dao {
 				e.printStackTrace();
 			}
 			return count;
+		}
+		
+		// Tab_1202
+		public int sum(Vo vo) {
+			int sum = 0;
+			checkConException();
+			try {
+				String select = "SELECT SUM(" + vo.getField_1() + ") FROM " + vo.getTableName();
+				// SELECT SUM(AMOUNT) FROM OFFER_LIST
+				rs = stmt.executeQuery(select);
+				while (rs.next()) {
+					sum = rs.getInt(1);
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			return sum;
 		}
 }

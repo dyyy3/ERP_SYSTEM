@@ -200,7 +200,7 @@ public class Tab_1201 implements ActionListener, ItemListener {
 					
 					for(int i=0; i<result2.length; i++) {
 						String[] addRow = new String[7];
-						for(int j=0; j<result2[i].length - 1; j++) { 
+						for(int j=0; j<result2[i].length - 2; j++) { 
 							addRow[j] = result2[i][j+1]; // 0번에는 offer_num 값이 있으므로 넣지않음 
 						}
 						dtm.addRow(addRow);
