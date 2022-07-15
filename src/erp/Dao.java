@@ -112,7 +112,7 @@ public class Dao {
 		checkConException();
 		try {
 			String select = "SELECT " + vo.getField_1() + " FROM " + vo.getTableName();
-			// SELECT client_name FROM CLIENT
+			// SELECT '' FROM ''
 			rs = stmt.executeQuery(select);
 			
 			while(rs.next()) {

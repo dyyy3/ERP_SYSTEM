@@ -23,7 +23,7 @@ public class panelTest {
 		p1.setBackground(Color.pink);
 		
 		p2.setSize(600, 800);
-		p2.setLocation(0, 600);
+		p2.setLocation(300, 0);
 		p2.setLayout(null);
 		p2.setBackground(Color.GREEN);
 		

@@ -1,75 +1,19 @@
 package test;
 
-import java.awt.*;
-import java.awt.event.*;
-
-public class Test implements ActionListener {
-	TextField tf1;
-	TextField tf2;
-	Button b;
-	
+public class Test {
 	public static void main(String[] args) {
-		new Test();
-	}
-	
-	public Test() {
-		Frame f = new Frame();
-		f.setSize(500, 500);
-		
-		Panel p = new Panel();
-		p.setLayout(null);
-		
-		tf1 = new TextField();
-		tf1.setBounds(10, 10, 200, 30);
-		tf1.addActionListener(this);
-		p.add(tf1);
-		
-		tf2 = new TextField();
-		tf2.setBounds(10, 50, 200, 30);
-		tf2.addActionListener(this);
-		p.add(tf2);
-		
-		b = new Button("등록");
-		b.setBounds(220, 10, 50, 30);
-		b.addActionListener(this);
-		p.add(b);
-		
-		f.add(p);
-		f.setVisible(true);
-	}
+		String s1 = "20200101";
+		String s2 = "20200111";
+		String s3 = "20201101";
+		String s4 = "20201111";
 
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		int currency_exchange; // 송금환율
-		int remittance_charge; // 송금수수료
+		int i1 = Integer.valueOf(s1);
+		int i2 = Integer.valueOf(s2);
+		int i3 = Integer.valueOf(s3);
+		int i4 = Integer.valueOf(s4);
 		
-		switch(e.getActionCommand()) {
-		case "등록" :
-			String s = "0";
-			try {
-				s = tf1.getText();
-			}catch(NullPointerException e1) {
-				s = "0";
-			}
-
-			try {
-				currency_exchange = Integer.parseInt(s); // 송금환율
-			}catch(NumberFormatException e1) {
-				s = "0";
-				currency_exchange = Integer.parseInt(s); // 송금환율
-			}
-			
-			try {
-				s = tf2.getText();
-			}catch(NullPointerException e1) {
-				s = "0";
-				remittance_charge = Integer.parseInt(s); // 송금수수료
-			}
-			
-//		int currency_exchange = Integer.parseInt(tf[0].getText()); // 송금환율
-//		int remittance_charge = Integer.parseInt(tf[3].getText()); // 송금수수료
+		if(i2 > i1) {
+			System.out.println("i2 > i1");
 		}
-		
-		
 	}
 }
