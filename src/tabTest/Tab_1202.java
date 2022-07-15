@@ -114,7 +114,6 @@ public class Tab_1202 implements ActionListener {
 		String tfText = ontf.getText();
 		switch(e.getActionCommand()) {
 		case "조회" :
-			
 			if(tfText == null) {
 				new ErrorMessageDialog("offer번호를 입력하세요.", "수입원가 등록");
 			}else {
@@ -172,27 +171,60 @@ public class Tab_1202 implements ActionListener {
 							dtm.setValueAt(addRow[j], i, j+2);
 						}
 					}
-					// 수량을 list에 저장
-//					for(int i=0; i<selectResult3.length; i++) {
-//						quantities.add(selectResult3[i][5]);
-//					}
 				}
 			}
 			break;
 			
 		case "등록" :
+			Vo vo;
 			if(tf[0].getText().equals("")) {
 				new ErrorMessageDialog("송금환율은 필수 입력값입니다.", "수입원가 등록");
 			}else {
-				// 총금액을 제외한 모든 TextField의 입력값을 읽어와서 offer_cost에 저장
-				int currency_exchange = Integer.parseInt(tf[0].getText()); // 송금환율
-				int remittance_charge = Integer.parseInt(tf[3].getText()); // 송금수수료
-				int custom_clearance_fee = Integer.parseInt(tf[1].getText()); // 통관비
-				int freight_charge = Integer.parseInt(tf[4].getText()); // 운반비
-				int other_cost = Integer.parseInt(tf[2].getText()); // 기타비용
+				// 총금액을 제외한 모든 TextField의 입력값을 각 변수에 저장
+				String s = "0"; // NullPointerException을 처리하기 위해 String s에 먼저 대입
+				int currency_exchange = 0; // 송금환율
+				int remittance_charge = 0; // 송금수수료
+				int custom_clearance_fee = 0; // 통관비
+				int freight_charge = 0; // 운반비
+				int other_cost = 0; // 기타비용
+				
+				try {
+					s = tf[0].getText();
+				}catch(NullPointerException e1) {
+					s = "0";
+					currency_exchange = Integer.parseInt(s); // 송금환율
+				}
+				
+				try {
+					s = tf[3].getText();
+				}catch(NullPointerException e1) {
+					s = "0";
+					remittance_charge = Integer.parseInt(s); // 송금수수료
+				}
+				
+				try {
+					s = tf[1].getText();
+				}catch(NullPointerException e1) {
+					s = "0";
+					custom_clearance_fee = Integer.parseInt(s); // 통관비
+				}
+				
+				try {
+					s = tf[4].getText();
+				}catch(NullPointerException e1) {
+					s = "0";
+					freight_charge = Integer.parseInt(s); // 운반비
+				}
+				
+				try {
+					s = tf[2].getText();
+				}catch(NullPointerException e1) {
+					s = "0";
+					other_cost = Integer.parseInt(s); // 기타비용
+				}
 				
 				// 총 금액(KRW)을 구해서 TextField와 table의 (n,9)에 출력
-				Vo vo = new Vo("offer_list", "amount");
+				vo = new Vo("offer_list", "amount");
 				int amount = dao.sum(vo);
 				int amount_krw = amount * currency_exchange + remittance_charge + custom_clearance_fee + freight_charge + other_cost; // 총 금액 = 금액 * 송금환율 + 송금수수료 + 통관비 + 운반비 + 기타비용
 				tf[5].setText(String.valueOf(amount_krw));
@@ -201,19 +233,22 @@ public class Tab_1202 implements ActionListener {
 					dtm.setValueAt(amount_krw, i, 8);
 				}
 				
+				// offer_cost에 값 저장
+				vo = new Vo(tfText, currency_exchange, remittance_charge, custom_clearance_fee, freight_charge, other_cost, amount_krw);
+				dao.insertOfferCost(vo);
+				
 				// 단가(KRW)을 구해서 table의 (n,10)에 출력하고, offer_list의 9열(unit_price_krw)에 저장
-				Vo vo2 = new Vo("offer_list", "quantity", "offer_num", tfText, "num");
-				String[] quantities = dao.selectOneFieldWhereOrderBy(vo2);
+				vo = new Vo("offer_list", "quantity", "offer_num", tfText, "num");
+				String[] quantities = dao.selectOneFieldWhereOrderBy(vo);
 				
 				// UPDATE OFFER_LIST SET UNIT_PRICE_KRW = '20000' WHERE num = '1'
 				int unit_price_krw;
-				Vo vo3;
 				boolean tryUpdateUnitPriceKrw = false;
 				for(int i=0; i<rowCount; i++) {
 					unit_price_krw = amount_krw / Integer.parseInt(quantities[i]);
 					dtm.setValueAt(unit_price_krw, i, 9);
-					vo3 = new Vo("offer_list", "unit_price_krw", unit_price_krw, "num", String.valueOf(i+1));
-					tryUpdateUnitPriceKrw = dao.updateOneIntFieldWhere(vo3);
+					vo = new Vo("offer_list", "unit_price_krw", unit_price_krw, "num", String.valueOf(i+1));
+					tryUpdateUnitPriceKrw = dao.updateOneIntFieldWhere(vo);
 				}
 				if(tryUpdateUnitPriceKrw == true) {
 					new ErrorMessageDialog("원가 정보가 등록되었습니다.", "수입원가 등록");

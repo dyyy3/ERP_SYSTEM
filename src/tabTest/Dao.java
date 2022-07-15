@@ -273,6 +273,23 @@ public class Dao {
 	}
 	
 	// Tab_1202
+	public boolean insertOfferCost(Vo vo) {
+		boolean b = true;
+		checkConException();
+		try {
+			String insert = "INSERT INTO OFFER_COST (OFFER_NUM, CURRENCY_EXCHANGE, REMITTANCE_CHARGE, CUSTOM_CLEARANCE_FEE, "
+					+ "FREIGHT_CHARGE, OTHER_COST, AMOUNT_KRW)"
+					+ " VALUES('" + vo.getField_1() + "', '" + vo.getValue_1() + "', '" + vo.getValue_2() + "',"
+					+ " '" + vo.getValue_3() + "', '" + vo.getValue_4() + "', '" + vo.getValue_5() + "', '" + vo.getValue_6() + "')";
+			stmt.executeQuery(insert);
+		}catch(Exception e) {
+			e.printStackTrace();
+			b = false;
+		}
+		return b;
+	}
+	
+	// Tab_1202
 	public boolean updateOneIntFieldWhere(Vo vo) {
 		boolean b = true;
 		checkConException();
@@ -281,7 +298,6 @@ public class Dao {
 					+ " WHERE " + vo.getField_2() + " = '" + vo.getField_3() + "'";
 			// UPDATE OFFER_LIST SET UNIT_PRICE_KRW = '20000' WHERE num = '1'
 			stmt.executeQuery(update);
-			System.out.println(update);
 		}catch(Exception e) {
 			e.printStackTrace();
 			b = false;

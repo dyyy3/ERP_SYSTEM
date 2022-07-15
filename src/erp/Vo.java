@@ -19,6 +19,11 @@ public class Vo {
 	private String field_15;
 	private String field_16;
 	private int value_1;
+	private int value_2;
+	private int value_3;
+	private int value_4;
+	private int value_5;
+	private int value_6;
 
 	public Vo() {
 
@@ -70,6 +75,20 @@ public class Vo {
 		this.value_1 = value_1;
 		this.field_2 = field_2;
 		this.field_3 = field_3;
+	}
+	
+	// Tab_1202
+	public Vo(String field_1, int value_1,
+			int value_2, int value_3, int value_4,
+			int value_5, int value_6)
+	{
+		this.field_1 = field_1;
+		this.value_1 = value_1;
+		this.value_2 = value_2;
+		this.value_3 = value_3;
+		this.value_4 = value_4;
+		this.value_5 = value_5;
+		this.value_6 = value_6;
 	}
 	
 	// Tab_1201
@@ -222,4 +241,23 @@ public class Vo {
 		return value_1;
 	}
 	
+	public int getValue_2() {
+		return value_2;
+	}
+	
+	public int getValue_3() {
+		return value_3;
+	}
+	
+	public int getValue_4() {
+		return value_4;
+	}
+	
+	public int getValue_5() {
+		return value_5;
+	}
+	
+	public int getValue_6() {
+		return value_6;
+	}
 }
