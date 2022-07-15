@@ -12,10 +12,10 @@ class LoginDialog implements ActionListener {
 		this.parentFrame = parentFrame;
 		this.message = massage;
 		
-		loginResult = new Dialog(this.parentFrame, "ë¡œê·¸ì¸ ë©”ì‹œì§€", true);
+		loginResult = new Dialog(this.parentFrame, "·Î±×ÀÎ ¸Ş½ÃÁö", true);
 		loginResult.setBackground(Color.WHITE);
 		loginResult.setSize(300, 200);
-		loginResult.setResizable(false); // frame í¬ê¸° ë³€ê²½ ë¶ˆê°€ëŠ¥
+		loginResult.setResizable(false); // frame Å©±â º¯°æ ºÒ°¡´É
 		loginResult.setLayout(null);
 		
 		Toolkit tk = Toolkit.getDefaultToolkit();

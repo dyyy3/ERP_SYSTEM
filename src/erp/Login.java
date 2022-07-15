@@ -13,13 +13,13 @@ public class Login extends WindowAdapter implements ActionListener {
 		loginFrame.setSize(500, 300);
 		loginFrame.setBackground(Color.DARK_GRAY);
 		loginFrame.addWindowListener(this);
-		loginFrame.setResizable(false); // frame í¬ê¸° ë³€ê²½ ë¶ˆê°€ëŠ¥
+		loginFrame.setResizable(false); // frame Å©±â º¯°æ ºÒ°¡´É
 		
 		Toolkit tk = Toolkit.getDefaultToolkit();
 		Dimension screenSize = tk.getScreenSize();
 		loginFrame.setLocation(screenSize.width/2-250, screenSize.height/2-150);
 
-		// Label, TestField, Button ìƒì„±
+		// Label, TestField, Button »ı¼º
 		
 		Label loginLabel = new Label("Log in");
 		Label lid = new Label("ID :", Label.RIGHT);
@@ -31,10 +31,10 @@ public class Login extends WindowAdapter implements ActionListener {
 		
 		Button loginButton = new Button("Log in");
 		
-		// Label, TestField, Buttonì„ Frameì— ì¶”ê°€
+		// Label, TestField, ButtonÀ» Frame¿¡ Ãß°¡
 		
 		loginLabel.setSize(30, 50);
-		loginLabel.setForeground(Color.WHITE); // ê¸€ì ìƒ‰ìƒ ë³€ê²½
+		loginLabel.setForeground(Color.WHITE); // ±ÛÀÚ »ö»ó º¯°æ
 		Font setBOLD30 = new Font("LoginLabelFont",Font.BOLD, 30);
 		loginLabel.setFont(setBOLD30);
 		loginFrame.add(loginLabel, "North");
@@ -44,7 +44,7 @@ public class Login extends WindowAdapter implements ActionListener {
 		
 		lid.setSize(70, 30);
 		lid.setLocation(50, 60);
-		lid.setForeground(Color.WHITE); // ê¸€ì ìƒ‰ìƒ ë³€ê²½
+		lid.setForeground(Color.WHITE); // ±ÛÀÚ »ö»ó º¯°æ
 		lid.setFont(setBOLD30);
 		lid.setAlignment(Label.LEFT);
 		
@@ -53,7 +53,7 @@ public class Login extends WindowAdapter implements ActionListener {
 		
 		lpw.setSize(70, 30);
 		lpw.setLocation(50, 100);
-		lpw.setForeground(Color.WHITE); // ê¸€ì ìƒ‰ìƒ ë³€ê²½
+		lpw.setForeground(Color.WHITE); // ±ÛÀÚ »ö»ó º¯°æ
 		lpw.setFont(setBOLD30);
 		lpw.setAlignment(Label.LEFT);
 		
@@ -72,7 +72,7 @@ public class Login extends WindowAdapter implements ActionListener {
 		
 		loginFrame.add(p, "Center");
 		
-		// Frameì„ ë³´ì´ê²Œ í•¨
+		// FrameÀ» º¸ÀÌ°Ô ÇÔ
 		loginFrame.setVisible(true);
 	}
 	
@@ -82,22 +82,22 @@ public class Login extends WindowAdapter implements ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		if(tfid.getText().equals("")) { // ID ë¯¸ì…ë ¥
-			new LoginDialog(loginFrame, "IDë¥¼ ì…ë ¥í•˜ì„¸ìš”."); // ë‹¤ì´ì–¼ë¡œê·¸ ìƒì„±í•´ì„œ "IDë¥¼ ì…ë ¥í•˜ì„¸ìš”." ì¶œë ¥
-		} else if(tfpw.getText().equals("")) { // Password ë¯¸ì…ë ¥
-			new LoginDialog(loginFrame, "Passwordë¥¼ ì…ë ¥í•˜ì„¸ìš”."); // ë‹¤ì´ì–¼ë¡œê·¸ ìƒì„±í•´ì„œ "Passwordë¥¼ ì…ë ¥í•˜ì„¸ìš”." ì¶œë ¥
-		} else { // ëª¨ë‘ ì…ë ¥ë˜ì—ˆì„ë•Œ
+		if(tfid.getText().equals("")) { // ID ¹ÌÀÔ·Â
+			new LoginDialog(loginFrame, "ID¸¦ ÀÔ·ÂÇÏ¼¼¿ä."); // ´ÙÀÌ¾ó·Î±× »ı¼ºÇØ¼­ "ID¸¦ ÀÔ·ÂÇÏ¼¼¿ä." Ãâ·Â
+		} else if(tfpw.getText().equals("")) { // Password ¹ÌÀÔ·Â
+			new LoginDialog(loginFrame, "Password¸¦ ÀÔ·ÂÇÏ¼¼¿ä."); // ´ÙÀÌ¾ó·Î±× »ı¼ºÇØ¼­ "Password¸¦ ÀÔ·ÂÇÏ¼¼¿ä." Ãâ·Â
+		} else { // ¸ğµÎ ÀÔ·ÂµÇ¾úÀ»¶§
 			Vo loginVo = new Vo("user_info", tfid.getText(), tfpw.getText());
 			Dao dao = new Dao();
-			boolean b = dao.loginTest(loginVo); // ë¡œê·¸ì¸ ê²°ê³¼ true/falseë¥¼ ë°›ëŠ”ë‹¤
+			boolean b = dao.loginTest(loginVo); // ·Î±×ÀÎ °á°ú true/false¸¦ ¹Ş´Â´Ù
 			if(String.valueOf(b).equals("true")) {
-				new LoginDialog(loginFrame, "ë¡œê·¸ì¸ ì„±ê³µ");
-				loginFrame.dispose(); // ë¡œê·¸ì¸ ì„±ê³µ í›„ ë¡œê·¸ì¸ í”„ë ˆì„ì„ ë‹«ëŠ”ë‹¤
+				new LoginDialog(loginFrame, "·Î±×ÀÎ ¼º°ø");
+				loginFrame.dispose(); // ·Î±×ÀÎ ¼º°ø ÈÄ ·Î±×ÀÎ ÇÁ·¹ÀÓÀ» ´İ´Â´Ù
 				Main main = new Main();
-				main.createMainScreen(loginVo.getField_1()); // ë¡œê·¸ì¸ì— ì„±ê³µí•œ IDë¥¼ ë„˜ê²¨ì¤€ë‹¤
-				// ë¡œê·¸ì¸ ì„±ê³µì‹œ ë©”ì¸ í”„ë ˆì„ setvisible true
+				main.createMainScreen(loginVo.getField_1()); // ·Î±×ÀÎ¿¡ ¼º°øÇÑ ID¸¦ ³Ñ°ÜÁØ´Ù
+				// ·Î±×ÀÎ ¼º°ø½Ã ¸ŞÀÎ ÇÁ·¹ÀÓ setvisible true
 			} else if(String.valueOf(b).equals("false")) {
-				new LoginDialog(loginFrame, "ì•„ì´ë”” ë˜ëŠ” ë¹„ë°€ë²ˆí˜¸ê°€ ì¼ì¹˜í•˜ì§€ì•ŠìŠµë‹ˆë‹¤.");
+				new LoginDialog(loginFrame, "¾ÆÀÌµğ ¶Ç´Â ºñ¹Ğ¹øÈ£°¡ ÀÏÄ¡ÇÏÁö¾Ê½À´Ï´Ù.");
 			}
 		}
 	}
