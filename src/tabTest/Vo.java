@@ -167,6 +167,33 @@ public class Vo {
 		this.field_15 = field_15;
 		this.field_16 = field_16;
 	}
+
+	// Tab_1202
+	public Vo(String tableName,
+			String field_7, String field_8, String field_1, int value_1,
+			String field_2, int value_2, String field_3, int value_3,
+			String field_4, int value_4, String field_5, int value_5,
+			String field_6, int value_6)
+	{
+		this.tableName = tableName;
+		this.field_7 = field_7;
+		this.field_8 = field_8;
+		this.field_1 = field_1;
+		this.value_1 = value_1;
+		this.field_2 = field_2;
+		this.value_2 = value_2;
+		this.field_3 = field_3;
+		this.value_3 = value_3;
+		this.field_4 = field_4;
+		this.value_4 = value_4;
+		this.field_5 = field_5;
+		this.value_5 = value_5;
+		this.field_6 = field_6;
+		this.value_6 = value_6;
+		
+	}
+	
+	
 	
 	
 	public String getTableName() {

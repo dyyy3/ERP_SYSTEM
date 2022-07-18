@@ -200,6 +200,7 @@ public class MainScreen extends WindowAdapter implements ActionListener {
 			if(i == -1) {
 				Tab_1101 tab1101 = new Tab_1101();
 				tp.addTab(menuItem, tab1101.p);
+				tp.setSelectedIndex(checkAddTab(menuItem));
 			}else {
 				tp.setSelectedIndex(i);
 			}
@@ -208,6 +209,7 @@ public class MainScreen extends WindowAdapter implements ActionListener {
 			if(i == -1) {
 				Tab_1201 tab1201 = new Tab_1201();
 				tp.addTab(menuItem, tab1201.p);
+				tp.setSelectedIndex(checkAddTab(menuItem));
 			}else {
 				tp.setSelectedIndex(i);
 			}
@@ -216,6 +218,7 @@ public class MainScreen extends WindowAdapter implements ActionListener {
 			if(i == -1) {
 				Tab_1202 tab1202 = new Tab_1202();
 				tp.addTab(menuItem, tab1202.p);
+				tp.setSelectedIndex(checkAddTab(menuItem));
 			}else {
 				tp.setSelectedIndex(i);
 			}
@@ -224,6 +227,7 @@ public class MainScreen extends WindowAdapter implements ActionListener {
 			if(i == -1) {
 				Tab_1301 tab1301 = new Tab_1301();
 				tp.addTab(menuItem, tab1301.p);
+				tp.setSelectedIndex(checkAddTab(menuItem));
 			}else {
 				tp.setSelectedIndex(i);
 			}
@@ -232,6 +236,7 @@ public class MainScreen extends WindowAdapter implements ActionListener {
 			if(i == -1) {
 				Tab_1302 tab1302 = new Tab_1302();
 				tp.addTab(menuItem, tab1302.p);
+				tp.setSelectedIndex(checkAddTab(menuItem));
 			}else {
 				tp.setSelectedIndex(i);
 			}
@@ -240,6 +245,7 @@ public class MainScreen extends WindowAdapter implements ActionListener {
 			if(i == -1) {
 				Tab_1303 tab1303 = new Tab_1303();
 				tp.addTab(menuItem, tab1303.p);
+				tp.setSelectedIndex(checkAddTab(menuItem));
 			}else {
 				tp.setSelectedIndex(i);
 			}
@@ -248,6 +254,7 @@ public class MainScreen extends WindowAdapter implements ActionListener {
 			if(i == -1) {
 				Tab_1401 tab1401 = new Tab_1401();
 				tp.addTab(menuItem, tab1401.p);
+				tp.setSelectedIndex(checkAddTab(menuItem));
 			}else {
 				tp.setSelectedIndex(i);
 			}
@@ -256,6 +263,7 @@ public class MainScreen extends WindowAdapter implements ActionListener {
 			if(i == -1) {
 				Tab_1402 tab1402 = new Tab_1402();
 				tp.addTab(menuItem, tab1402.p);
+				tp.setSelectedIndex(checkAddTab(menuItem));
 			}else {
 				tp.setSelectedIndex(i);
 			}
@@ -264,6 +272,7 @@ public class MainScreen extends WindowAdapter implements ActionListener {
 			if(i == -1) {
 				Tab_1501 tab1501 = new Tab_1501();
 				tp.addTab(menuItem, tab1501.p);
+				tp.setSelectedIndex(checkAddTab(menuItem));
 			}else {
 				tp.setSelectedIndex(i);
 			}

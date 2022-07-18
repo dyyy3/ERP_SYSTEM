@@ -66,7 +66,7 @@ public class Dao {
 		return dept_id;
 	}
 	
-	// Tab_1201, Tab_1202
+	// Tab_1201, Tab_1202, Tab_1301
 	public String[][] selectAllOfferListWhere(Vo vo) {
 		ArrayList<String> list = new ArrayList<String>();
 		String[][] result = null; // list로 받은 값을 String 2차원 배열로 바꿔서 return
@@ -103,6 +103,32 @@ public class Dao {
 		return result;
 	}
 	
+	// Tab_1202
+	public String[] selectAllOfferCostWhere(Vo vo) {
+		String[] result = new String[7];
+		
+		checkConException();
+		try {
+			String select = "SELECT * FROM " + vo.getTableName() + " WHERE " + vo.getField_1() + " = '" + vo.getField_2() + "'";
+			// SELECT * FROM OFFER_COST WHERE OFFER_NUM = '22-7-3'
+			rs = stmt.executeQuery(select);
+			
+			while(rs.next()) {
+				result[0] = rs.getString(1);
+				result[1] = rs.getString(2);
+				result[2] = rs.getString(3);
+				result[3] = rs.getString(4);
+				result[4] = rs.getString(5);
+				result[5] = rs.getString(6);
+				result[6] = rs.getString(7);
+				
+			}
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
+	
 	
 	// Tab_1101, Tab_1201
 	public String[] selectOneField(Vo vo) {
@@ -126,6 +152,28 @@ public class Dao {
 		return result;
 	}
 	
+	// Tab_1301
+	public String[] selectOneFieldOrderBy(Vo vo) {
+		List<String> list = new ArrayList<>(); // 쿼리문으로 얻은 값을 저장. 행의 길이를 모르므로 list로 받는다
+		String[] result = null; // list로 받은 값을 String 배열로 바꿔서 return
+		
+		checkConException();
+		try {
+			String select = "SELECT " + vo.getField_1() + " FROM " + vo.getTableName() + " ORDER BY " + vo.getField_2();
+			// SELECT '' FROM '' ORDER BY ''
+			rs = stmt.executeQuery(select);
+			
+			while(rs.next()) {
+				list.add(rs.getString(1));
+			}
+			result = list.toArray(new String[list.size()]); // list의 size와 동일한 길이의 String 배열을 만든다
+			
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
+	
 	// Tab_1202
 		public String[] selectOneFieldWhereOrderBy(Vo vo) {
 			List<String> list = new ArrayList<>(); // 쿼리문으로 얻은 값을 저장. 행의 길이를 모르므로 list로 받는다
@@ -133,11 +181,9 @@ public class Dao {
 			
 			checkConException();
 			try {
-				// new Vo("offer_list", "num", "offer_num", tfText, "num");
 				String select = "SELECT " + vo.getField_2() + " FROM " + vo.getField_1()
 						+ " WHERE " + vo.getField_3() + " = '" + vo.getField_4() + "'"
 						+ " ORDER BY " + vo.getField_5();
-				// SELECT NUM FROM OFFER_LIST WHERE OFFER_NUM = '22-7-2' ORDER BY num
 				rs = stmt.executeQuery(select);
 				
 				while(rs.next()) {
@@ -305,6 +351,32 @@ public class Dao {
 		return b;
 	}
 	
+	// Tab_1202
+	public boolean updateSevenIntFieldWhere(Vo vo) {
+		boolean b = true;
+		checkConException();
+		try {
+			String update = "UPDATE " + vo.getTableName()
+					+ " SET " + vo.getField_7() + " = '" + vo.getField_8() + "', " + vo.getField_1() + " = " + vo.getValue_1() + ", "
+					+ vo.getField_2() + " = " + vo.getValue_2() + ", " + vo.getField_3() + " = " + vo.getValue_3() + ", "
+					+ vo.getField_4() + " = " + vo.getValue_4() + ", " + vo.getField_5() + " = " + vo.getValue_5() + ", "
+					+ vo.getField_6() + " = " + vo.getValue_6()
+					+ " WHERE " + vo.getField_7() + " = '" + vo.getField_8() + "'";
+			// UPDATE OFFER_COST
+			// SET OFFER_NUM = '22-7-3', CURRENCY_EXCHANGE = 0,
+			// REMITTANCE_CHARGE = 0, CUSTOM_CLEARANCE_FEE = 0,
+			// FREIGHT_CHARGE = 0, OTHER_COST = 0,
+			// AMOUNT_KRW = 0
+			// WHERE OFFER_NUM = '22-7-3'
+			
+			stmt.executeQuery(update);
+		}catch(Exception e) {
+			e.printStackTrace();
+			b = false;
+		}
+		return b;
+	}
+	
 	// Tab_1201
 	public boolean updateFourFieldsWhere(Vo vo) {
 		boolean b = true;
@@ -393,11 +465,11 @@ public class Dao {
 		}
 		
 		// Tab_1202
-		public int sum(Vo vo) {
+		public int sumWhere(Vo vo) {
 			int sum = 0;
 			checkConException();
 			try {
-				String select = "SELECT SUM(" + vo.getField_1() + ") FROM " + vo.getTableName();
+				String select = "SELECT SUM(" + vo.getField_1() + ") FROM " + vo.getTableName() + " WHERE " + vo.getField_2() + " = '" + vo.getField_3() + "'";
 				// SELECT SUM(AMOUNT) FROM OFFER_LIST
 				rs = stmt.executeQuery(select);
 				while (rs.next()) {

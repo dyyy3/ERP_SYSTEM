@@ -20,6 +20,7 @@ public class Tab_1202 implements ActionListener {
 	TextField[] tf;
 	DefaultTableModel dtm;
 	Dao dao = new Dao();
+	Vo vo;
 	
 	public Tab_1202() {
 		p = new JPanel();
@@ -118,14 +119,14 @@ public class Tab_1202 implements ActionListener {
 				new ErrorMessageDialog("offer번호를 입력하세요.", "수입원가 등록");
 			}else {
 				// 테이블에 출력 : 0 순번, 1 거래처, 2 품목코드, 3 품목명, 4 단위, 5 수량, 6 단가, 7 금액
-				Vo searchOffer = new Vo("offer", "offer_num", tfText);
-				String[] result = dao.selectAllOfferWhere(searchOffer);
+				vo = new Vo("offer", "offer_num", tfText);
+				String[] result = dao.selectAllOfferWhere(vo);
 				if(result.length == 0) {
 					new ErrorMessageDialog("등록되지않은 offer번호입니다.", "수입원가 등록");
 				}else {
 					// 0 순번 : offer_list테이블의 두번째 필드(num)
-					Vo selectIndex0 = new Vo("offer_list", "num", "offer_num", tfText, "num");
-					String[] selectResult1 = dao.selectOneFieldWhereOrderBy(selectIndex0);
+					vo = new Vo("offer_list", "num", "offer_num", tfText, "num");
+					String[] selectResult1 = dao.selectOneFieldWhereOrderBy(vo);
 					
 					int deleteRowCount = rowCount;
 					if(deleteRowCount == 0) {
@@ -147,8 +148,8 @@ public class Tab_1202 implements ActionListener {
 					
 					// 1 거래처 : offer테이블의 두번째 필드(client_name)
 					// SELECT client_name FROM OFFER WHERE OFFER_NUM = '22-7-2'
-					Vo selectIndex1 = new Vo("offer", "client_name", "offer_num", tfText);
-					String selectResult2 = dao.selectOneFieldWhere(selectIndex1);
+					vo = new Vo("offer", "client_name", "offer_num", tfText);
+					String selectResult2 = dao.selectOneFieldWhere(vo);
 					
 					for(int i=0; i<selectResult1.length; i++) {
 						dtm.setValueAt(selectResult2, i, 1);
@@ -161,8 +162,8 @@ public class Tab_1202 implements ActionListener {
 					// 6 단가 : offer_list테이블의 일곱번째 필드(unit_price)
 					// 7 금액 : offer_list테이블의 여덟번째 필드(amount)
 					
-					Vo selectIndex2 = new Vo("offer_list", "offer_num", tfText, "num");
-					String[][] selectResult3 = dao.selectAllOfferListWhere(selectIndex2);
+					vo = new Vo("offer_list", "offer_num", tfText, "num");
+					String[][] selectResult3 = dao.selectAllOfferListWhere(vo);
 					
 					for(int i=0; i<selectResult3.length; i++) {
 						String[] addRow = new String[6];
@@ -172,11 +173,46 @@ public class Tab_1202 implements ActionListener {
 						}
 					}
 				}
+			} // else문의 끝
+			
+			// 이미 원가가 등록되어있다면 등록된 원가도 테이블에 출력
+			vo = new Vo("offer_cost", "offer_num", "offer_num", tfText);
+			String checkCost = dao.selectOneFieldWhere(vo);
+			//SELECT OFFER_NUM FROM offer_cost WHERE OFFER_NUM = '22-7-3'
+			if(checkCost.equals("")) {
+				
+			}else {
+				// tf[0] ~ tf[5]에 offer_cost 테이블에 저장된 값으로 set
+				vo = new Vo("offer_cost", "offer_num", tfText);
+				String[] offerCost = dao.selectAllOfferCostWhere(vo); // 0 : offer_num, 1 : 송금환율, 2 : 송금수수료, 3 : 통관비, 4 : 운반비, 5 : 기타비용, 6 : 총 금액
+
+				tf[0].setText(offerCost[1]); // 송금환율
+				tf[1].setText(offerCost[3]); // 통관비
+				tf[2].setText(offerCost[5]); // 기타비용
+				tf[3].setText(offerCost[2]); // 송금수수료
+				tf[4].setText(offerCost[4]); // 운반비
+				tf[5].setText(offerCost[6]); // 총 금액
+				
+				// 테이블 (n, 8)에 offer_list 테이블에 저장된 값으로 set
+				vo = new Vo("offer_list", "unit_price_krw", "offer_num", tfText, "num");
+				String[] unitPriceKrw = dao.selectOneFieldWhereOrderBy(vo);
+				
+				for(int i=0; i<unitPriceKrw.length; i++) {
+					dtm.setValueAt(unitPriceKrw[i], i, 8);
+				}
+				
+				// (n, 9)에 단가 * 수량 값
+				vo = new Vo("offer_list", "quantity", "offer_num", tfText, "num");
+				String[] quantities = dao.selectOneFieldWhereOrderBy(vo); // 수량
+				
+				for(int i=0; i<quantities.length; i++) {
+					dtm.setValueAt(Integer.parseInt(unitPriceKrw[i]) * Integer.parseInt(quantities[i]), i, 9);
+				}
+				
 			}
 			break;
 			
 		case "등록" :
-			Vo vo;
 			if(tf[0].getText().equals("")) {
 				new ErrorMessageDialog("송금환율은 필수 입력값입니다.", "수입원가 등록");
 			}else {
@@ -188,17 +224,13 @@ public class Tab_1202 implements ActionListener {
 				int freight_charge = 0; // 운반비
 				int other_cost = 0; // 기타비용
 				
-				try {
-					s = tf[0].getText();
-				}catch(NullPointerException e1) {
-					s = "0";
-					currency_exchange = Integer.parseInt(s); // 송금환율
-				}
+				currency_exchange = Integer.parseInt(tf[0].getText()); // 송금환율
 				
 				try {
 					s = tf[3].getText();
 				}catch(NullPointerException e1) {
 					s = "0";
+				}finally {
 					remittance_charge = Integer.parseInt(s); // 송금수수료
 				}
 				
@@ -206,6 +238,7 @@ public class Tab_1202 implements ActionListener {
 					s = tf[1].getText();
 				}catch(NullPointerException e1) {
 					s = "0";
+				}finally {
 					custom_clearance_fee = Integer.parseInt(s); // 통관비
 				}
 				
@@ -213,6 +246,7 @@ public class Tab_1202 implements ActionListener {
 					s = tf[4].getText();
 				}catch(NullPointerException e1) {
 					s = "0";
+				}finally {
 					freight_charge = Integer.parseInt(s); // 운반비
 				}
 				
@@ -220,41 +254,73 @@ public class Tab_1202 implements ActionListener {
 					s = tf[2].getText();
 				}catch(NullPointerException e1) {
 					s = "0";
+				}finally {
 					other_cost = Integer.parseInt(s); // 기타비용
 				}
 				
-				// 총 금액(KRW)을 구해서 TextField와 table의 (n,9)에 출력
-				vo = new Vo("offer_list", "amount");
-				int amount = dao.sum(vo);
-				int amount_krw = amount * currency_exchange + remittance_charge + custom_clearance_fee + freight_charge + other_cost; // 총 금액 = 금액 * 송금환율 + 송금수수료 + 통관비 + 운반비 + 기타비용
+				// 1. 금액(USD) 구하기
+				// : SELECT SUM(amount) FROM offer_list WHERE offer_num = 'tfTest'
+				vo = new Vo("offer_list", "amount", "offer_num", tfText);
+				int amount = dao.sumWhere(vo);
+
+				// 2. 총금액(KRW)을 구한후 TextField에 출력
+				// : 총금액(KRW) = 금액(USD) * 송금환율 + 송금수수료 + 통관비 + 운반비 + 기타비용
+				int amount_krw = amount * currency_exchange + remittance_charge + custom_clearance_fee + freight_charge + other_cost;
 				tf[5].setText(String.valueOf(amount_krw));
-				
-				for(int i=0; i<rowCount; i++) {
-					dtm.setValueAt(amount_krw, i, 8);
+
+				// 3. offer_cost 테이블에 송금환율 ~ 총금액까지 6가지 값 저장
+				vo = new Vo("offer_cost", "offer_num", "offer_num", tfText);
+				String checkOfferCost = dao.selectOneFieldWhere(vo); // offer_cost에 동일한 offeer_num으로 이미 저장된 값이 있는지 확인
+
+				if(checkOfferCost.equals("")) { // 없으면 insert
+					vo = new Vo(tfText, currency_exchange, remittance_charge, custom_clearance_fee, freight_charge, other_cost, amount_krw);
+					dao.insertOfferCost(vo);
+				}else { // 있으면 update
+					vo = new Vo("offer_cost",
+							"offer_num", tfText, "currency_exchange", currency_exchange,
+							"remittance_charge",  remittance_charge, "custom_clearance_fee", custom_clearance_fee,
+							"freight_charge", freight_charge, "other_cost", other_cost,
+							"amount_krw", amount_krw);
+					dao.updateSevenIntFieldWhere(vo);
 				}
 				
-				// offer_cost에 값 저장
-				vo = new Vo(tfText, currency_exchange, remittance_charge, custom_clearance_fee, freight_charge, other_cost, amount_krw);
-				dao.insertOfferCost(vo);
-				
-				// 단가(KRW)을 구해서 table의 (n,10)에 출력하고, offer_list의 9열(unit_price_krw)에 저장
+				// 4. 항목별 수량, 단가 구해서 각 배열에 저장후 총 수량을 구한다
+				// : offer_list 테이블에서 offer_num이 ontf.getText()와 일치하는 조건의 quantity로 구할 수 있음
 				vo = new Vo("offer_list", "quantity", "offer_num", tfText, "num");
-				String[] quantities = dao.selectOneFieldWhereOrderBy(vo);
+				String[] quantities = dao.selectOneFieldWhereOrderBy(vo); // 수량
 				
-				// UPDATE OFFER_LIST SET UNIT_PRICE_KRW = '20000' WHERE num = '1'
+				vo = new Vo("offer_list", "unit_price", "offer_num", tfText, "num");
+				String[] unit_price_arr = dao.selectOneFieldWhereOrderBy(vo); // 단가
+				
+				int quantity_sum = 0; // 총수량
+				for(int i=0; i<quantities.length; i++) {
+					quantity_sum += Integer.parseInt(quantities[i]);
+				}
+
+				// 5. 단가(KRW)을 구하여 테이블(n, 8)에 출력, offer_list의 9열(unit_price_krw)에 저장, 단가(KRW) * 수량을 테이블(n, 9)에 출력
+				// : 단가(KRW) = 단가 * 송금환율 + (송금수수료 + 통관비 + 운반비 + 기타비용) / 총 수량
 				int unit_price_krw;
 				boolean tryUpdateUnitPriceKrw = false;
-				for(int i=0; i<rowCount; i++) {
-					unit_price_krw = amount_krw / Integer.parseInt(quantities[i]);
-					dtm.setValueAt(unit_price_krw, i, 9);
+				for(int i=0; i<rowCount; i++) {		
+					// 단가(KRW) 계산
+					unit_price_krw = Integer.parseInt(unit_price_arr[i]) * currency_exchange
+							+ (remittance_charge + custom_clearance_fee + freight_charge + other_cost) / quantity_sum;
+					// 테이블에 단가(KRW) 출력
+					dtm.setValueAt(unit_price_krw, i, 8);
+					// offer_list에 단가(KRW) 저장
 					vo = new Vo("offer_list", "unit_price_krw", unit_price_krw, "num", String.valueOf(i+1));
 					tryUpdateUnitPriceKrw = dao.updateOneIntFieldWhere(vo);
+					// 테이블에 단가(KRW) * 수량 출력
+					dtm.setValueAt(unit_price_krw * Integer.parseInt(quantities[i]), i, 9);
 				}
+				
+				// 결과 출력
 				if(tryUpdateUnitPriceKrw == true) {
 					new ErrorMessageDialog("원가 정보가 등록되었습니다.", "수입원가 등록");
 				}else {
 					new ErrorMessageDialog("원가 정보 등록에 실패하였습니다.", "수입원가 등록");
 				}
+				
 			}
 			break;
 		}

@@ -170,6 +170,13 @@ public class Tab_1201 implements ActionListener, ItemListener {
 				String[] result = dao.selectAllOfferWhere(searchOffer);
 				if(result.length == 0) {
 					new ErrorMessageDialog("등록되지않은 offer번호입니다.", "수입offer 등록");
+					int deleteRow = rowCount; // 이전에 조회되어있던 offer의 상세정보를 테이블에서 보이지않게함
+					if(deleteRow != 0) {
+						while(deleteRow != 0) {
+							dtm.removeRow(deleteRow - 1);
+							deleteRow--;
+						}
+					}
 				}else {
 					// offer테이블 데이터 출력
 					tf.setText(result[0]);

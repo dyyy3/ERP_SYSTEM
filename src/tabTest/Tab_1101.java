@@ -81,8 +81,6 @@ public class Tab_1101 implements ActionListener, ItemListener {
 		tfpn = new TextField(); // 품목명
 		
 		tfpc.setEditable(false); // 변경 불가
-		tfpc.setFocusable(false); // focusing 불가
-		
 		tfpn.setEditable(false); // 변경 불가
 
 		p.add(tfpc);

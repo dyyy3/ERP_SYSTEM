@@ -148,7 +148,7 @@ public class Tab_1301 implements ActionListener, ItemListener {
 		
 		// Table 추가
 		String[] header = {
-				"", "순번", "offer번호", "거래처", "품목코드",
+				"", "offer번호", "순번", "거래처", "품목코드",
 				"품목명", "단위", "수량"
 		};
 		
@@ -164,145 +164,142 @@ public class Tab_1301 implements ActionListener, ItemListener {
 		p.add(sp);
 	}
 	
-	public void setTable(String s1, String s2) {
-		// 테이블에 출력 : 0 체크박스, 1 순번, 2 offer번호, 3 거래처, 4 품목코드, 5 품목명, 6 단위, 7 수량
-		String date1 = s1; // 2022-7-1
-		String date2 = s2; // 2022-7-31
-		String[] date1Arr = s1.split("-"); // 2022, 7, 1
-		String[] date2Arr = s2.split("-"); // 2022, 7, 31
+	// 기간은 어떤 경우에라도 주어져야하는 조건이므로 중복을 제거하기위해 기간 조건에 맞는 날짜와 offer_num을 구하는 코드는 별도의 메서드로 작성하여 호출
+	public String[][] dateAndOfferNum(String date1, String date2) {
+		String[] date1Arr = date1.split("-"); // 2022, 7, 1
+		String[] date2Arr = date2.split("-"); // 2022, 7, 31
 		
-		// offer_date를 DB에서 가져온 후 저장
-		vo = new Vo("offer", "offer_date");
-		String[] selectResult1 = dao.selectOneField(vo);
+		String[][] dateAndOfferNum; // 리턴값
 		
-		String[][] dbDate = new String[selectResult1.length][3];
+		// offer_date와 offer_num을 DB에서 가져온 후 저장
+		vo = new Vo("offer", "offer_date", "offer_num");
+		String[] selectResult1 = dao.selectOneFieldOrderBy(vo); // offer_date
+		vo = new Vo("offer", "offer_num", "offer_num");
+		String[] selectResult2 = dao.selectOneFieldOrderBy(vo); // offer_num
+		
+		
+		String[][] dbDate = new String[selectResult1.length][4]; // 0 ~ 2 : 날짜(년,월,일) / 3 : offer번호 
 		
 		for(int i=0; i<selectResult1.length; i++) { // DB의 날짜를 구분자로 나누어서 2차원 배열에 담는다
 			String[] splitDate = selectResult1[i].split("-");
 			for(int j=0; j<dbDate[i].length; j++) {
-				dbDate[i][j] =  splitDate[j];
-				System.out.print(dbDate[i][j] + " ");
+				if(j < 3) { // 날짜 저장
+					dbDate[i][j] =  splitDate[j];
+				}else { // offer번호 저장
+					dbDate[i][j] = selectResult2[i];
+				}
+//				System.out.print(dbDate[i][j] + " ");
 			}
-			System.out.println();
+//			System.out.println();
 		}
+//		System.out.println();
 		
-		String[] finallyDate;
-		// 기간 조건을 충족하는 날짜들을 String 배열에 저장
+		String[][] selectedDateAndOfferNum = new String[selectResult1.length][4]; // 기간 조건을 충족하는 날짜와 offer번호를 String타입 2차원 배열에 저장
+		int index = 0; // String[] selectedDate의 index
+		
 		for(int i=0; i<dbDate.length; i++) {
-			boolean b = true;
-			if(Integer.valueOf(dbDate[i][0]) >= Integer.valueOf(date1Arr[0])) { // 시작년도보다 빠를때
-				
-			}else {
-				b = false;
-			}
-			if(Integer.valueOf(dbDate[i][1]) >= Integer.valueOf(date1Arr[1])) { // 시작월보다 빠를때
-
-			}else {
-				b = false;
-			}
-			if(Integer.valueOf(dbDate[i][2]) >= Integer.valueOf(date1Arr[2])) { // 시작일보다 빠를때
-
-			}else {
-				b = false;
-			}
-			if(Integer.valueOf(dbDate[i][0]) <= Integer.valueOf(date2Arr[0])) { // 종료년도보다 늦을때
-
-			}else {
-				b = false;
-			}
-			if(Integer.valueOf(dbDate[i][1]) <= Integer.valueOf(date2Arr[1])) { // 종료월보다 늦을때
-
-			}else {
-				b = false;
-			}
-			if(Integer.valueOf(dbDate[i][2]) <= Integer.valueOf(date2Arr[2])) { // 종료일보다 늦를때
-
-			}else {
-				b = false;
+			boolean checkStartDate = true;
+			boolean checkEndDate = true;
+			
+			// 시작일과 비교
+			if(Integer.valueOf(dbDate[i][0]) > Integer.valueOf(date1Arr[0])) { // db년도 > 시작년도
+				// checkStartDate = true;
+			}else if(Integer.valueOf(dbDate[i][0]).equals(Integer.valueOf(date1Arr[0]))) { // db년도 = 시작년도
+				if(Integer.valueOf(dbDate[i][1]) > Integer.valueOf(date1Arr[1])) { // db월 > 시작월
+					// checkStartDate = true;
+				}else if(Integer.valueOf(dbDate[i][1]).equals(Integer.valueOf(date1Arr[1]))) { // db월 = 시작월
+					if(Integer.valueOf(dbDate[i][2]) > Integer.valueOf(date1Arr[2])) { // db일 > 시작일
+						// checkStartDate = true;
+					}else if(Integer.valueOf(dbDate[i][2]).equals(Integer.valueOf(date1Arr[2]))) { // db일 = 시작일
+						// checkStartDate = true;
+					}else if(Integer.valueOf(dbDate[i][2]) < Integer.valueOf(date1Arr[2])) { // db일 < 시작일
+						checkStartDate = false;
+					}
+				}else if(Integer.valueOf(dbDate[i][1]) < Integer.valueOf(date1Arr[1])) { // db월 < 시작월
+					checkStartDate = false;
+				}
+			}else if(Integer.valueOf(dbDate[i][0]) < Integer.valueOf(date1Arr[0])) {  // db년도 < 시작년도
+				checkStartDate = false;
 			}
 			
-			if(b == true) {
-				finallyDate[i] = dbDate[i][0];
+			// 종료일과 비교
+			if(Integer.valueOf(dbDate[i][0]) < Integer.valueOf(date2Arr[0])) { // db년도 < 종료년도
+				// checkEndDate = true;
+			}else if(Integer.valueOf(dbDate[i][0]).equals(Integer.valueOf(date2Arr[0]))) { // db년도 = 종료년도
+				if(Integer.valueOf(dbDate[i][1]) < Integer.valueOf(date2Arr[1])) { // db월 < 종료월
+					// checkEndDate = true;
+				}else if(Integer.valueOf(dbDate[i][1]).equals(Integer.valueOf(date2Arr[1]))) { // db월 = 종료월
+					if(Integer.valueOf(dbDate[i][2]) < Integer.valueOf(date2Arr[2])) { // db일 < 종료일
+						// checkEndDate = true;
+					}else if(Integer.valueOf(dbDate[i][2]).equals(Integer.valueOf(date2Arr[2]))) { // db일 = 종료일
+						// checkEndDate = true;
+					}else if(Integer.valueOf(dbDate[i][2]) > Integer.valueOf(date2Arr[2])) { // db일 > 종료일
+						checkEndDate = false;
+					}
+				}else if(Integer.valueOf(dbDate[i][1]) > Integer.valueOf(date2Arr[1])) { // db월 > 종료월
+					checkEndDate = false;
+				}
+			}else if(Integer.valueOf(dbDate[i][0]) > Integer.valueOf(date2Arr[0])) {  // db년도 > 종료료년도
+				checkEndDate = false;
+			}
+
+			// 시작일과 종료일 비교 결과값이 모두 true일때 selectedDate 배열에 저장
+			if(checkStartDate == true && checkEndDate == true) {
+				selectedDateAndOfferNum[index][0] = dbDate[i][0] + "-" + dbDate[i][1] + "-" + dbDate[i][2];
+				selectedDateAndOfferNum[index][1] = selectResult2[i];
+				index++;
+			}
+			
+		} // for문의 끝
+		
+		// selectedDateAndOfferNum 배열에서 null값을 제외한 값을 selectedDateAndOfferNum 배열에 복사
+		dateAndOfferNum = new String[index][2];
+		
+		for(int i=0; i<selectedDateAndOfferNum.length; i++) {
+			if(selectedDateAndOfferNum[i][0] == null) {
+
+			}else {
+				dateAndOfferNum[i][0] = selectedDateAndOfferNum[i][0]; // 날짜
+				dateAndOfferNum[i][1] = selectedDateAndOfferNum[i][1]; // offer번호
 			}
 		}
 		
-		
-		
-//		// 날짜 형식을 2022-1-1에서 2022-01-01로 변경
-//		char[] c = date1.toCharArray();
-//
-//		// 1~9월을 01~09로 변경
-//		if (c[5] == '1' && c[6] != '-') { // 10~12월
-//
-//		} else { // 1~9월
-//			c[4] = '0';
-//		}
-//
-//		// 1~9일을 01~09일로 변경
-//		if (c[c.length - 2] == '-') {
-//			c[c.length - 2] = '0';
-//		}
-//
-//		String[] date3 = new String[2];
-//
-//		for (int i = 0; i < date3.length; i++) { // 빈 문자열로 초기화
-//			date3[i] = "";
-//		}
-//
-//		switch (c.length) {
-//		case 8:
-//			for (int i = 0; i < c.length; i++) {
-//				date3[0] += Character.toString(c[i]);
-//			}
-//			break;
-//		case 9:
-//			if (c[6] == '-') {
-//				for (int i = 0; i < c.length; i++) {
-//					if (i == 6) {
-//
-//					} else {
-//						date3[0] += Character.toString(c[i]);
-//					}
-//				}
-//			} else if (c[4] == '-') {
-//				for (int i = 0; i < c.length; i++) {
-//					if (i == 4) {
-//
-//					} else {
-//						date3[0] += Character.toString(c[i]);
-//					}
-//				}
-//			}
-//			break;
-//		case 10:
-//			for (int i = 0; i < c.length; i++) {
-//				if (i == 4 || i == 7) { // 구분자 2개는 넣지않음
-//
-//				} else {
-//					date3[0] += Character.toString(c[i]);
-//				}
-//			}
-//			break;
-//		}
-//
-//		System.out.println(date3[0]);
-
-//		// 1~2 : offer_list 테이블의 1,2열, 4~7 : offer_list 테이블의 3~6열
-//		vo = new Vo();
-//		String[][] result1 = dao.selectAllOfferListWhere(vo);
-//		
-//		// 3 : offer 테이블의 2열
-//		vo = new Vo();
-//		String[] result2 = dao.selectAllOfferWhere(vo);
+		return dateAndOfferNum;
 	}
 	
-	public void setTable(String s1, String s2, String s3, String s4, String s5) {
-		// 테이블에 출력 : 0 체크박스, 1 순번, 2 offer번호, 3 거래처, 4 품목코드, 5 품목명, 6 단위, 7 수량 
-		String date1;
-		String date2;
-		String offer_num;
-		String client_name;
-		String product_code;
+	public void setTable(String date1, String date2) {
+		// 테이블에 출력 : 0 체크박스, 1 offer번호, 1 순번, 3 거래처, 4 품목코드, 5 품목명, 6 단위, 7 수량
+		
+		String[][] result = dateAndOfferNum(date1, date2); // 0열 : 날짜, 1열 : offer번호
+		
+		// 1~2 : offer_list 테이블의 1,2열, 3 : offer 테이블의 2열, 4~7 : offer_list 테이블의 3~6열
+		for(int i=0; i<result.length; i++) {
+			vo = new Vo("offer_list", "offer_num", result[i][1], "offer_num");
+			
+			String[][] result1 = dao.selectAllOfferListWhere(vo);
+			
+			vo = new Vo("offer", "client_name", "offer_num");
+			String[] result2 = dao.selectOneFieldOrderBy(vo);
+			
+			for(int j=0; j<result1.length; j++) {
+				String[] addRow = new String[9];
+				addRow[0] = "";
+				addRow[1] = result1[j][0]; // 2 offer번호
+				addRow[2] = result1[j][1]; // 1 순번
+				addRow[3] = result2[j]; // 3 거래처
+				addRow[4] = result1[j][2]; // 4 품목코드
+				addRow[5] = result1[j][3]; // 5 품목명
+				addRow[6] = result1[j][4]; // 6 단위
+				addRow[7] = result1[j][5]; // 7 수량
+				dtm.addRow(addRow);
+			}
+		}
+	}
+	
+	public void setTable(String date1, String date2, String offer_num, String client_name, String product_code) {
+		// 테이블에 출력 : 0 체크박스, 1 offer번호, 1 순번, 3 거래처, 4 품목코드, 5 품목명, 6 단위, 7 수량
+		
+		
 		
 		// 1~2 : offer_list 테이블의 1,2열, 4~7 : offer_list 테이블의 3~6열
 		vo = new Vo();
@@ -322,7 +319,6 @@ public class Tab_1301 implements ActionListener, ItemListener {
 			String offer_num = tf[0].getText();
 			String client_name = ch.getSelectedItem();
 			String product_code = tf[1].getText();
-			
 			
 			// 조회 조건 경우의 수 : 8가지
 			if(offer_num.equals("") && client_name.equals("") && product_code.equals("")) { // 기간으로 조회 (offer번호, 거래처, 품목코드 빈칸인 경우)
