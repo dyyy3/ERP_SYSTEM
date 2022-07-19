@@ -7,6 +7,8 @@ import javax.swing.*;
 
 import java.text.*;
 import java.util.*;
+
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
 import net.sourceforge.jdatepicker.impl.JDatePanelImpl;
@@ -26,8 +28,20 @@ public class Tab_1301 implements ActionListener, ItemListener {
 	UtilDateModel model;
 	UtilDateModel model2;
 	DefaultTableModel dtm;
+	JTable table;
 	Dao dao = new Dao();
 	Vo vo;
+	
+	DefaultTableCellRenderer dcr = new DefaultTableCellRenderer() {
+		public Component getTableCellRendererComponent // 셀렌더러
+		(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+			JCheckBox box = new JCheckBox();
+			box.setSelected(((Boolean) value).booleanValue());
+//			box.setSelected(((Boolean) dtm.getValueAt(0, 0)).booleanValue());
+			box.setHorizontalAlignment(JLabel.CENTER);
+			return box;
+		}
+	};
 	
 	public Tab_1301() {
 		p = new JPanel();
@@ -152,12 +166,8 @@ public class Tab_1301 implements ActionListener, ItemListener {
 				"품목명", "단위", "수량"
 		};
 		
-		/*
-		checkbox 추가되어야함
-		*/
-		
 		dtm = new DefaultTableModel(header, 0);		
-		JTable table = new JTable(dtm);
+		table = new JTable(dtm);
 		
 		JScrollPane sp = new JScrollPane(table);
 		sp.setBounds(10, 170, 1000, 500);
@@ -188,11 +198,8 @@ public class Tab_1301 implements ActionListener, ItemListener {
 				}else { // offer번호 저장
 					dbDate[i][j] = selectResult2[i];
 				}
-//				System.out.print(dbDate[i][j] + " ");
 			}
-//			System.out.println();
 		}
-//		System.out.println();
 		
 		String[][] selectedDateAndOfferNum = new String[selectResult1.length][4]; // 기간 조건을 충족하는 날짜와 offer번호를 String타입 2차원 배열에 저장
 		int index = 0; // String[] selectedDate의 index
@@ -286,8 +293,8 @@ public class Tab_1301 implements ActionListener, ItemListener {
 			String[][] result1 = dao.selectAllOfferAndOfferListJoinWhereTwoFields(vo);
 			
 			for(int j=0; j<result1.length; j++) {
-				String[] addRow = new String[9];
-				addRow[0] = "";
+				Object[] addRow = new Object[9];
+				addRow[0] = false;
 				addRow[1] = result1[j][0];
 				addRow[2] = result1[j][6];
 				addRow[3] = result1[j][1];
@@ -298,6 +305,11 @@ public class Tab_1301 implements ActionListener, ItemListener {
 				dtm.addRow(addRow);
 			}
 		}
+		table.getColumn("").setCellRenderer(dcr);
+		
+		JCheckBox box = new JCheckBox();
+		box.setHorizontalAlignment(JLabel.CENTER);
+		table.getColumn("").setCellEditor(new DefaultCellEditor(box));
 	}
 	
 	public void setTable(String date1, String date2, String ocp) {
@@ -332,8 +344,8 @@ public class Tab_1301 implements ActionListener, ItemListener {
 				String[][] result1 = dao.selectAllOfferAndOfferListJoinWhereThreeFields(vo);
 				
 				for(int j=0; j<result1.length; j++) {
-					String[] addRow = new String[9];
-					addRow[0] = "";
+					Object[] addRow = new Object[9];
+					addRow[0] = false;
 					addRow[1] = result1[j][0];
 					addRow[2] = result1[j][6];
 					addRow[3] = result1[j][1];
@@ -354,8 +366,8 @@ public class Tab_1301 implements ActionListener, ItemListener {
 				String[][] result1 = dao.selectAllOfferAndOfferListJoinWhereThreeFields(vo);
 				
 				for(int j=0; j<result1.length; j++) {
-					String[] addRow = new String[9];
-					addRow[0] = "";
+					Object[] addRow = new Object[9];
+					addRow[0] = false;
 					addRow[1] = result1[j][0];
 					addRow[2] = result1[j][6];
 					addRow[3] = result1[j][1];
@@ -376,8 +388,8 @@ public class Tab_1301 implements ActionListener, ItemListener {
 				String[][] result1 = dao.selectAllOfferAndOfferListJoinWhereThreeFields(vo);
 				
 				for(int j=0; j<result1.length; j++) {
-					String[] addRow = new String[9];
-					addRow[0] = "";
+					Object[] addRow = new Object[9];
+					addRow[0] = false;
 					addRow[1] = result1[j][0];
 					addRow[2] = result1[j][6];
 					addRow[3] = result1[j][1];
@@ -390,6 +402,11 @@ public class Tab_1301 implements ActionListener, ItemListener {
 			}
 			break;
 		}
+		table.getColumn("").setCellRenderer(dcr);
+		
+		JCheckBox box = new JCheckBox();
+		box.setHorizontalAlignment(JLabel.CENTER);
+		table.getColumn("").setCellEditor(new DefaultCellEditor(box));
 	}
 	
 	public void setTable(String date1, String date2, String ocp1, String ocp2) {
@@ -426,8 +443,8 @@ public class Tab_1301 implements ActionListener, ItemListener {
 				String[][] result1 = dao.selectAllOfferAndOfferListJoinWhereFourFields(vo);
 				
 				for(int j=0; j<result1.length; j++) {
-					String[] addRow = new String[9];
-					addRow[0] = "";
+					Object[] addRow = new Object[9];
+					addRow[0] = false;
 					addRow[1] = result1[j][0];
 					addRow[2] = result1[j][6];
 					addRow[3] = result1[j][1];
@@ -448,8 +465,8 @@ public class Tab_1301 implements ActionListener, ItemListener {
 				String[][] result1 = dao.selectAllOfferAndOfferListJoinWhereFourFields(vo);
 				
 				for(int j=0; j<result1.length; j++) {
-					String[] addRow = new String[9];
-					addRow[0] = "";
+					Object[] addRow = new Object[9];
+					addRow[0] = false;
 					addRow[1] = result1[j][0];
 					addRow[2] = result1[j][6];
 					addRow[3] = result1[j][1];
@@ -470,8 +487,8 @@ public class Tab_1301 implements ActionListener, ItemListener {
 				String[][] result1 = dao.selectAllOfferAndOfferListJoinWhereFourFields(vo);
 				
 				for(int j=0; j<result1.length; j++) {
-					String[] addRow = new String[9];
-					addRow[0] = "";
+					Object[] addRow = new Object[9];
+					addRow[0] = false;
 					addRow[1] = result1[j][0];
 					addRow[2] = result1[j][6];
 					addRow[3] = result1[j][1];
@@ -483,6 +500,11 @@ public class Tab_1301 implements ActionListener, ItemListener {
 				}
 			}
 		}
+		table.getColumn("").setCellRenderer(dcr);
+		
+		JCheckBox box = new JCheckBox();
+		box.setHorizontalAlignment(JLabel.CENTER);
+		table.getColumn("").setCellEditor(new DefaultCellEditor(box));
 	}
 	
 	public void setTable(String date1, String date2, String offer_num, String client_name, String product_code) {
@@ -506,8 +528,8 @@ public class Tab_1301 implements ActionListener, ItemListener {
 			String[][] result1 = dao.selectAllOfferAndOfferListJoinWhereFourFields(vo);
 
 			for (int j = 0; j < result1.length; j++) {
-				String[] addRow = new String[9];
-				addRow[0] = "";
+				Object[] addRow = new Object[9];
+				addRow[0] = false;
 				addRow[1] = result1[j][0];
 				addRow[2] = result1[j][6];
 				addRow[3] = result1[j][1];
@@ -518,6 +540,11 @@ public class Tab_1301 implements ActionListener, ItemListener {
 				dtm.addRow(addRow);
 			}
 		}
+		table.getColumn("").setCellRenderer(dcr);
+		
+		JCheckBox box = new JCheckBox();
+		box.setHorizontalAlignment(JLabel.CENTER);
+		table.getColumn("").setCellEditor(new DefaultCellEditor(box));
 	}
 	
 	@Override
@@ -572,6 +599,14 @@ public class Tab_1301 implements ActionListener, ItemListener {
 			break;
 			
 		case "입고처리" :
+			for(int i=0; i<dtm.getRowCount(); i++) {
+				boolean b = Boolean.valueOf(table.getValueAt(i, 0).toString());
+				if(b == true) {
+					System.out.println(table.getValueAt(i, 1));
+					System.out.println(table.getValueAt(i, 2));
+					System.out.println();
+				}
+			}
 			break;
 		}
 	}

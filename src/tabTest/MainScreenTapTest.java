@@ -165,7 +165,3 @@ public class MainScreenTapTest extends WindowAdapter implements ActionListener {
 		main.setVisible(true);
 	}
 }
-
-
-
-
