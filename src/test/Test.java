@@ -2,18 +2,16 @@ package test;
 
 public class Test {
 	public static void main(String[] args) {
-		String s1 = "20200101";
-		String s2 = "20200111";
-		String s3 = "20201101";
-		String s4 = "20201111";
-
-		int i1 = Integer.valueOf(s1);
-		int i2 = Integer.valueOf(s2);
-		int i3 = Integer.valueOf(s3);
-		int i4 = Integer.valueOf(s4);
+		String offer_num = "22-7-1";
+		String client_name = "Blue Stone";
+		String product_code = "1-G031-CCN006-020";
 		
-		if(i2 > i1) {
-			System.out.println("i2 > i1");
-		}
+		String[] check = product_code.split("-");
+		
+		System.out.println(check.length);
+
+		// check.length가 3이면 offer_num
+		// 1이면 clinet_name
+		// 4면 product_code
 	}
 }

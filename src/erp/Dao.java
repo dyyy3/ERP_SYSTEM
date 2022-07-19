@@ -103,6 +103,264 @@ public class Dao {
 		return result;
 	}
 	
+	// Tab_1301
+		public String[][] selectAllOfferAndOfferListJoinWhereTwoFields(Vo vo) {
+			ArrayList<String> list = new ArrayList<String>();
+			String[][] result = null; // list로 받은 값을 String 2차원 배열로 바꿔서 return
+			
+			checkConException();
+			try {
+				String select = "SELECT * FROM OFFER o, OFFER_LIST ol "
+						+ " WHERE o.offer_num = ol.offer_num "
+						+ " AND " + vo.getTableName() + " = '" + vo.getField_1() + "'"
+						+ " ORDER BY " + vo.getField_2();
+				rs = stmt.executeQuery(select);
+				
+				while(rs.next()) {
+					list.add(rs.getString(1));
+					list.add(rs.getString(2));
+					list.add(rs.getString(3));
+					list.add(rs.getString(4));
+					list.add(rs.getString(5));
+					list.add(rs.getString(6));
+					list.add(rs.getString(7));
+					list.add(rs.getString(8));
+					list.add(rs.getString(9));
+					list.add(rs.getString(10));
+					list.add(rs.getString(11));
+					list.add(rs.getString(12));
+					list.add(rs.getString(13));
+					list.add(rs.getString(14));
+				}
+				// list를 String[][] result로
+				result = new String[list.size() / 14][14];
+				int a = 0;
+				for(int i=0; i<list.size()/14; i++) {
+					for(int j=0; j<14; j++) {
+						result[i][j] = list.get(a);
+						a++;
+					}
+				}
+			}catch(Exception e) {
+				e.printStackTrace();
+			}
+			return result;
+		}
+	
+	// Tab_1301
+	public String[][] selectAllOfferAndOfferListJoinWhereThreeFields(Vo vo) {
+		ArrayList<String> list = new ArrayList<String>();
+		String[][] result = null; // list로 받은 값을 String 2차원 배열로 바꿔서 return
+		
+		checkConException();
+		try {
+			String select = "SELECT * FROM OFFER o, OFFER_LIST ol "
+					+ " WHERE o.offer_num = ol.offer_num "
+					+ " AND " + vo.getField_1() + " = '" + vo.getField_2() + "'"
+					+ " AND " + vo.getField_3() + " = '" + vo.getField_4() + "'"
+					+ " ORDER BY " + vo.getField_5();
+			rs = stmt.executeQuery(select);
+			
+			while(rs.next()) {
+				list.add(rs.getString(1));
+				list.add(rs.getString(2));
+				list.add(rs.getString(3));
+				list.add(rs.getString(4));
+				list.add(rs.getString(5));
+				list.add(rs.getString(6));
+				list.add(rs.getString(7));
+				list.add(rs.getString(8));
+				list.add(rs.getString(9));
+				list.add(rs.getString(10));
+				list.add(rs.getString(11));
+				list.add(rs.getString(12));
+				list.add(rs.getString(13));
+				list.add(rs.getString(14));
+			}
+			// list를 String[][] result로
+			result = new String[list.size() / 14][14];
+			int a = 0;
+			for(int i=0; i<list.size()/14; i++) {
+				for(int j=0; j<14; j++) {
+					result[i][j] = list.get(a);
+					a++;
+				}
+			}
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
+	
+	// Tab_1301
+	public String[][] selectAllOfferAndOfferListJoinWhereFourFields(Vo vo) {
+		ArrayList<String> list = new ArrayList<String>();
+		String[][] result = null; // list로 받은 값을 String 2차원 배열로 바꿔서 return
+
+		checkConException();
+		try {
+			String select = "SELECT * FROM OFFER o, OFFER_LIST ol "
+					+ " WHERE o.offer_num = ol.offer_num "
+					+ " AND " + vo.getField_1() + " = '" + vo.getField_2() + "'"
+					+ " AND " + vo.getField_3() + " = '" + vo.getField_4() + "'"
+					+ " AND " + vo.getField_5() + " = '" + vo.getField_6() + "'"
+					+ " ORDER BY " + vo.getField_7();
+			rs = stmt.executeQuery(select);
+
+			while (rs.next()) {
+				list.add(rs.getString(1));
+				list.add(rs.getString(2));
+				list.add(rs.getString(3));
+				list.add(rs.getString(4));
+				list.add(rs.getString(5));
+				list.add(rs.getString(6));
+				list.add(rs.getString(7));
+				list.add(rs.getString(8));
+				list.add(rs.getString(9));
+				list.add(rs.getString(10));
+				list.add(rs.getString(11));
+				list.add(rs.getString(12));
+				list.add(rs.getString(13));
+				list.add(rs.getString(14));
+			}
+			// list를 String[][] result로
+			result = new String[list.size() / 14][14];
+			int a = 0;
+			for (int i = 0; i < list.size() / 14; i++) {
+				for (int j = 0; j < 14; j++) {
+					result[i][j] = list.get(a);
+					a++;
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
+	
+	// Tab_1301
+	public String[][] selectAllOfferAndOfferListJoinWhereFiveFields(Vo vo) {
+		ArrayList<String> list = new ArrayList<String>();
+		String[][] result = null; // list로 받은 값을 String 2차원 배열로 바꿔서 return
+		
+		checkConException();
+		try {
+			String select = "SELECT * FROM OFFER o, OFFER_LIST ol "
+					+ " WHERE o.offer_num = ol.offer_num "
+					+ " AND " + vo.getField_1() + " = '" + vo.getField_2() + "'"
+					+ " AND " + vo.getField_3() + " = '" + vo.getField_4() + "'"
+					+ " AND " + vo.getField_5() + " = '" + vo.getField_6() + "'"
+					+ " AND " + vo.getField_7() + " = '" + vo.getField_8() + "'"
+					+ " ORDER BY " + vo.getField_9();
+			rs = stmt.executeQuery(select);
+			
+			while (rs.next()) {
+				list.add(rs.getString(1));
+				list.add(rs.getString(2));
+				list.add(rs.getString(3));
+				list.add(rs.getString(4));
+				list.add(rs.getString(5));
+				list.add(rs.getString(6));
+				list.add(rs.getString(7));
+				list.add(rs.getString(8));
+				list.add(rs.getString(9));
+				list.add(rs.getString(10));
+				list.add(rs.getString(11));
+				list.add(rs.getString(12));
+				list.add(rs.getString(13));
+				list.add(rs.getString(14));
+			}
+			// list를 String[][] result로
+			result = new String[list.size() / 14][14];
+			int a = 0;
+			for (int i = 0; i < list.size() / 14; i++) {
+				for (int j = 0; j < 14; j++) {
+					result[i][j] = list.get(a);
+					a++;
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
+
+	// Tab_1301
+	public String[][] selectAllOfferListWhereTwoFields(Vo vo) {
+		ArrayList<String> list = new ArrayList<String>();
+		String[][] result = null; // list로 받은 값을 String 2차원 배열로 바꿔서 return
+
+		checkConException();
+		try {
+			String select = "SELECT * FROM " + vo.getTableName() + " WHERE " + vo.getField_1() + " = '"
+					+ vo.getField_2() + "'" + " AND " + vo.getField_3() + " = '" + vo.getField_4() + "'" + " ORDER BY "
+					+ vo.getField_5();
+			rs = stmt.executeQuery(select);
+
+			while (rs.next()) {
+				list.add(rs.getString(1));
+				list.add(rs.getString(2));
+				list.add(rs.getString(3));
+				list.add(rs.getString(4));
+				list.add(rs.getString(5));
+				list.add(rs.getString(6));
+				list.add(rs.getString(7));
+				list.add(rs.getString(8));
+				list.add(rs.getString(9));
+			}
+			// list를 String[][] result로
+			result = new String[list.size() / 9][9]; // [3][8]. 3행 8열. 행 : 0~2, 열 : 0~7
+			int a = 0; // 0~23
+			for(int i=0; i<list.size()/9; i++) {
+				for(int j=0; j<9; j++) {
+					result[i][j] = list.get(a);
+					a++;
+				}
+			}
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
+	
+	// Tab_1301
+	public String[][] selectAllOfferListWhereThreeFields(Vo vo) {
+		ArrayList<String> list = new ArrayList<String>();
+		String[][] result = null; // list로 받은 값을 String 2차원 배열로 바꿔서 return
+		
+		checkConException();
+		try {
+			String select = "SELECT * FROM " + vo.getField_1() + " WHERE " + vo.getField_2() + " = '" + vo.getField_3() + "'"
+					+ " AND " + vo.getField_4() + " = '" + vo.getField_5() + "'"
+					+ " AND " + vo.getField_6() + " = '" + vo.getField_7() + "'"
+					+ " ORDER BY " + vo.getField_8();
+			rs = stmt.executeQuery(select);
+			while(rs.next()) {
+				list.add(rs.getString(1));
+				list.add(rs.getString(2));
+				list.add(rs.getString(3));
+				list.add(rs.getString(4));
+				list.add(rs.getString(5));
+				list.add(rs.getString(6));
+				list.add(rs.getString(7));
+				list.add(rs.getString(8));
+				list.add(rs.getString(9));
+			}
+			// list를 String[][] result로
+			result = new String[list.size() / 9][9]; // [3][8]. 3행 8열. 행 : 0~2, 열 : 0~7
+			int a = 0; // 0~23
+			for(int i=0; i<list.size()/9; i++) {
+				for(int j=0; j<9; j++) {
+					result[i][j] = list.get(a);
+					a++;
+				}
+			}
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
+	
 	// Tab_1202
 	public String[] selectAllOfferCostWhere(Vo vo) {
 		String[] result = new String[7];
@@ -130,7 +388,7 @@ public class Dao {
 	}
 	
 	
-	// Tab_1101, Tab_1201
+	// Tab_1101, Tab_1201, Tab_1301
 	public String[] selectOneField(Vo vo) {
 		List<String> list = new ArrayList<>(); // 쿼리문으로 얻은 값을 저장. 행의 길이를 모르므로 list로 받는다
 		String[] result = null; // list로 받은 값을 String 배열로 바꿔서 return
@@ -185,7 +443,6 @@ public class Dao {
 						+ " WHERE " + vo.getField_3() + " = '" + vo.getField_4() + "'"
 						+ " ORDER BY " + vo.getField_5();
 				rs = stmt.executeQuery(select);
-				
 				while(rs.next()) {
 					list.add(rs.getString(vo.getField_2())); // num
 				}
@@ -246,13 +503,33 @@ public class Dao {
 	}
 	
 	
-	// Tab_1101, Tab_1201, Tab_1202
+	// Tab_1101, Tab_1201, Tab_1202, Tab_1301
 	public String selectOneFieldWhere(Vo vo) {
 		String code ="";
 		checkConException();
 		try {
 			String select = "SELECT " + vo.getField_1() + " FROM " + vo.getTableName() + " WHERE " + vo.getField_2() + " = '" + vo.getField_3() + "'";
 			// SELECT STONE_NAME_CODE FROM STONE_NAME WHERE STONE_NAME = ''
+			rs = stmt.executeQuery(select);
+			
+			while(rs.next()){
+				code = rs.getString(vo.getField_1());
+			}
+			
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		return code;
+	}
+	
+	// Tab_1101, Tab_1201, Tab_1202
+	public String selectOneFieldWhereTwoFields(Vo vo) {
+		String code ="";
+		checkConException();
+		try {
+			String select = "SELECT " + vo.getField_1() + " FROM " + vo.getTableName()
+					+ " WHERE " + vo.getField_2() + " = '" + vo.getField_3() + "'"
+					+ " AND " + vo.getField_4() + " = '" + vo.getField_5() + "'";
 			rs = stmt.executeQuery(select);
 			
 			while(rs.next()){

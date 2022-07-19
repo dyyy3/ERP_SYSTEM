@@ -268,52 +268,276 @@ public class Tab_1301 implements ActionListener, ItemListener {
 	}
 	
 	public void setTable(String date1, String date2) {
-		// 테이블에 출력 : 0 체크박스, 1 offer번호, 1 순번, 3 거래처, 4 품목코드, 5 품목명, 6 단위, 7 수량
+		// 기간으로 조회 (offer번호, 거래처, 품목코드 빈칸인 경우)
+		
+		// 0 체크박스
+		// 1 offer번호 : offer와 offer_list Join 테이블의 1
+		// 2 순번 : 7
+		// 3 거래처 : 2
+		// 4 품목코드 : 8
+		// 5 품목명 : 9
+		// 6 단위 : 10
+		// 7 수량 : 11
 		
 		String[][] result = dateAndOfferNum(date1, date2); // 0열 : 날짜, 1열 : offer번호
 		
-		// 1~2 : offer_list 테이블의 1,2열, 3 : offer 테이블의 2열, 4~7 : offer_list 테이블의 3~6열
 		for(int i=0; i<result.length; i++) {
-			vo = new Vo("offer_list", "offer_num", result[i][1], "offer_num");
-			
-			String[][] result1 = dao.selectAllOfferListWhere(vo);
-			
-			vo = new Vo("offer", "client_name", "offer_num");
-			String[] result2 = dao.selectOneFieldOrderBy(vo);
+			vo = new Vo("o.OFFER_NUM", result[i][1], "o.offer_num");
+			String[][] result1 = dao.selectAllOfferAndOfferListJoinWhereTwoFields(vo);
 			
 			for(int j=0; j<result1.length; j++) {
 				String[] addRow = new String[9];
 				addRow[0] = "";
-				addRow[1] = result1[j][0]; // 2 offer번호
-				addRow[2] = result1[j][1]; // 1 순번
-				addRow[3] = result2[j]; // 3 거래처
-				addRow[4] = result1[j][2]; // 4 품목코드
-				addRow[5] = result1[j][3]; // 5 품목명
-				addRow[6] = result1[j][4]; // 6 단위
-				addRow[7] = result1[j][5]; // 7 수량
+				addRow[1] = result1[j][0];
+				addRow[2] = result1[j][6];
+				addRow[3] = result1[j][1];
+				addRow[4] = result1[j][7];
+				addRow[5] = result1[j][8];
+				addRow[6] = result1[j][9];
+				addRow[7] = result1[j][10];
 				dtm.addRow(addRow);
 			}
 		}
 	}
 	
-	public void setTable(String date1, String date2, String offer_num, String client_name, String product_code) {
-		// 테이블에 출력 : 0 체크박스, 1 offer번호, 1 순번, 3 거래처, 4 품목코드, 5 품목명, 6 단위, 7 수량
+	public void setTable(String date1, String date2, String ocp) {
+		// 기간 + offer번호로 조회 (거래처, 품목코드 빈칸인 경우)
+		// 기간 + 거래처로 조회 (offer번호, 품목코드 빈칸인 경우)
+		// 기간 + 품목코드로 조회 (offer번호, 거래처 빈칸인 경우)
 		
-		
-		
-		// 1~2 : offer_list 테이블의 1,2열, 4~7 : offer_list 테이블의 3~6열
-		vo = new Vo();
-		String[][] result1 = dao.selectAllOfferListWhere(vo);
+		// 0 체크박스
+		// 1 offer번호 : offer와 offer_list Join 테이블의 1
+		// 2 순번 : 7
+		// 3 거래처 : 2
+		// 4 품목코드 : 8
+		// 5 품목명 : 9
+		// 6 단위 : 10
+		// 7 수량 : 11
 
-		// 3 : offer 테이블의 2열
-		vo = new Vo();
-		String[] result2 = dao.selectAllOfferWhere(vo);
+		String[][] result = dateAndOfferNum(date1, date2); // 0열 : 날짜, 1열 : offer번호
+		
+		// 세번째 매개변수가 어떤 값인지 확인
+		String offer_num;
+		String client_name;
+		String product_code;
+		
+		String[] check = ocp.split("-");
+		
+		switch(check.length) {
+		case 3 : 
+			offer_num = ocp;
+			
+			for(int i=0; i<result.length; i++) {
+				vo = new Vo("o.OFFER_NUM", result[i][1], "o.OFFER_NUM", offer_num, "o.offer_num");
+				String[][] result1 = dao.selectAllOfferAndOfferListJoinWhereThreeFields(vo);
+				
+				for(int j=0; j<result1.length; j++) {
+					String[] addRow = new String[9];
+					addRow[0] = "";
+					addRow[1] = result1[j][0];
+					addRow[2] = result1[j][6];
+					addRow[3] = result1[j][1];
+					addRow[4] = result1[j][7];
+					addRow[5] = result1[j][8];
+					addRow[6] = result1[j][9];
+					addRow[7] = result1[j][10];
+					dtm.addRow(addRow);
+				}
+			}
+			break;
+			
+		case 1 : 
+			client_name = ocp;
+			
+			for(int i=0; i<result.length; i++) {
+				vo = new Vo("o.OFFER_NUM", result[i][1], "o.CLIENT_NAME", client_name, "o.offer_num");
+				String[][] result1 = dao.selectAllOfferAndOfferListJoinWhereThreeFields(vo);
+				
+				for(int j=0; j<result1.length; j++) {
+					String[] addRow = new String[9];
+					addRow[0] = "";
+					addRow[1] = result1[j][0];
+					addRow[2] = result1[j][6];
+					addRow[3] = result1[j][1];
+					addRow[4] = result1[j][7];
+					addRow[5] = result1[j][8];
+					addRow[6] = result1[j][9];
+					addRow[7] = result1[j][10];
+					dtm.addRow(addRow);
+				}
+			}
+			break;
+			
+		case 4 : 
+			product_code = ocp;
+
+			for(int i=0; i<result.length; i++) {
+				vo = new Vo("o.OFFER_NUM", result[i][1], "ol.PRODUCT_CODE", product_code, "o.offer_num");
+				String[][] result1 = dao.selectAllOfferAndOfferListJoinWhereThreeFields(vo);
+				
+				for(int j=0; j<result1.length; j++) {
+					String[] addRow = new String[9];
+					addRow[0] = "";
+					addRow[1] = result1[j][0];
+					addRow[2] = result1[j][6];
+					addRow[3] = result1[j][1];
+					addRow[4] = result1[j][7];
+					addRow[5] = result1[j][8];
+					addRow[6] = result1[j][9];
+					addRow[7] = result1[j][10];
+					dtm.addRow(addRow);
+				}
+			}
+			break;
+		}
+	}
+	
+	public void setTable(String date1, String date2, String ocp1, String ocp2) {
+		// 기간 + offer번호 + 거래처로 조회 (품목코드 빈칸인 경우) // 3, 1
+		// 기간 + offer번호 + 품목코드로 조회 (거래처 빈칸인 경우) // 3, 4
+		// 기간 + 거래처 + 품목코드로 조회 (offer번호 빈칸인 경우) // 1, 4
+		
+		// 0 체크박스
+		// 1 offer번호 : offer와 offer_list Join 테이블의 1
+		// 2 순번 : 7
+		// 3 거래처 : 2
+		// 4 품목코드 : 8
+		// 5 품목명 : 9
+		// 6 단위 : 10
+		// 7 수량 : 11
+		
+		String[][] result = dateAndOfferNum(date1, date2); // 0열 : 날짜, 1열 : offer번호
+		
+		// 세번째, 네번째 매개변수가 어떤 값인지 확인
+		String offer_num;
+		String client_name;
+		String product_code;
+		
+		String[] check1 = ocp1.split("-");
+		String[] check2 = ocp2.split("-");
+		
+		if(check1.length == 3 && check2.length == 1) {
+			offer_num = ocp1;
+			client_name = ocp2;
+			
+			for(int i=0; i<result.length; i++) {
+				vo = new Vo("o.OFFER_NUM", result[i][1], "o.OFFER_NUM", offer_num,
+						"o.CLIENT_NAME", client_name, "o.OFFER_NUM");
+				String[][] result1 = dao.selectAllOfferAndOfferListJoinWhereFourFields(vo);
+				
+				for(int j=0; j<result1.length; j++) {
+					String[] addRow = new String[9];
+					addRow[0] = "";
+					addRow[1] = result1[j][0];
+					addRow[2] = result1[j][6];
+					addRow[3] = result1[j][1];
+					addRow[4] = result1[j][7];
+					addRow[5] = result1[j][8];
+					addRow[6] = result1[j][9];
+					addRow[7] = result1[j][10];
+					dtm.addRow(addRow);
+				}
+			}
+		}else if(check1.length == 3 && check2.length == 4) {
+			offer_num = ocp1;
+			product_code = ocp2;
+			
+			for(int i=0; i<result.length; i++) {
+				vo = new Vo("o.OFFER_NUM", result[i][1], "o.OFFER_NUM", offer_num,
+						"ol.PRODUCT_CODE", product_code, "o.OFFER_NUM");
+				String[][] result1 = dao.selectAllOfferAndOfferListJoinWhereFourFields(vo);
+				
+				for(int j=0; j<result1.length; j++) {
+					String[] addRow = new String[9];
+					addRow[0] = "";
+					addRow[1] = result1[j][0];
+					addRow[2] = result1[j][6];
+					addRow[3] = result1[j][1];
+					addRow[4] = result1[j][7];
+					addRow[5] = result1[j][8];
+					addRow[6] = result1[j][9];
+					addRow[7] = result1[j][10];
+					dtm.addRow(addRow);
+				}
+			}
+		}else if(check1.length == 1 && check2.length == 4) {
+			client_name = ocp1;
+			product_code = ocp2;
+			
+			for(int i=0; i<result.length; i++) {
+				vo = new Vo("o.OFFER_NUM", result[i][1], "o.CLIENT_NAME", client_name,
+						"ol.PRODUCT_CODE", product_code, "o.OFFER_NUM");
+				String[][] result1 = dao.selectAllOfferAndOfferListJoinWhereFourFields(vo);
+				
+				for(int j=0; j<result1.length; j++) {
+					String[] addRow = new String[9];
+					addRow[0] = "";
+					addRow[1] = result1[j][0];
+					addRow[2] = result1[j][6];
+					addRow[3] = result1[j][1];
+					addRow[4] = result1[j][7];
+					addRow[5] = result1[j][8];
+					addRow[6] = result1[j][9];
+					addRow[7] = result1[j][10];
+					dtm.addRow(addRow);
+				}
+			}
+		}
+	}
+	
+	public void setTable(String date1, String date2, String offer_num, String client_name, String product_code) {
+		// 기간 + offer번호 + 거래처 + 품목코드로 조회
+
+		// 기간으로 조회 (offer번호, 거래처, 품목코드 빈칸인 경우)
+		// 0 체크박스
+		// 1 offer번호 : offer와 offer_list Join 테이블의 1
+		// 2 순번 : 7
+		// 3 거래처 : 2
+		// 4 품목코드 : 8
+		// 5 품목명 : 9
+		// 6 단위 : 10
+		// 7 수량 : 11
+
+		String[][] result = dateAndOfferNum(date1, date2); // 0열 : 날짜, 1열 : offer번호
+
+		for (int i = 0; i < result.length; i++) {
+			vo = new Vo("o.OFFER_NUM", result[i][1], "o.OFFER_NUM", offer_num, "o.CLIENT_NAME", client_name,
+					"ol.PRODUCT_CODE", product_code, "o.offer_num");
+			String[][] result1 = dao.selectAllOfferAndOfferListJoinWhereFourFields(vo);
+
+			for (int j = 0; j < result1.length; j++) {
+				String[] addRow = new String[9];
+				addRow[0] = "";
+				addRow[1] = result1[j][0];
+				addRow[2] = result1[j][6];
+				addRow[3] = result1[j][1];
+				addRow[4] = result1[j][7];
+				addRow[5] = result1[j][8];
+				addRow[6] = result1[j][9];
+				addRow[7] = result1[j][10];
+				dtm.addRow(addRow);
+			}
+		}
 	}
 	
 	@Override
 	public void actionPerformed(ActionEvent e) {
+		int rowCount = dtm.getRowCount();
+		
 		switch(e.getActionCommand()) {
 		case "조회" :
+			if(rowCount != 0) {
+				int deleteRowCount = rowCount;
+				if(deleteRowCount == 0) {
+					
+				}else {
+					while(deleteRowCount != 0){
+						dtm.removeRow(deleteRowCount - 1);
+						deleteRowCount--;
+					}
+				}
+			}
+			
 			String date1 = model.getYear() + "-" + (model.getMonth() + 1) + "-" + model.getDay();
 			String date2 = model2.getYear() + "-" + (model2.getMonth() + 1) + "-" + model2.getDay();
 			String offer_num = tf[0].getText();
@@ -325,22 +549,26 @@ public class Tab_1301 implements ActionListener, ItemListener {
 				setTable(date1, date2);
 				
 			}else if(client_name.equals("") && product_code.equals("")) { // 기간 + offer번호로 조회 (거래처, 품목코드 빈칸인 경우)
+				setTable(date1, date2, offer_num);
 				
 			}else if(offer_num.equals("") && product_code.equals("")) { // 기간 + 거래처로 조회 (offer번호, 품목코드 빈칸인 경우)
+				setTable(date1, date2, client_name);
 				
-			}else if(offer_num.equals("") && client_name.equals("")) { // 기간 + 품목코드로 조회 (offer번호, 거래처빈칸인 경우)
+			}else if(offer_num.equals("") && client_name.equals("")) { // 기간 + 품목코드로 조회 (offer번호, 거래처 빈칸인 경우)
+				setTable(date1, date2, product_code);
 				
 			}else if(product_code.equals("")) { // 기간 + offer번호 + 거래처로 조회 (품목코드 빈칸인 경우)
+				setTable(date1, date2, offer_num, client_name);
 				
 			}else if(client_name.equals("")) { // 기간 + offer번호 + 품목코드로 조회 (거래처 빈칸인 경우)
+				setTable(date1, date2, offer_num, product_code);
 				
 			}else if(offer_num.equals("")) { // 기간 + 거래처 + 품목코드로 조회 (offer번호 빈칸인 경우)
+				setTable(date1, date2, client_name, product_code);
 				
 			}else { // 기간 + offer번호 + 거래처 + 품목코드로 조회
 				setTable(date1, date2, offer_num, client_name, product_code);
 			}
-			
-
 			break;
 			
 		case "입고처리" :
