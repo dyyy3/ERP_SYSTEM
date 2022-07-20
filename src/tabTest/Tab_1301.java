@@ -648,23 +648,15 @@ public class Tab_1301 implements ActionListener, ItemListener {
 			}
 			
 			if(min == max) {
-				System.out.println("s : " + s);
-				
 				vo = new Vo("storing", "offer_num", "offer_num", s);
 				String checkOfferNum = dao.selectOneFieldDistinctWhere(vo);
-				
-				System.out.println("checkOffereNum : " + checkOfferNum);
 				
 				if(checkOfferNum == null) {
 					storing_num = Integer.parseInt(String.valueOf(max) + "0001");
 				}else {
 					vo = new Vo("storing", "storing_num", "offer_num", s);
-					int i = dao.selectMaxWhere(vo);
-					int j = i + 1;
-					storing_num = j;
-					
-					System.out.println("i : " + i);
-					System.out.println("j : " + j);
+					int i = dao.selectMaxWhere(vo) + 1;
+					storing_num = i;
 				}
 			}else { // min != max -> 서로 다른 offer번호가 함께 체크된 상태
 				new ErrorMessageDialog("offer번호가 다른 품목이 있습니다. 같은 offeer번호로 선택해주세요", "입고 등록");

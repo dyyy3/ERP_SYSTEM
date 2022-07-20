@@ -720,10 +720,28 @@ public class Dao {
 		checkConException();
 		try {
 			String select = "SELECT MAX(" + vo.getField_1() + ") FROM " + vo.getTableName()
-			+ " WHERE " + vo.getField_2() + " = '" + vo.getField_3() + "'";
-			
+					+ " WHERE " + vo.getField_2() + " = '" + vo.getField_3() + "'";
 			rs = stmt.executeQuery(select);
 			// SELECT MAX(NUM) FROM OFFER_LIST WHERE OFFER_NUM = '22-7-3'
+			while(rs.next()){
+				result = rs.getInt(1);
+			}
+			
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
+	
+	// Tab_1302
+	public int selectMaxWhereLike(Vo vo) {
+		int result = 0;
+		checkConException();
+		try {
+			String select = "SELECT MAX(" + vo.getField_1() + ") FROM " + vo.getTableName()
+					+ " WHERE " + vo.getField_2() + " Like '" + vo.getField_3() + "%'";
+			rs = stmt.executeQuery(select);
+			
 			while(rs.next()){
 				result = rs.getInt(1);
 			}

@@ -134,6 +134,7 @@ public class Tab_1302 implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		int rowCount = dtm.getRowCount();
 		String product_code = pctf.getText();
+		String unstoring_date = model.getYear() + "-" + (model.getMonth() + 1) + "-" + model.getDay();
 		int count = 1;
 		
 		switch(e.getActionCommand()) {
@@ -195,15 +196,100 @@ public class Tab_1302 implements ActionListener {
 
 		case "출고처리" :
 			boolean b = true;
+			int unstoring_num = 0;
+			
+			// 출고번호 결정
+			String[] toSplit = unstoring_date.split("-"); // 22-7-20 -> 22, 7, 20
+			String date = toSplit[0] + toSplit[1] + toSplit[2]; // 22720
+			
+			vo = new Vo("unstoring", "unstoring_num", "unstoring_num", date);
+			String checkUnstoringNum = dao.selectOneFieldWhereLike(vo);
+			if(checkUnstoringNum == null) {
+				unstoring_num = Integer.parseInt(date + "0001"); // 227200001
+			}else {
+				vo = new Vo("unstoring", "unstoring_num", "unstoring_num", date);
+				int i = dao.selectMaxWhereLike(vo) + 1;
+				unstoring_num = i;
+			}
+			
+			// DB테이블에 저장
 			for(int i=0; i<dtm.getRowCount(); i++) {
 				b = Boolean.valueOf(table.getValueAt(i, 0).toString());
 				if(b == true) {
 					String s = table.getValueAt(i, 1).toString();
 					// 출고 table에 insert (quantity 값은 (-) 로 저장)
+//					UNSTORING_NUM, UNSTORING_DATE, PRODUCT_CODE,"
+//							+ " PRODUCT_NAME, UNIT, QUANTITY
+					vo = new Vo();
+					dao.insertUnstoring(vo);
+					
 					// 재고 table에 update
 				}
 			}
 			break;
+			
+//			// DB테이블에 저장
+//			int num2;
+//
+//			String storing_date = model3.getYear() + "-" + (model3.getMonth() + 1) + "-" + model3.getDay();
+//			String offer_num2 = "";
+//			String client_name2 = "";
+//			String product_code2 = "";
+//			String product_name = "";
+//			String unit = "";
+//			int quantity = 0;
+//
+//			boolean tryInsertStoring = true;
+//
+//			for (int i = 0; i < dtm.getRowCount(); i++) {
+//				b = Boolean.valueOf(table.getValueAt(i, 0).toString());
+//				if (b == true) {
+//					offer_num2 = table.getValueAt(i, 1).toString();
+//					num2 = Integer.parseInt(table.getValueAt(i, 2).toString());
+//
+//					vo = new Vo("ol.OFFER_NUM", offer_num2, "ol.NUM", num2, "ol.offer_num");
+//					String[][] result = dao.selectAllOfferAndOfferListJoinWhereTwoStringFieldsAndOneIntField(vo);
+//
+//					for (int j = 0; j < result.length; j++) {
+//						client_name2 = result[j][1];
+//						product_code2 = result[j][7];
+//						product_name = result[j][8];
+//						unit = result[j][9];
+//						quantity = Integer.parseInt(result[j][10]);
+//					}
+//					vo = new Vo(storing_num, storing_date, offer_num2, client_name2, product_code2, product_name, unit,
+//							quantity);
+//					tryInsertStoring = dao.insertStoring(vo);
+//
+//					vo = new Vo("stock", "product_code", "product_code", product_code2);
+//					String checkProductCode = dao.selectOneFieldWhere(vo);
+//
+//					if (checkProductCode == null || checkProductCode.equals("")) { // insert
+//						vo = new Vo(product_code2, unit, quantity);
+//						dao.insertStock(vo);
+//					} else { // update
+//						vo = new Vo("stock", "quantity", "product_code", product_code2);
+//						int currentQuantity;
+//
+//						try {
+//							currentQuantity = Integer.valueOf(dao.selectOneFieldWhere(vo));
+//						} catch (NumberFormatException e1) {
+//							currentQuantity = Integer.valueOf("0");
+//						}
+//
+//						vo = new Vo("stock", "quantity", currentQuantity + quantity, "product_code", product_code2);
+//						dao.updateOneIntFieldWhere(vo);
+//					}
+//				}
+//			}
+//
+//			if (tryInsertStoring == true) {
+//				new ErrorMessageDialog("입고 처리되었습니다.", "입고 등록");
+//			} else {
+//				new ErrorMessageDialog("입고 처리에 실패하였습니다.", "입고 등록");
+//			}
+//
+//			break;
 		}
 	}
 }

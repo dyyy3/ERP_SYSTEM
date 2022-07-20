@@ -196,45 +196,23 @@ public class Tab_1302 implements ActionListener {
 
 		case "출고처리" :
 			boolean b = true;
-			int max = 0;
-			int min = 1000000;
 			int unstoring_num = 0;
 			
 			// 출고번호 결정
-			String[] toSplit = unstoring_date.split("-");
-			String date = toSplit[0] + toSplit[1] + toSplit[2];
+			String[] toSplit = unstoring_date.split("-"); // 22-7-20 -> 22, 7, 20
+			String date = toSplit[0] + toSplit[1] + toSplit[2]; // 22720
 			
 			vo = new Vo("unstoring", "unstoring_num", "unstoring_num", date);
 			String checkUnstoringNum = dao.selectOneFieldWhereLike(vo);
 			if(checkUnstoringNum == null) {
-				unstoring_num = Integer.parseInt(String.valueOf(date) + "0001");
+				unstoring_num = Integer.parseInt(date + "0001"); // 227200001
 			}else {
-				vo = new Vo();
+				vo = new Vo("unstoring", "unstoring_num", "unstoring_num", date);
+				int i = dao.selectMaxWhereLike(vo) + 1;
+				unstoring_num = i;
 			}
 			
-			
-			if(min == max) {
-				vo = new Vo("storing", "offer_num", "offer_num", String.valueOf(max));
-				String checkOfferNum = dao.selectOneFieldDistinctWhere(vo);
-//				if(checkOfferNum == null) {
-//					storing_num = Integer.parseInt(String.valueOf(max) + "0001");
-//				}else {
-//					vo = new Vo();
-//					int i = dao.selectMaxWhere(vo) + 1;
-//					
-//					if(i < 10) {
-//						storing_num = Integer.parseInt(String.valueOf(max) + "000" + String.valueOf(i));
-//					}else if(i < 100) {
-//						storing_num = Integer.parseInt(String.valueOf(max) + "00" + String.valueOf(i));
-//					}else if(i < 1000) {
-//						storing_num = Integer.parseInt(String.valueOf(max) + "0" + String.valueOf(i));
-//					}
-//				}
-//			}else { // min != max -> 서로 다른 offer번호가 함께 체크된 상태
-//				new ErrorMessageDialog("offer번호가 다른 품목이 있습니다. 같은 offeer번호로 선택해주세요", "입고 등록");
-//				break;
-			}
-			
+			// DB테이블에 저장
 			for(int i=0; i<dtm.getRowCount(); i++) {
 				b = Boolean.valueOf(table.getValueAt(i, 0).toString());
 				if(b == true) {
@@ -249,6 +227,69 @@ public class Tab_1302 implements ActionListener {
 				}
 			}
 			break;
+			
+//			// DB테이블에 저장
+//			int num2;
+//
+//			String storing_date = model3.getYear() + "-" + (model3.getMonth() + 1) + "-" + model3.getDay();
+//			String offer_num2 = "";
+//			String client_name2 = "";
+//			String product_code2 = "";
+//			String product_name = "";
+//			String unit = "";
+//			int quantity = 0;
+//
+//			boolean tryInsertStoring = true;
+//
+//			for (int i = 0; i < dtm.getRowCount(); i++) {
+//				b = Boolean.valueOf(table.getValueAt(i, 0).toString());
+//				if (b == true) {
+//					offer_num2 = table.getValueAt(i, 1).toString();
+//					num2 = Integer.parseInt(table.getValueAt(i, 2).toString());
+//
+//					vo = new Vo("ol.OFFER_NUM", offer_num2, "ol.NUM", num2, "ol.offer_num");
+//					String[][] result = dao.selectAllOfferAndOfferListJoinWhereTwoStringFieldsAndOneIntField(vo);
+//
+//					for (int j = 0; j < result.length; j++) {
+//						client_name2 = result[j][1];
+//						product_code2 = result[j][7];
+//						product_name = result[j][8];
+//						unit = result[j][9];
+//						quantity = Integer.parseInt(result[j][10]);
+//					}
+//					vo = new Vo(storing_num, storing_date, offer_num2, client_name2, product_code2, product_name, unit,
+//							quantity);
+//					tryInsertStoring = dao.insertStoring(vo);
+//
+//					vo = new Vo("stock", "product_code", "product_code", product_code2);
+//					String checkProductCode = dao.selectOneFieldWhere(vo);
+//
+//					if (checkProductCode == null || checkProductCode.equals("")) { // insert
+//						vo = new Vo(product_code2, unit, quantity);
+//						dao.insertStock(vo);
+//					} else { // update
+//						vo = new Vo("stock", "quantity", "product_code", product_code2);
+//						int currentQuantity;
+//
+//						try {
+//							currentQuantity = Integer.valueOf(dao.selectOneFieldWhere(vo));
+//						} catch (NumberFormatException e1) {
+//							currentQuantity = Integer.valueOf("0");
+//						}
+//
+//						vo = new Vo("stock", "quantity", currentQuantity + quantity, "product_code", product_code2);
+//						dao.updateOneIntFieldWhere(vo);
+//					}
+//				}
+//			}
+//
+//			if (tryInsertStoring == true) {
+//				new ErrorMessageDialog("입고 처리되었습니다.", "입고 등록");
+//			} else {
+//				new ErrorMessageDialog("입고 처리에 실패하였습니다.", "입고 등록");
+//			}
+//
+//			break;
 		}
 	}
 }
