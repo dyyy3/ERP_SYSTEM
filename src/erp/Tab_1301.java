@@ -27,6 +27,7 @@ public class Tab_1301 implements ActionListener, ItemListener {
 	Button plb, b1, b2;
 	UtilDateModel model;
 	UtilDateModel model2;
+	UtilDateModel model3;
 	DefaultTableModel dtm;
 	JTable table;
 	Dao dao = new Dao();
@@ -64,8 +65,8 @@ public class Tab_1301 implements ActionListener, ItemListener {
 		p.add(l1);
 		
 		// Label 추가
-		Label[] label = new Label[4];
-		String[] labelName = {"기간", "offer번호", "거래처", "품목코드"};
+		Label[] label = new Label[5];
+		String[] labelName = {"기간", "offer번호", "거래처", "입고일자", "품목코드"};
 
 		for (int i = 0; i < label.length; i++) {
 			label[i] = new Label(labelName[i]);
@@ -75,7 +76,8 @@ public class Tab_1301 implements ActionListener, ItemListener {
 		label[0].setBounds(10, 50, 150, 30);
 		label[1].setBounds(380, 50, 150, 30);
 		label[2].setBounds(380, 90, 150, 30);
-		label[3].setBounds(380, 130, 150, 30);
+		label[3].setBounds(10, 130, 150, 30);
+		label[4].setBounds(380, 130, 150, 30);
 		
 		// JDatePicker 추가
 		model = new UtilDateModel();
@@ -114,6 +116,25 @@ public class Tab_1301 implements ActionListener, ItemListener {
 		model2.setSelected(true);
 		
 		p.add(datePicker2);
+		
+		// JDatePicker 추가(3)
+		model3 = new UtilDateModel();
+		JDatePanelImpl datePanel3 = new JDatePanelImpl(model3);
+		JDatePickerImpl datePicker3 = new JDatePickerImpl(datePanel3);
+		datePicker3.setBounds(170, 130, 200, 30);
+
+		SimpleDateFormat sdf3 = new SimpleDateFormat("yyyy-MM-dd");
+		Date todayDate3 = new Date();
+		String today3 = sdf3.format(todayDate3);
+
+		String[] date3 = today3.split("-");
+		int dateY3 = Integer.parseInt(date3[0]);
+		int dateM3 = Integer.parseInt(date3[1]) - 1;
+		int dateD3 = Integer.parseInt(date3[2]);
+		model3.setDate(dateY3, dateM3, dateD3);
+		model3.setSelected(true);
+
+		p.add(datePicker3);
 		
 		// Choice 추가
 		ch = new Choice();
@@ -156,7 +177,7 @@ public class Tab_1301 implements ActionListener, ItemListener {
 		p.add(b1);
 
 		b2 = new Button("입고처리");
-		b2.setBounds(10, 130, 50, 30);
+		b2.setBounds(10, 170, 50, 30);
 		b2.addActionListener(this);
 		p.add(b2);
 		
@@ -170,7 +191,7 @@ public class Tab_1301 implements ActionListener, ItemListener {
 		table = new JTable(dtm);
 		
 		JScrollPane sp = new JScrollPane(table);
-		sp.setBounds(10, 170, 1000, 500);
+		sp.setBounds(10, 210, 1000, 500);
 		p.add(sp);
 	}
 	
@@ -599,12 +620,15 @@ public class Tab_1301 implements ActionListener, ItemListener {
 			break;
 			
 		case "입고처리" :
+			boolean b = true;
+			String[] offerNum = new String[dtm.getRowCount()];
+			
 			for(int i=0; i<dtm.getRowCount(); i++) {
-				boolean b = Boolean.valueOf(table.getValueAt(i, 0).toString());
+				b = Boolean.valueOf(table.getValueAt(i, 0).toString());
 				if(b == true) {
-					System.out.println(table.getValueAt(i, 1));
-					System.out.println(table.getValueAt(i, 2));
-					System.out.println();
+					String[] toSplit = table.getValueAt(i, 1).toString().split("-");
+					offerNum[i] = toSplit[0] + toSplit[1] + toSplit[2];
+					System.out.println(offerNum[i]);
 				}
 			}
 			break;
@@ -613,7 +637,6 @@ public class Tab_1301 implements ActionListener, ItemListener {
 
 	@Override
 	public void itemStateChanged(ItemEvent e) {
-		// TODO Auto-generated method stub
 		
 	}
 }
