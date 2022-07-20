@@ -629,6 +629,25 @@ public class Dao {
 		return result;
 	}
 	
+	// Tab_1302
+	public String selectOneFieldWhereLike(Vo vo) {
+		String result = null; // list로 받은 값을 String 배열로 바꿔서 return
+		
+		checkConException();
+		try {
+			String select = "SELECT " + vo.getField_1() + " FROM " + vo.getTableName()
+			+ " WHERE " + vo.getField_2() + " LIKE '%" + vo.getField_3() + "%'";
+			rs = stmt.executeQuery(select);
+			
+			while(rs.next()) {
+				result = rs.getString(vo.getField_1());
+			}
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
+	
 	// Tab_1201
 	public String[] selectAllOfferWhere(Vo vo) {
 		List<String> list = new ArrayList<>(); // 쿼리문으로 얻은 값을 저장. 열의 길이를 모르므로 list로 받는다
@@ -700,8 +719,9 @@ public class Dao {
 		int result = 0;
 		checkConException();
 		try {
-			String select = "SELECT MAX(" + vo.getField_1() + " FROM " + vo.getTableName()
+			String select = "SELECT MAX(" + vo.getField_1() + ") FROM " + vo.getTableName()
 			+ " WHERE " + vo.getField_2() + " = '" + vo.getField_3() + "'";
+			
 			rs = stmt.executeQuery(select);
 			// SELECT MAX(NUM) FROM OFFER_LIST WHERE OFFER_NUM = '22-7-3'
 			while(rs.next()){
@@ -801,6 +821,23 @@ public class Dao {
 		return b;
 	}
 	
+	// Tab_1302
+	public boolean insertUnstoring(Vo vo) {
+		boolean b = true;
+		checkConException();
+		try {
+			String insert = "INSERT INTO UNSTORING (UNSTORING_NUM, UNSTORING_DATE, PRODUCT_CODE,"
+					+ " PRODUCT_NAME, UNIT, QUANTITY)"
+					+ " VALUES('" + vo.getValue_1() + "', '" + vo.getField_1() + "', '" + vo.getField_2() + "', '"
+					+ vo.getField_3() + "', '" + vo.getField_4() + "', '" + vo.getValue_2() + "')";
+			stmt.executeQuery(insert);
+		}catch(Exception e) {
+			e.printStackTrace();
+			b = false;
+		}
+		return b;
+	}
+	
 	// Tab_1301
 	public boolean insertStock(Vo vo) {
 		boolean b = true;
@@ -808,9 +845,6 @@ public class Dao {
 		try {
 			String insert = "INSERT INTO STOCK (PRODUCT_CODE, UNIT, QUANTITY)"
 					+ " VALUES('" + vo.getField_1() + "', '" + vo.getField_2() + "', '" + vo.getValue_1() + "')";
-			
-			System.out.println(insert);
-			
 			stmt.executeQuery(insert);
 		}catch(Exception e) {
 			e.printStackTrace();

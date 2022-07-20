@@ -134,6 +134,7 @@ public class Tab_1302 implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		int rowCount = dtm.getRowCount();
 		String product_code = pctf.getText();
+		String unstoring_date = model.getYear() + "-" + (model.getMonth() + 1) + "-" + model.getDay();
 		int count = 1;
 		
 		switch(e.getActionCommand()) {
@@ -195,11 +196,55 @@ public class Tab_1302 implements ActionListener {
 
 		case "출고처리" :
 			boolean b = true;
+			int max = 0;
+			int min = 1000000;
+			int unstoring_num = 0;
+			
+			// 출고번호 결정
+			String[] toSplit = unstoring_date.split("-");
+			String date = toSplit[0] + toSplit[1] + toSplit[2];
+			
+			vo = new Vo("unstoring", "unstoring_num", "unstoring_num", date);
+			String checkUnstoringNum = dao.selectOneFieldWhereLike(vo);
+			if(checkUnstoringNum == null) {
+				unstoring_num = Integer.parseInt(String.valueOf(date) + "0001");
+			}else {
+				vo = new Vo();
+			}
+			
+			
+			if(min == max) {
+				vo = new Vo("storing", "offer_num", "offer_num", String.valueOf(max));
+				String checkOfferNum = dao.selectOneFieldDistinctWhere(vo);
+//				if(checkOfferNum == null) {
+//					storing_num = Integer.parseInt(String.valueOf(max) + "0001");
+//				}else {
+//					vo = new Vo();
+//					int i = dao.selectMaxWhere(vo) + 1;
+//					
+//					if(i < 10) {
+//						storing_num = Integer.parseInt(String.valueOf(max) + "000" + String.valueOf(i));
+//					}else if(i < 100) {
+//						storing_num = Integer.parseInt(String.valueOf(max) + "00" + String.valueOf(i));
+//					}else if(i < 1000) {
+//						storing_num = Integer.parseInt(String.valueOf(max) + "0" + String.valueOf(i));
+//					}
+//				}
+//			}else { // min != max -> 서로 다른 offer번호가 함께 체크된 상태
+//				new ErrorMessageDialog("offer번호가 다른 품목이 있습니다. 같은 offeer번호로 선택해주세요", "입고 등록");
+//				break;
+			}
+			
 			for(int i=0; i<dtm.getRowCount(); i++) {
 				b = Boolean.valueOf(table.getValueAt(i, 0).toString());
 				if(b == true) {
 					String s = table.getValueAt(i, 1).toString();
 					// 출고 table에 insert (quantity 값은 (-) 로 저장)
+//					UNSTORING_NUM, UNSTORING_DATE, PRODUCT_CODE,"
+//							+ " PRODUCT_NAME, UNIT, QUANTITY
+					vo = new Vo();
+					dao.insertUnstoring(vo);
+					
 					// 재고 table에 update
 				}
 			}

@@ -621,6 +621,7 @@ public class Tab_1301 implements ActionListener, ItemListener {
 		case "입고처리" :
 			boolean b = true;
 			String[] offerNum = new String[dtm.getRowCount()];
+			String s = "";
 			int max = 0;
 			int min = 1000000;
 			int storing_num = 0;
@@ -629,7 +630,7 @@ public class Tab_1301 implements ActionListener, ItemListener {
 			for(int i=0; i<dtm.getRowCount(); i++) {
 				b = Boolean.valueOf(table.getValueAt(i, 0).toString());
 				if(b == true) {
-					String s = table.getValueAt(i, 1).toString();
+					s = table.getValueAt(i, 1).toString();
 					String[] toSplit = s.split("-");
 					offerNum[i] = toSplit[0] + toSplit[1] + toSplit[2]; 
 				}
@@ -647,21 +648,23 @@ public class Tab_1301 implements ActionListener, ItemListener {
 			}
 			
 			if(min == max) {
-				vo = new Vo("storing", "offer_num", "offer_num", String.valueOf(max));
+				System.out.println("s : " + s);
+				
+				vo = new Vo("storing", "offer_num", "offer_num", s);
 				String checkOfferNum = dao.selectOneFieldDistinctWhere(vo);
+				
+				System.out.println("checkOffereNum : " + checkOfferNum);
+				
 				if(checkOfferNum == null) {
 					storing_num = Integer.parseInt(String.valueOf(max) + "0001");
 				}else {
-					vo = new Vo();
-					int i = dao.selectMaxWhere(vo) + 1;
+					vo = new Vo("storing", "storing_num", "offer_num", s);
+					int i = dao.selectMaxWhere(vo);
+					int j = i + 1;
+					storing_num = j;
 					
-					if(i < 10) {
-						storing_num = Integer.parseInt(String.valueOf(max) + "000" + String.valueOf(i));
-					}else if(i < 100) {
-						storing_num = Integer.parseInt(String.valueOf(max) + "00" + String.valueOf(i));
-					}else if(i < 1000) {
-						storing_num = Integer.parseInt(String.valueOf(max) + "0" + String.valueOf(i));
-					}
+					System.out.println("i : " + i);
+					System.out.println("j : " + j);
 				}
 			}else { // min != max -> 서로 다른 offer번호가 함께 체크된 상태
 				new ErrorMessageDialog("offer번호가 다른 품목이 있습니다. 같은 offeer번호로 선택해주세요", "입고 등록");
@@ -703,8 +706,6 @@ public class Tab_1301 implements ActionListener, ItemListener {
 				
 					vo = new Vo("stock", "product_code", "product_code", product_code2);
 					String checkProductCode = dao.selectOneFieldWhere(vo);
-					
-					System.out.println("checkProductCode : " +  checkProductCode);
 					
 					if(checkProductCode == null || checkProductCode.equals("")) { // insert
 						vo = new Vo(product_code2, unit, quantity);
