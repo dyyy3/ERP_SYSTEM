@@ -55,6 +55,17 @@ public class Vo {
 		this.field_3 = field_3;
 	}
 	
+	// Tab_1202, Tab_1301
+	public Vo(String tableName, String field_1, int value_1,
+			String field_2, String field_3)
+	{
+		this.tableName = tableName;
+		this.field_1 = field_1;
+		this.value_1 = value_1;
+		this.field_2 = field_2;
+		this.field_3 = field_3;
+	}
+
 	// Tab_1201, Tab_1202, Tab_1301
 	public Vo(String field_1, String field_2, String field_3,
 			String field_4, String field_5)
@@ -67,6 +78,17 @@ public class Vo {
 	}
 	
 	// Tab_1301
+	public Vo(String field_1, String field_2, String field_3,
+			int value_1, String field_4) 
+	{
+		this.field_1 = field_1;
+		this.field_2 = field_2;
+		this.field_3 = field_3;
+		this.value_1 = value_1;
+		this.field_4 = field_4;
+	}
+
+	// Tab_1301
 	public Vo(String tableName, String field_1, String field_2,
 			String field_3, String field_4, String field_5)
 	{
@@ -78,16 +100,6 @@ public class Vo {
 		this.field_5 = field_5;
 	}
 	
-	// Tab_1202
-	public Vo(String tableName, String field_1, int value_1,
-			String field_2, String field_3)
-	{
-		this.tableName = tableName;
-		this.field_1 = field_1;
-		this.value_1 = value_1;
-		this.field_2 = field_2;
-		this.field_3 = field_3;
-	}
 	
 	// Tab_1202
 	public Vo(String field_1, int value_1,
@@ -132,6 +144,20 @@ public class Vo {
 		this.field_8 = field_8;
 	}
 	
+	// Tab_1301
+	public Vo(int value_1, String field_1, String field_2, String field_3,
+			String field_4, String field_5, String field_6, int value_2) 
+	{
+		this.value_1 = value_1;
+		this.field_1 = field_1;
+		this.field_2 = field_2;
+		this.field_3 = field_3;
+		this.field_4 = field_4;
+		this.field_5 = field_5;
+		this.field_6 = field_6;
+		this.value_2 = value_2;
+	}
+	
 	// Tab_1201, Tab_1301
 	public Vo(String field_1, String field_2, String field_3,
 			String field_4, String field_5, String field_6,
@@ -146,6 +172,20 @@ public class Vo {
 		this.field_7 = field_7;
 		this.field_8 = field_8;
 		this.field_9 = field_9;
+	}
+	
+	// Tab_1301
+	public Vo(String field_1, int value_1, int value_2, int value_3,
+			int value_4, int value_5, int value_6, String field_2)
+	{
+		this.field_1 = field_1;
+		this.value_1 = value_1;
+		this.value_2 = value_2;
+		this.value_3 = value_3;
+		this.value_4 = value_4;
+		this.value_5 = value_5;
+		this.value_6 = value_6;
+		this.field_2 = field_2;
 	}
 	
 	// Tab_1201

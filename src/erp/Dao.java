@@ -159,6 +159,53 @@ public class Dao {
 					+ " AND " + vo.getField_1() + " = '" + vo.getField_2() + "'"
 					+ " AND " + vo.getField_3() + " = '" + vo.getField_4() + "'"
 					+ " ORDER BY " + vo.getField_5();
+			System.out.println(select);
+
+			rs = stmt.executeQuery(select);
+			
+			while(rs.next()) {
+				list.add(rs.getString(1));
+				list.add(rs.getString(2));
+				list.add(rs.getString(3));
+				list.add(rs.getString(4));
+				list.add(rs.getString(5));
+				list.add(rs.getString(6));
+				list.add(rs.getString(7));
+				list.add(rs.getString(8));
+				list.add(rs.getString(9));
+				list.add(rs.getString(10));
+				list.add(rs.getString(11));
+				list.add(rs.getString(12));
+				list.add(rs.getString(13));
+				list.add(rs.getString(14));
+			}
+			// list를 String[][] result로
+			result = new String[list.size() / 14][14];
+			int a = 0;
+			for(int i=0; i<list.size()/14; i++) {
+				for(int j=0; j<14; j++) {
+					result[i][j] = list.get(a);
+					a++;
+				}
+			}
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
+	
+	// Tab_1301
+	public String[][] selectAllOfferAndOfferListJoinWhereTwoStringFieldsAndOneIntField(Vo vo) {
+		ArrayList<String> list = new ArrayList<String>();
+		String[][] result = null; // list로 받은 값을 String 2차원 배열로 바꿔서 return
+		
+		checkConException();
+		try {
+			String select = "SELECT * FROM OFFER o, OFFER_LIST ol "
+					+ " WHERE o.offer_num = ol.offer_num "
+					+ " AND " + vo.getField_1() + " = '" + vo.getField_2() + "'"
+					+ " AND " + vo.getField_3() + " = '" + vo.getValue_1() + "'"
+					+ " ORDER BY " + vo.getField_4();
 			rs = stmt.executeQuery(select);
 			
 			while(rs.next()) {
@@ -476,6 +523,27 @@ public class Dao {
 		return result;
 	}
 	
+	// Tab_1301
+	public String selectOneFieldDistinctWhere(Vo vo) {
+		String result = null; // list로 받은 값을 String 배열로 바꿔서 return
+		
+		checkConException();
+		try {
+			String select = "SELECT DISTINCT " + vo.getField_1() + " FROM " + vo.getTableName()
+					+ " WHERE " + vo.getField_2() + " = '" + vo.getField_3() + "'";
+			// SELECT DISTINCT OFFER_NUM FROM STORING WHERE OFFER_NUM = '22-7-3'
+			rs = stmt.executeQuery(select);
+			
+			while(rs.next()) {
+				result = rs.getString(vo.getField_1());
+			}
+			
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
+	
 	// Tab_1201
 	public String[] selectAllOfferWhere(Vo vo) {
 		List<String> list = new ArrayList<>(); // 쿼리문으로 얻은 값을 저장. 열의 길이를 모르므로 list로 받는다
@@ -542,6 +610,25 @@ public class Dao {
 		return code;
 	}
 	
+	// Tab_1301
+	public int selectMaxWhere(Vo vo) {
+		int result = 0;
+		checkConException();
+		try {
+			String select = "SELECT MAX(" + vo.getField_1() + " FROM " + vo.getTableName()
+			+ " WHERE " + vo.getField_2() + " = '" + vo.getField_3() + "'";
+			rs = stmt.executeQuery(select);
+			// SELECT MAX(NUM) FROM OFFER_LIST WHERE OFFER_NUM = '22-7-3'
+			while(rs.next()){
+				result = rs.getInt(1);
+			}
+			
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
+	
 	// Tab_1101
 	public boolean insertProductList(Vo vo) {
 		boolean b2 = true;
@@ -604,6 +691,24 @@ public class Dao {
 					+ "FREIGHT_CHARGE, OTHER_COST, AMOUNT_KRW)"
 					+ " VALUES('" + vo.getField_1() + "', '" + vo.getValue_1() + "', '" + vo.getValue_2() + "',"
 					+ " '" + vo.getValue_3() + "', '" + vo.getValue_4() + "', '" + vo.getValue_5() + "', '" + vo.getValue_6() + "')";
+			stmt.executeQuery(insert);
+		}catch(Exception e) {
+			e.printStackTrace();
+			b = false;
+		}
+		return b;
+	}
+	
+
+	// Tab_1301
+	public boolean insertStoring(Vo vo) {
+		boolean b = true;
+		checkConException();
+		try {
+			String insert = "INSERT INTO STORING (STORING_NUM, STORING_DATE, OFFER_NUM, CLIENT_NAME,"
+					+ " PRODUCT_CODE, PRODUCT_NAME, UNIT, QUANTITY)"
+					+ " VALUES('" + vo.getValue_1() + "', '" + vo.getField_1() + "', '" + vo.getField_2() + "', '" + vo.getField_3() + "', '"
+					+ vo.getField_4() + "', '" + vo.getField_5() + "', '" + vo.getField_6() + "', '" + vo.getValue_2() + "')";
 			stmt.executeQuery(insert);
 		}catch(Exception e) {
 			e.printStackTrace();

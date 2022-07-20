@@ -622,15 +622,94 @@ public class Tab_1301 implements ActionListener, ItemListener {
 		case "입고처리" :
 			boolean b = true;
 			String[] offerNum = new String[dtm.getRowCount()];
+			int max = 0;
+			int min = 1000000;
+			int storing_num = 0;
+			
+			// 입고번호 결정
+			for(int i=0; i<dtm.getRowCount(); i++) {
+				b = Boolean.valueOf(table.getValueAt(i, 0).toString());
+				if(b == true) {
+					String s = table.getValueAt(i, 1).toString();
+					String[] toSplit = s.split("-");
+					offerNum[i] = toSplit[0] + toSplit[1] + toSplit[2]; 
+				}
+			}
+			
+			for(int i=0; i<offerNum.length; i++) {
+				if(offerNum[i] != null) {
+					if(max < Integer.parseInt(offerNum[i])) {
+						max = Integer.parseInt(offerNum[i]);
+					}
+					if(min > Integer.parseInt(offerNum[i])) {
+						min = Integer.parseInt(offerNum[i]);
+					}
+				}
+			}
+			
+			if(min == max) {
+				vo = new Vo("storing", "offer_num", "offer_num", String.valueOf(max));
+				String checkOfferNum = dao.selectOneFieldDistinctWhere(vo);
+				if(checkOfferNum == null) {
+					storing_num = Integer.parseInt(String.valueOf(max) + "0001");
+				}else {
+					vo = new Vo();
+					int i = dao.selectMaxWhere(vo) + 1;
+					
+					if(i < 10) {
+						storing_num = Integer.parseInt(String.valueOf(max) + "000" + String.valueOf(i));
+					}else if(i < 100) {
+						storing_num = Integer.parseInt(String.valueOf(max) + "00" + String.valueOf(i));
+					}else if(i < 1000) {
+						storing_num = Integer.parseInt(String.valueOf(max) + "0" + String.valueOf(i));
+					}
+				}
+			}else { // min != max -> 서로 다른 offer번호가 함께 체크된 상태
+				new ErrorMessageDialog("offer번호가 다른 품목이 있습니다. 같은 offeer번호로 선택해주세요", "입고 등록");
+				break;
+			}
+			
+			// DB테이블에 저장
+			int num2;
+			
+			String storing_date = model3.getYear() + "-" + (model3.getMonth() + 1) + "-" + model3.getDay();
+			String offer_num2 = "";
+			String client_name2 = "";
+			String product_code2 = "";
+			String product_name = "";
+			String unit = "";
+			int quantity = 0;
+			
+			boolean tryInsertStoring = true;
 			
 			for(int i=0; i<dtm.getRowCount(); i++) {
 				b = Boolean.valueOf(table.getValueAt(i, 0).toString());
 				if(b == true) {
-					String[] toSplit = table.getValueAt(i, 1).toString().split("-");
-					offerNum[i] = toSplit[0] + toSplit[1] + toSplit[2];
-					System.out.println(offerNum[i]);
+					offer_num2 = table.getValueAt(i, 1).toString();
+					num2 = Integer.parseInt(table.getValueAt(i, 2).toString());
+					
+					vo = new Vo("ol.OFFER_NUM", offer_num2, "ol.NUM", num2, "ol.offer_num");
+					String[][] result = dao.selectAllOfferAndOfferListJoinWhereTwoStringFieldsAndOneIntField(vo);
+					
+					for(int j=0; j<result.length; j++) {
+						client_name2 = result[j][1];
+						product_code2 = result[j][7];
+						product_name = result[j][8];
+						unit = result[j][9];
+						quantity = Integer.parseInt(result[j][10]);
+					}
+					vo = new Vo(storing_num, storing_date, offer_num2, client_name2, 
+							product_code2, product_name, unit, quantity);
+					tryInsertStoring = dao.insertStoring(vo);
 				}
 			}
+			
+			if(tryInsertStoring == true) {
+				new ErrorMessageDialog("입고 처리되었습니다.", "입고 등록");
+			}else {
+				new ErrorMessageDialog("입고 처리에 실패하였습니다.", "입고 등록");
+			}
+			
 			break;
 		}
 	}
