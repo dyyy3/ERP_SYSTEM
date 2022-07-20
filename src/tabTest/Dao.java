@@ -73,7 +73,8 @@ public class Dao {
 		
 		checkConException();
 		try {
-			String select = "SELECT * FROM " + vo.getTableName() + " WHERE " + vo.getField_1() + " = '" + vo.getField_2() + "'"
+			String select = "SELECT * FROM " + vo.getTableName()
+					+ " WHERE " + vo.getField_1() + " = '" + vo.getField_2() + "'"
 					+ " ORDER BY " + vo.getField_3();
 			rs = stmt.executeQuery(select);
 			
@@ -104,48 +105,48 @@ public class Dao {
 	}
 	
 	// Tab_1301
-		public String[][] selectAllOfferAndOfferListJoinWhereTwoFields(Vo vo) {
-			ArrayList<String> list = new ArrayList<String>();
-			String[][] result = null; // list로 받은 값을 String 2차원 배열로 바꿔서 return
-			
-			checkConException();
-			try {
-				String select = "SELECT * FROM OFFER o, OFFER_LIST ol "
-						+ " WHERE o.offer_num = ol.offer_num "
-						+ " AND " + vo.getTableName() + " = '" + vo.getField_1() + "'"
-						+ " ORDER BY " + vo.getField_2();
-				rs = stmt.executeQuery(select);
-				
-				while(rs.next()) {
-					list.add(rs.getString(1));
-					list.add(rs.getString(2));
-					list.add(rs.getString(3));
-					list.add(rs.getString(4));
-					list.add(rs.getString(5));
-					list.add(rs.getString(6));
-					list.add(rs.getString(7));
-					list.add(rs.getString(8));
-					list.add(rs.getString(9));
-					list.add(rs.getString(10));
-					list.add(rs.getString(11));
-					list.add(rs.getString(12));
-					list.add(rs.getString(13));
-					list.add(rs.getString(14));
-				}
-				// list를 String[][] result로
-				result = new String[list.size() / 14][14];
-				int a = 0;
-				for(int i=0; i<list.size()/14; i++) {
-					for(int j=0; j<14; j++) {
-						result[i][j] = list.get(a);
-						a++;
-					}
-				}
-			}catch(Exception e) {
-				e.printStackTrace();
+	public String[][] selectAllOfferAndOfferListJoinWhereTwoFields(Vo vo) {
+		ArrayList<String> list = new ArrayList<String>();
+		String[][] result = null; // list로 받은 값을 String 2차원 배열로 바꿔서 return
+
+		checkConException();
+		try {
+			String select = "SELECT * FROM OFFER o, OFFER_LIST ol "
+					+ " WHERE o.offer_num = ol.offer_num "
+					+ " AND " + vo.getTableName() + " = '" + vo.getField_1() + "'"
+					+ " ORDER BY " + vo.getField_2();
+			rs = stmt.executeQuery(select);
+
+			while (rs.next()) {
+				list.add(rs.getString(1));
+				list.add(rs.getString(2));
+				list.add(rs.getString(3));
+				list.add(rs.getString(4));
+				list.add(rs.getString(5));
+				list.add(rs.getString(6));
+				list.add(rs.getString(7));
+				list.add(rs.getString(8));
+				list.add(rs.getString(9));
+				list.add(rs.getString(10));
+				list.add(rs.getString(11));
+				list.add(rs.getString(12));
+				list.add(rs.getString(13));
+				list.add(rs.getString(14));
 			}
-			return result;
+			// list를 String[][] result로
+			result = new String[list.size() / 14][14];
+			int a = 0;
+			for (int i = 0; i < list.size() / 14; i++) {
+				for (int j = 0; j < 14; j++) {
+					result[i][j] = list.get(a);
+					a++;
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
+		return result;
+	}
 	
 	// Tab_1301
 	public String[][] selectAllOfferAndOfferListJoinWhereThreeFields(Vo vo) {
@@ -331,6 +332,90 @@ public class Dao {
 		}
 		return result;
 	}
+	
+	// Tab_1301
+	public String[][] selectAllProductListAndStockJoinWhere(Vo vo) {
+		ArrayList<String> list = new ArrayList<String>();
+		String[][] result = null; // list로 받은 값을 String 2차원 배열로 바꿔서 return
+		
+		checkConException();
+		try {
+			String select = "SELECT * FROM PRODUCT_LIST pl, STOCK s "
+					+ " WHERE pl.product_code = s.product_code "
+					+ " ORDER BY " + vo.getTableName();
+			rs = stmt.executeQuery(select);
+			
+			while (rs.next()) {
+				list.add(rs.getString(1));
+				list.add(rs.getString(2));
+				list.add(rs.getString(3));
+				list.add(rs.getString(4));
+				list.add(rs.getString(5));
+				list.add(rs.getString(6));
+				list.add(rs.getString(7));
+				list.add(rs.getString(8));
+				list.add(rs.getString(9));
+				list.add(rs.getString(10));
+				list.add(rs.getString(11));
+				list.add(rs.getString(12));
+			}
+			// list를 String[][] result로
+			result = new String[list.size() / 12][12];
+			int a = 0;
+			for (int i = 0; i < list.size() / 12; i++) {
+				for (int j = 0; j < 12; j++) {
+					result[i][j] = list.get(a);
+					a++;
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
+	
+	// Tab_1301
+	public String[][] selectAllProductListAndStockJoinWhereTwoFields(Vo vo) {
+		ArrayList<String> list = new ArrayList<String>();
+		String[][] result = null; // list로 받은 값을 String 2차원 배열로 바꿔서 return
+		
+		checkConException();
+		try {
+			String select = "SELECT * FROM PRODUCT_LIST pl, STOCK s "
+					+ " WHERE pl.product_code = s.product_code "
+					+ " AND " + vo.getTableName() + " = '" + vo.getField_1() + "'"
+					+ " ORDER BY " + vo.getField_2();
+			rs = stmt.executeQuery(select);
+			
+			while (rs.next()) {
+				list.add(rs.getString(1));
+				list.add(rs.getString(2));
+				list.add(rs.getString(3));
+				list.add(rs.getString(4));
+				list.add(rs.getString(5));
+				list.add(rs.getString(6));
+				list.add(rs.getString(7));
+				list.add(rs.getString(8));
+				list.add(rs.getString(9));
+				list.add(rs.getString(10));
+				list.add(rs.getString(11));
+				list.add(rs.getString(12));
+			}
+			// list를 String[][] result로
+			result = new String[list.size() / 12][12];
+			int a = 0;
+			for (int i = 0; i < list.size() / 12; i++) {
+				for (int j = 0; j < 12; j++) {
+					result[i][j] = list.get(a);
+					a++;
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
+
 
 	// Tab_1301
 	public String[][] selectAllOfferListWhereTwoFields(Vo vo) {
@@ -699,7 +784,6 @@ public class Dao {
 		return b;
 	}
 	
-
 	// Tab_1301
 	public boolean insertStoring(Vo vo) {
 		boolean b = true;
@@ -709,6 +793,24 @@ public class Dao {
 					+ " PRODUCT_CODE, PRODUCT_NAME, UNIT, QUANTITY)"
 					+ " VALUES('" + vo.getValue_1() + "', '" + vo.getField_1() + "', '" + vo.getField_2() + "', '" + vo.getField_3() + "', '"
 					+ vo.getField_4() + "', '" + vo.getField_5() + "', '" + vo.getField_6() + "', '" + vo.getValue_2() + "')";
+			stmt.executeQuery(insert);
+		}catch(Exception e) {
+			e.printStackTrace();
+			b = false;
+		}
+		return b;
+	}
+	
+	// Tab_1301
+	public boolean insertStock(Vo vo) {
+		boolean b = true;
+		checkConException();
+		try {
+			String insert = "INSERT INTO STOCK (PRODUCT_CODE, UNIT, QUANTITY)"
+					+ " VALUES('" + vo.getField_1() + "', '" + vo.getField_2() + "', '" + vo.getValue_1() + "')";
+			
+			System.out.println(insert);
+			
 			stmt.executeQuery(insert);
 		}catch(Exception e) {
 			e.printStackTrace();

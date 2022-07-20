@@ -38,7 +38,6 @@ public class Tab_1301 implements ActionListener, ItemListener {
 		(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
 			JCheckBox box = new JCheckBox();
 			box.setSelected(((Boolean) value).booleanValue());
-//			box.setSelected(((Boolean) dtm.getValueAt(0, 0)).booleanValue());
 			box.setHorizontalAlignment(JLabel.CENTER);
 			return box;
 		}
@@ -66,7 +65,7 @@ public class Tab_1301 implements ActionListener, ItemListener {
 		
 		// Label 추가
 		Label[] label = new Label[5];
-		String[] labelName = {"기간", "offer번호", "거래처", "입고일자", "품목코드"};
+		String[] labelName = {"기간", "offer번호", "거래처", "품목코드", "입고일자"};
 
 		for (int i = 0; i < label.length; i++) {
 			label[i] = new Label(labelName[i]);
@@ -76,8 +75,8 @@ public class Tab_1301 implements ActionListener, ItemListener {
 		label[0].setBounds(10, 50, 150, 30);
 		label[1].setBounds(380, 50, 150, 30);
 		label[2].setBounds(380, 90, 150, 30);
-		label[3].setBounds(10, 130, 150, 30);
-		label[4].setBounds(380, 130, 150, 30);
+		label[3].setBounds(380, 130, 150, 30);
+		label[4].setBounds(10, 170, 150, 30);
 		
 		// JDatePicker 추가
 		model = new UtilDateModel();
@@ -121,7 +120,7 @@ public class Tab_1301 implements ActionListener, ItemListener {
 		model3 = new UtilDateModel();
 		JDatePanelImpl datePanel3 = new JDatePanelImpl(model3);
 		JDatePickerImpl datePicker3 = new JDatePickerImpl(datePanel3);
-		datePicker3.setBounds(170, 130, 200, 30);
+		datePicker3.setBounds(170, 170, 200, 30);
 
 		SimpleDateFormat sdf3 = new SimpleDateFormat("yyyy-MM-dd");
 		Date todayDate3 = new Date();
@@ -177,7 +176,7 @@ public class Tab_1301 implements ActionListener, ItemListener {
 		p.add(b1);
 
 		b2 = new Button("입고처리");
-		b2.setBounds(10, 170, 50, 30);
+		b2.setBounds(380, 170, 70, 30);
 		b2.addActionListener(this);
 		p.add(b2);
 		
@@ -701,6 +700,28 @@ public class Tab_1301 implements ActionListener, ItemListener {
 					vo = new Vo(storing_num, storing_date, offer_num2, client_name2, 
 							product_code2, product_name, unit, quantity);
 					tryInsertStoring = dao.insertStoring(vo);
+				
+					vo = new Vo("stock", "product_code", "product_code", product_code2);
+					String checkProductCode = dao.selectOneFieldWhere(vo);
+					
+					System.out.println("checkProductCode : " +  checkProductCode);
+					
+					if(checkProductCode == null || checkProductCode.equals("")) { // insert
+						vo = new Vo(product_code2, unit, quantity);
+						dao.insertStock(vo);
+					}else { // update
+						vo = new Vo("stock", "quantity", "product_code", product_code2);
+						int currentQuantity;
+						
+						try {
+							currentQuantity = Integer.valueOf(dao.selectOneFieldWhere(vo));
+						}catch(NumberFormatException e1) {
+							currentQuantity = Integer.valueOf("0");
+						}
+						
+						vo = new Vo("stock", "quantity", currentQuantity + quantity, "product_code", product_code2);
+						dao.updateOneIntFieldWhere(vo);
+					}
 				}
 			}
 			
