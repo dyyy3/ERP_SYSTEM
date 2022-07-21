@@ -134,7 +134,6 @@ public class Tab_1302 implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		int rowCount = dtm.getRowCount();
 		String product_code = pctf.getText();
-		String unstoring_date = model.getYear() + "-" + (model.getMonth() + 1) + "-" + model.getDay();
 		int count = 1;
 		
 		switch(e.getActionCommand()) {
@@ -194,102 +193,101 @@ public class Tab_1302 implements ActionListener {
 			}
 			break;
 
-		case "출고처리" :
-			boolean b = true;
+		case "출고처리":
 			int unstoring_num = 0;
-			
+			String unstoring_date = model.getYear() + "-" + (model.getMonth() + 1) + "-" + model.getDay();
+
 			// 출고번호 결정
-			String[] toSplit = unstoring_date.split("-"); // 22-7-20 -> 22, 7, 20
-			String date = toSplit[0] + toSplit[1] + toSplit[2]; // 22720
-			
+			String removeYear = unstoring_date.replaceFirst("2", "-"); // 2022-7-21 -> -022-7-21
+			removeYear = removeYear.replaceFirst("0", "-"); // -022-7-21 -> --22-7-21
+			String[] toSplit = removeYear.split("-"); // --22-7-21 -> "", "", 22, 7, 21
+			String date = toSplit[2] + toSplit[3] + toSplit[4]; // 22721
+
 			vo = new Vo("unstoring", "unstoring_num", "unstoring_num", date);
 			String checkUnstoringNum = dao.selectOneFieldWhereLike(vo);
-			if(checkUnstoringNum == null) {
-				unstoring_num = Integer.parseInt(date + "0001"); // 227200001
-			}else {
+			if (checkUnstoringNum == null) {
+				unstoring_num = Integer.parseInt(date + "0001"); // 227210001
+			} else {
 				vo = new Vo("unstoring", "unstoring_num", "unstoring_num", date);
 				int i = dao.selectMaxWhereLike(vo) + 1;
 				unstoring_num = i;
 			}
-			
+
 			// DB테이블에 저장
-			for(int i=0; i<dtm.getRowCount(); i++) {
-				b = Boolean.valueOf(table.getValueAt(i, 0).toString());
-				if(b == true) {
-					String s = table.getValueAt(i, 1).toString();
-					// 출고 table에 insert (quantity 값은 (-) 로 저장)
-//					UNSTORING_NUM, UNSTORING_DATE, PRODUCT_CODE,"
-//							+ " PRODUCT_NAME, UNIT, QUANTITY
-					vo = new Vo();
-					dao.insertUnstoring(vo);
-					
-					// 재고 table에 update
+			boolean b = true;
+
+			// 출고수량 체크, 재고수량 - 출고수량 >= 0 체크
+			boolean checkUnstoringQuantityNull = true;
+			boolean checkStockQuantity = true;
+
+			for (int i = 0; i < dtm.getRowCount(); i++) {
+				b = Boolean.valueOf(table.getValueAt(i, 0).toString()); // 체크여부 확인
+				if (b == true) {
+					if (table.getValueAt(i, 6) == null || table.getValueAt(i, 6).toString().equals("")) {
+						new ErrorMessageDialog("출고수량을 입력해주세요.", "출고 등록");
+						checkUnstoringQuantityNull = false; // 출고수량이 빈칸인 행이 있으면 다른 행도 출고처리되지않도록 함
+						break;
+					}else {
+						String product_code2 = table.getValueAt(i, 2).toString();
+						vo = new Vo("stock", "quantity", "product_code", product_code2);
+						int stock_quantity = Integer.parseInt(dao.selectOneFieldWhere(vo));
+						int unstoring_quantity = Integer.parseInt(table.getValueAt(i, 6).toString());
+						int updateStockQuantity = stock_quantity - unstoring_quantity;
+
+						if (updateStockQuantity < 0) {
+							new ErrorMessageDialog("(-)재고를 허용하지않는 창고입니다.", "출고 등록");
+							checkStockQuantity = false; // 수행 결과로 재고수량이 (-)가 되는 행이 있으면 출고처리되지않도록 함
+							break;
+						}
+					}
 				}
 			}
-			break;
 			
-//			// DB테이블에 저장
-//			int num2;
-//
-//			String storing_date = model3.getYear() + "-" + (model3.getMonth() + 1) + "-" + model3.getDay();
-//			String offer_num2 = "";
-//			String client_name2 = "";
-//			String product_code2 = "";
-//			String product_name = "";
-//			String unit = "";
-//			int quantity = 0;
-//
-//			boolean tryInsertStoring = true;
-//
-//			for (int i = 0; i < dtm.getRowCount(); i++) {
-//				b = Boolean.valueOf(table.getValueAt(i, 0).toString());
-//				if (b == true) {
-//					offer_num2 = table.getValueAt(i, 1).toString();
-//					num2 = Integer.parseInt(table.getValueAt(i, 2).toString());
-//
-//					vo = new Vo("ol.OFFER_NUM", offer_num2, "ol.NUM", num2, "ol.offer_num");
-//					String[][] result = dao.selectAllOfferAndOfferListJoinWhereTwoStringFieldsAndOneIntField(vo);
-//
-//					for (int j = 0; j < result.length; j++) {
-//						client_name2 = result[j][1];
-//						product_code2 = result[j][7];
-//						product_name = result[j][8];
-//						unit = result[j][9];
-//						quantity = Integer.parseInt(result[j][10]);
-//					}
-//					vo = new Vo(storing_num, storing_date, offer_num2, client_name2, product_code2, product_name, unit,
-//							quantity);
-//					tryInsertStoring = dao.insertStoring(vo);
-//
-//					vo = new Vo("stock", "product_code", "product_code", product_code2);
-//					String checkProductCode = dao.selectOneFieldWhere(vo);
-//
-//					if (checkProductCode == null || checkProductCode.equals("")) { // insert
-//						vo = new Vo(product_code2, unit, quantity);
-//						dao.insertStock(vo);
-//					} else { // update
-//						vo = new Vo("stock", "quantity", "product_code", product_code2);
-//						int currentQuantity;
-//
-//						try {
-//							currentQuantity = Integer.valueOf(dao.selectOneFieldWhere(vo));
-//						} catch (NumberFormatException e1) {
-//							currentQuantity = Integer.valueOf("0");
-//						}
-//
-//						vo = new Vo("stock", "quantity", currentQuantity + quantity, "product_code", product_code2);
-//						dao.updateOneIntFieldWhere(vo);
-//					}
-//				}
-//			}
-//
-//			if (tryInsertStoring == true) {
-//				new ErrorMessageDialog("입고 처리되었습니다.", "입고 등록");
-//			} else {
-//				new ErrorMessageDialog("입고 처리에 실패하였습니다.", "입고 등록");
-//			}
-//
-//			break;
+			// DB에 저장
+			boolean tryInsertUnstoring = false;
+			
+			if (checkUnstoringQuantityNull == true && checkStockQuantity == true) { // 체크된 모든 행의 출고수량에 빈칸이 없고, 실행후
+				for (int i = 0; i < dtm.getRowCount(); i++) {
+					b = Boolean.valueOf(table.getValueAt(i, 0).toString());
+					if (b == true) {
+						// 출고수량 저장
+						int unstoring_quantity = Integer.parseInt(table.getValueAt(i, 6).toString());
+						
+						// 출고처리 후 재고수량을 구한다
+						String product_code2 = table.getValueAt(i, 2).toString();
+						vo = new Vo("stock", "quantity", "product_code", product_code2);
+						int stock_quantity = Integer.parseInt(dao.selectOneFieldWhere(vo));
+						int updateStockQuantity = stock_quantity - unstoring_quantity;
+						
+						// 출고 table에 insert
+						String product_name = table.getValueAt(i, 3).toString();
+						String unit = table.getValueAt(i, 4).toString();
+						
+						vo = new Vo(unstoring_num, unstoring_date, product_code2, product_name, unit,
+								unstoring_quantity);
+						tryInsertUnstoring = dao.insertUnstoring(vo);
+						
+						if (tryInsertUnstoring == true) {
+							table.setValueAt(String.valueOf(updateStockQuantity), i, 5); // 재고수량을 변경된 값으로 수정
+							table.setValueAt("", i, 6);// 출고수량 셀을 비움
+						} else {
+							String falseMessage = String.valueOf(i) + "행의 출고 처리에 실패하였습니다.";
+							new ErrorMessageDialog(falseMessage, "출고 등록");
+							break;
+						}
+						
+						// 재고 table에 update
+						vo = new Vo("stock", "quantity", updateStockQuantity, "product_code", product_code2);
+						dao.updateOneIntFieldWhere(vo);
+					}
+				} // for문의 끝
+			}
+
+			if (tryInsertUnstoring == true) {
+				new ErrorMessageDialog("출고 처리되었습니다.", "출고 등록");
+			}
+
+			break;
 		}
 	}
 }

@@ -675,7 +675,7 @@ public class Dao {
 	}
 	
 	
-	// Tab_1101, Tab_1201, Tab_1202, Tab_1301
+	// Tab_1101, Tab_1201, Tab_1202, Tab_1301, Tab_1302
 	public String selectOneFieldWhere(Vo vo) {
 		String code ="";
 		checkConException();

@@ -70,7 +70,7 @@ public class Vo {
 		this.value_1 = value_1;
 	}
 	
-	// Tab_1202, Tab_1301
+	// Tab_1202, Tab_1301, Tab_1302
 	public Vo(String tableName, String field_1, int value_1,
 			String field_2, String field_3)
 	{
@@ -115,7 +115,7 @@ public class Vo {
 		this.field_5 = field_5;
 	}
 	
-	// Tab_1301
+	// Tab_1301, Tab_1302
 	public Vo(int value_1, String field_1, String field_2,
 			String field_3, String field_4, int value_2) 
 	{
