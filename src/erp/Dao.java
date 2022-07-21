@@ -415,6 +415,84 @@ public class Dao {
 		}
 		return result;
 	}
+	
+	// Tab_1303
+	public String[][] selectFourFieldsProductListAndStockJoinWhere(Vo vo) {
+		ArrayList<String> list = new ArrayList<String>();
+		String[][] result = null; // list로 받은 값을 String 2차원 배열로 바꿔서 return
+		
+		checkConException();
+		try {
+			String select = "SELECT " + vo.getField_1() + "," + vo.getField_2() + "," + vo.getField_3() + "," + vo.getField_4()
+					+ " FROM PRODUCT_LIST pl, STOCK s "
+					+ " WHERE pl.product_code = s.product_code "
+					+ " ORDER BY " + vo.getField_5();
+			// SELECT s.PRODUCT_CODE, pl.PRODUCT_NAME , s.UNIT , s.QUANTITY
+			// FROM PRODUCT_LIST pl , STOCK s
+			// WHERE pl.PRODUCT_CODE = s.PRODUCT_CODE
+			// ORDER BY PRODUCT_NAME
+			rs = stmt.executeQuery(select);
+			
+			while (rs.next()) {
+				list.add(rs.getString(1));
+				list.add(rs.getString(2));
+				list.add(rs.getString(3));
+				list.add(rs.getString(4));
+			}
+			// list를 String[][] result로
+			result = new String[list.size() / 4][4];
+			int a = 0;
+			for (int i = 0; i < list.size() / 4; i++) {
+				for (int j = 0; j < 4; j++) {
+					result[i][j] = list.get(a);
+					a++;
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
+	
+	// Tab_1303
+	public String[][] selectFourFieldsProductListAndStockJoinWhereTwoFields(Vo vo) {
+		ArrayList<String> list = new ArrayList<String>();
+		String[][] result = null; // list로 받은 값을 String 2차원 배열로 바꿔서 return
+		
+		checkConException();
+		try {
+			String select = "SELECT " + vo.getField_1() + "," + vo.getField_2() + "," + vo.getField_3() + "," + vo.getField_4()
+					+ " FROM PRODUCT_LIST pl, STOCK s "
+					+ " WHERE pl.product_code = s.product_code "
+					+ " AND " + vo.getField_5() + " = '" + vo.getField_6() + "'"
+					+ " ORDER BY " + vo.getField_7();
+			// SELECT s.PRODUCT_CODE, pl.PRODUCT_NAME , s.UNIT , s.QUANTITY
+			// FROM PRODUCT_LIST pl , STOCK s
+			// WHERE pl.PRODUCT_CODE = s.PRODUCT_CODE
+			// AND s.PRODUCT_CODE = '1-G031-CCN006-020'
+			// ORDER BY PRODUCT_NAME
+			rs = stmt.executeQuery(select);
+			
+			while (rs.next()) {
+				list.add(rs.getString(1));
+				list.add(rs.getString(2));
+				list.add(rs.getString(3));
+				list.add(rs.getString(4));
+			}
+			// list를 String[][] result로
+			result = new String[list.size() / 4][4];
+			int a = 0;
+			for (int i = 0; i < list.size() / 4; i++) {
+				for (int j = 0; j < 4; j++) {
+					result[i][j] = list.get(a);
+					a++;
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
 
 
 	// Tab_1301

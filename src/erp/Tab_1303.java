@@ -2,8 +2,16 @@ package erp;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import javax.swing.*;
 //import javax.swing.event.*;
+import javax.swing.table.DefaultTableModel;
+
+import net.sourceforge.jdatepicker.impl.JDatePanelImpl;
+import net.sourceforge.jdatepicker.impl.JDatePickerImpl;
+import net.sourceforge.jdatepicker.impl.UtilDateModel;
 
 public class Tab_1303 implements ActionListener {
 //	폴더 그림:40,40
@@ -12,6 +20,11 @@ public class Tab_1303 implements ActionListener {
 //	Button 사이즈:50,30
 //	가로 여백 30, 세로 여백 10
 	JPanel p;
+	TextField pctf, pntf;
+	DefaultTableModel dtm;
+	JTable table;
+	Dao dao = new Dao();
+	Vo vo;
 	
 	public Tab_1303() {
 		p = new JPanel();
@@ -34,8 +47,8 @@ public class Tab_1303 implements ActionListener {
 		p.add(l1);
 		
 		// Label 추가
-		Label[] label = new Label[3];
-		String[] labelName = {"기간", "품목코드", "품목명"};
+		Label[] label = new Label[2];
+		String[] labelName = {"품목코드", "품목명"};
 
 		for (int i = 0; i < label.length; i++) {
 			label[i] = new Label(labelName[i]);
@@ -43,61 +56,83 @@ public class Tab_1303 implements ActionListener {
 		}
 		
 		label[0].setBounds(10, 50, 150, 30);
-		label[1].setBounds(380, 50, 150, 30);
-		label[2].setBounds(380, 90, 150, 30);
-		
-		// Choice 추가
-		Choice[] ch = new Choice[2];
-		
-		for(int i=0; i<ch.length; i++) {
-			ch[i] = new Choice();
-			p.add(ch[i]);
-		}
-		ch[0].setBounds(170, 50, 200, 30); // 기간
-		ch[1].setBounds(170, 90, 200, 30); // 기간
+		label[1].setBounds(10, 90, 150, 30);
 		
 		// TextField 추가
-		TextField pctf = new TextField();
-		pctf.setBounds(540, 50, 200, 30);
+		pctf = new TextField();
+		pctf.setBounds(170, 50, 200, 30);
 		p.add(pctf);
 
-		TextField pntf = new TextField();
-		pntf.setBounds(540, 90, 200, 30);
+		pntf = new TextField();
+		pntf.setBounds(170, 90, 200, 30);
+		pntf.setEditable(false); // 변경 불가
 		p.add(pntf);
 		
 		// Button 추가
 		Button pcb = new Button("…");
-		pcb.setBounds(750, 50, 30, 30);
+		pcb.setBounds(380, 50, 30, 30);
 		p.add(pcb);
 		/*
 		버튼을 TextField 안으로 넣을수 있는지 체크
 		*/
 		
 		Button b1 = new Button("조회");
-		b1.setBounds(790, 50, 50, 30);
+		b1.setBounds(440, 50, 50, 30);
+		b1.addActionListener(this);
 		p.add(b1);
 
 		// Table 추가
-		String[] header = {
-				"순번", "offer번호", "거래처", "품목코드", "품목명",
-				"단위", "기초 수량", "입고 수량", "출고 수량", "재고 수량"
-		};
-		String[][] contents = {
-				{"", "", "", "", "", "", "", "", "", ""}
-		};
-		/*
-		checkbox 추가되어야함
-		*/
-		JTable table = new JTable(contents, header);
+		String[] header = {"순번", "품목코드", "품목명", "단위", "재고 수량"};
+		dtm = new DefaultTableModel(header, 0);
+		table = new JTable(dtm);
 		
 		JScrollPane sp = new JScrollPane(table);
 		sp.setBounds(10, 130, 1000, 500);
 		p.add(sp);
-
 	}
 	
 	@Override
 	public void actionPerformed(ActionEvent e) {
+		int rowCount = dtm.getRowCount();
+		int count = 1;
 		
+		switch(e.getActionCommand()) {
+		case "조회" : 
+			if(rowCount != 0) {
+				int deleteRowCount = rowCount;
+				if(deleteRowCount == 0) {
+					
+				}else {
+					while(deleteRowCount != 0){
+						dtm.removeRow(deleteRowCount - 1);
+						deleteRowCount--;
+					}
+				}
+			}
+			
+			String[][] result;
+			
+			if(pctf.getText() == null || pctf.getText().equals("")) { // 모든 품목 조회
+				vo = new Vo("s.PRODUCT_CODE", "pl.PRODUCT_NAME", "s.UNIT", "s.QUANTITY", "PRODUCT_NAME");
+				result = dao.selectFourFieldsProductListAndStockJoinWhere(vo);
+				
+			}else { // 입력된 품목 조회
+				String product_code = pctf.getText();
+				vo = new Vo("s.PRODUCT_CODE", "pl.PRODUCT_NAME", "s.UNIT", "s.QUANTITY", "s.PRODUCT_CODE", product_code, "PRODUCT_NAME");
+				result = dao.selectFourFieldsProductListAndStockJoinWhereTwoFields(vo);
+			}
+			
+			for(int i=0; i<result.length; i++) {
+				Object[] addRow = new Object[7];
+				addRow[0] = count++; // 순번
+				addRow[1] = result[i][0]; // 품목코드
+				addRow[2] = result[i][1]; // 품목명
+				addRow[3] = result[i][2]; // 단위
+				addRow[4] = result[i][3]; // 재고수량
+				dtm.addRow(addRow);
+			}
+			count = 1;
+			break;
+		}
 	}
 }
