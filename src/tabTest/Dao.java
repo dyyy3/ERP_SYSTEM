@@ -160,8 +160,6 @@ public class Dao {
 					+ " AND " + vo.getField_1() + " = '" + vo.getField_2() + "'"
 					+ " AND " + vo.getField_3() + " = '" + vo.getField_4() + "'"
 					+ " ORDER BY " + vo.getField_5();
-			System.out.println(select);
-
 			rs = stmt.executeQuery(select);
 			
 			while(rs.next()) {
@@ -494,7 +492,6 @@ public class Dao {
 		return result;
 	}
 
-
 	// Tab_1301
 	public String[][] selectAllOfferListWhereTwoFields(Vo vo) {
 		ArrayList<String> list = new ArrayList<String>();
@@ -664,7 +661,7 @@ public class Dao {
 			return result;
 		}
 	
-	// Tab_1201
+	// Tab_1201, Tab_1401
 	public String[] selectOneFieldDistinct(Vo vo) {
 		List<String> list = new ArrayList<>(); // 쿼리문으로 얻은 값을 저장. 행의 길이를 모르므로 list로 받는다
 		String[] result = null; // list로 받은 값을 String 배열로 바꿔서 return
@@ -772,7 +769,7 @@ public class Dao {
 		return code;
 	}
 	
-	// Tab_1101, Tab_1201, Tab_1202
+	// Tab_1101, Tab_1201, Tab_1202, Tab_1401
 	public String selectOneFieldWhereTwoFields(Vo vo) {
 		String code ="";
 		checkConException();
@@ -825,6 +822,58 @@ public class Dao {
 			}
 			
 		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
+	
+	// Tab_1401
+	public String[][] selectAllStroingAndUnStoringFullOuterJoin(Vo vo) {
+		ArrayList<String> list = new ArrayList<String>();
+		String[][] result = null; // list로 받은 값을 String 2차원 배열로 바꿔서 return
+
+		checkConException();
+		try {
+			String select = "SELECT * FROM "
+					+ " (SELECT PRODUCT_CODE , PRODUCT_NAME , UNIT, SUM(QUANTITY)"
+					+ " FROM STORING WHERE STORING_DATE LIKE '" + vo.getTableName() + "%' "
+					+ " GROUP BY PRODUCT_CODE, PRODUCT_NAME, UNIT) "
+					+ " FULL OUTER JOIN "
+					+ "(SELECT PRODUCT_CODE , PRODUCT_NAME , UNIT, SUM(QUANTITY)"
+					+ "FROM UNSTORING WHERE UNSTORING_DATE LIKE '" + vo.getTableName() + "%' "
+					+ "GROUP BY PRODUCT_CODE , PRODUCT_NAME, UNIT)"
+					+ "USING (PRODUCT_CODE)";
+//			SELECT * FROM
+//			(SELECT PRODUCT_CODE , PRODUCT_NAME , UNIT, SUM(QUANTITY)
+//			FROM STORING WHERE STORING_DATE LIKE '2022-7%'
+//			GROUP BY PRODUCT_CODE, PRODUCT_NAME, UNIT)
+//			FULL OUTER JOIN
+//			(SELECT PRODUCT_CODE , PRODUCT_NAME , UNIT, SUM(QUANTITY)
+//			FROM UNSTORING WHERE UNSTORING_DATE LIKE '2022-7%'
+//			GROUP BY PRODUCT_CODE , PRODUCT_NAME, UNIT)
+//			USING (PRODUCT_CODE)
+			
+			rs = stmt.executeQuery(select);
+
+			while (rs.next()) {
+				list.add(rs.getString(1));
+				list.add(rs.getString(2));
+				list.add(rs.getString(3));
+				list.add(rs.getString(4));
+				list.add(rs.getString(5));
+				list.add(rs.getString(6));
+				list.add(rs.getString(7));
+			}
+			// list를 String[][] result로
+			result = new String[list.size() / 7][7]; // [3][8]. 3행 8열. 행 : 0~2, 열 : 0~7
+			int a = 0; // 0~23
+			for (int i = 0; i < list.size() / 7; i++) {
+				for (int j = 0; j < 7; j++) {
+					result[i][j] = list.get(a);
+					a++;
+				}
+			}
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return result;

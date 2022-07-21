@@ -29,7 +29,7 @@ public class Vo {
 
 	}
 	
-	// Tab_1101
+	// Tab_1101, Tab_1401
 	public Vo(String tableName) {
 		this.tableName = tableName;
 	}
@@ -54,7 +54,7 @@ public class Vo {
 		this.value_1 = value_1;
 	}
 	
-	// Tab_1101, Tab_1201, Tab_1202
+	// Tab_1101, Tab_1201, Tab_1202, Tab_1401
 	public Vo(String tableName, String field_1, String field_2, String field_3) {
 		this.tableName = tableName;
 		this.field_1 = field_1;
