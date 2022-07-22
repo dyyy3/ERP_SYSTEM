@@ -1,4 +1,4 @@
-package tabTest;
+package test;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -6,7 +6,6 @@ import javax.swing.*;
 //import javax.swing.event.*;
 import javax.swing.table.*;
 
-import tabTest.TableCheckBoxTest2.TableCell2;
 
 public class Tab_1501_table implements ActionListener {
 //	폴더 그림 : 40, 40

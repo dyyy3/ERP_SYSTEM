@@ -568,6 +568,41 @@ public class Dao {
 		return result;
 	}
 	
+	// Tab_1501
+	public String[][] selectAllPermissionWhere(Vo vo) {
+		ArrayList<String> list = new ArrayList<String>();
+		String[][] result = null; // list로 받은 값을 String 2차원 배열로 바꿔서 return
+		
+		checkConException();
+		try {
+			String select = "SELECT * FROM PERMISSION"
+					+ " WHERE " + vo.getTableName() + " = '" + vo.getField_1() + "'"
+					+ " ORDER BY " + vo.getField_2();
+//			SELECT * FROM PERMISSION WHERE USER_ID = '202201000' ORDER BY SCREEN_ID
+			rs = stmt.executeQuery(select);
+			while(rs.next()) {
+				list.add(rs.getString(1));
+				list.add(rs.getString(2));
+				list.add(rs.getString(3));
+				list.add(rs.getString(4));
+				list.add(rs.getString(5));
+				list.add(rs.getString(6));
+			}
+			// list를 String[][] result로
+			result = new String[list.size() / 6][6];
+			int a = 0;
+			for(int i=0; i<list.size()/6; i++) {
+				for(int j=0; j<6; j++) {
+					result[i][j] = list.get(a);
+					a++;
+				}
+			}
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
+	
 	// Tab_1202
 	public String[] selectAllOfferCostWhere(Vo vo) {
 		String[] result = new String[7];
@@ -617,7 +652,7 @@ public class Dao {
 		return result;
 	}
 	
-	// Tab_1301
+	// Tab_1301, Tab_1501
 	public String[] selectOneFieldOrderBy(Vo vo) {
 		List<String> list = new ArrayList<>(); // 쿼리문으로 얻은 값을 저장. 행의 길이를 모르므로 list로 받는다
 		String[] result = null; // list로 받은 값을 String 배열로 바꿔서 return
@@ -640,27 +675,26 @@ public class Dao {
 	}
 	
 	// Tab_1202
-		public String[] selectOneFieldWhereOrderBy(Vo vo) {
-			List<String> list = new ArrayList<>(); // 쿼리문으로 얻은 값을 저장. 행의 길이를 모르므로 list로 받는다
-			String[] result = null; // list로 받은 값을 String 배열로 바꿔서 return
-			
-			checkConException();
-			try {
-				String select = "SELECT " + vo.getField_2() + " FROM " + vo.getField_1()
-						+ " WHERE " + vo.getField_3() + " = '" + vo.getField_4() + "'"
-						+ " ORDER BY " + vo.getField_5();
-				rs = stmt.executeQuery(select);
-				while(rs.next()) {
-					list.add(rs.getString(vo.getField_2())); // num
-				}
-				result = list.toArray(new String[list.size()]); // list의 size와 동일한 길이의 String 배열을 만든다
-				
-			}catch(Exception e) {
-				e.printStackTrace();
+	public String[] selectOneFieldWhereOrderBy(Vo vo) {
+		List<String> list = new ArrayList<>(); // 쿼리문으로 얻은 값을 저장. 행의 길이를 모르므로 list로 받는다
+		String[] result = null; // list로 받은 값을 String 배열로 바꿔서 return
+
+		checkConException();
+		try {
+			String select = "SELECT " + vo.getField_2() + " FROM " + vo.getField_1() + " WHERE " + vo.getField_3()
+					+ " = '" + vo.getField_4() + "'" + " ORDER BY " + vo.getField_5();
+			rs = stmt.executeQuery(select);
+			while (rs.next()) {
+				list.add(rs.getString(vo.getField_2())); // num
 			}
-			return result;
+			result = list.toArray(new String[list.size()]); // list의 size와 동일한 길이의 String 배열을 만든다
+
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
-	
+		return result;
+	}
+
 	// Tab_1201, Tab_1401
 	public String[] selectOneFieldDistinct(Vo vo) {
 		List<String> list = new ArrayList<>(); // 쿼리문으로 얻은 값을 저장. 행의 길이를 모르므로 list로 받는다
@@ -749,6 +783,35 @@ public class Dao {
 		return result;
 	}
 	
+	// Tab_1501
+	public String[] selectAllUserInfoAndDepartmentInfoWheretwoFields(Vo vo) {
+		List<String> list = new ArrayList<>(); // 쿼리문으로 얻은 값을 저장. 열의 길이를 모르므로 list로 받는다
+		String[] result = null; // list로 받은 값을 String 배열로 바꿔서 return
+		
+		checkConException();
+		try {
+			String select = "SELECT * FROM USER_INFO ui, DEPARTMENT_INFO di "
+					+ " WHERE ui.DEPT_ID = di.DEPT_ID "
+					+ " AND " + vo.getTableName() + " = '" + vo.getField_1() + "'";
+			// SELECT * FROM USER_INFO ui , DEPARTMENT_INFO di
+			// WHERE ui.DEPT_ID = di.DEPT_ID
+			// AND USER_ID = '202011004'
+			rs = stmt.executeQuery(select);
+			
+			while(rs.next()) {
+				list.add(rs.getString(1));
+				list.add(rs.getString(2));
+				list.add(rs.getString(3));
+				list.add(rs.getString(4));
+				list.add(rs.getString(5));
+				list.add(rs.getString(6));
+			}
+			result = list.toArray(new String[list.size()]); // list의 size와 동일한 길이의 String 배열을 만든다
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
 	
 	// Tab_1101, Tab_1201, Tab_1202, Tab_1301, Tab_1302
 	public String selectOneFieldWhere(Vo vo) {
@@ -769,7 +832,7 @@ public class Dao {
 		return code;
 	}
 	
-	// Tab_1101, Tab_1201, Tab_1202, Tab_1401
+	// Tab_1101, Tab_1201, Tab_1202, Tab_1401, Tab_1501
 	public String selectOneFieldWhereTwoFields(Vo vo) {
 		String code ="";
 		checkConException();
@@ -998,6 +1061,39 @@ public class Dao {
 		return b;
 	}
 	
+	// Tab_1501
+	public boolean insertUserInfo(Vo vo) {
+		boolean b = true;
+		checkConException();
+		try {
+			String insert = "INSERT INTO USER_INFO (USER_ID, USER_PW, DEPT_ID, USER_NAME)"
+					+ " VALUES('" + vo.getField_1() + "', '" + vo.getField_2() + "', '"
+					+ vo.getValue_1() + "', '" + vo.getField_3() + "')";
+			stmt.executeQuery(insert);
+		}catch(Exception e) {
+			e.printStackTrace();
+			b = false;
+		}
+		return b;
+	}
+	
+	// Tab_1501
+	public boolean insertPermission(Vo vo) {
+		boolean b = true;
+		checkConException();
+		try {
+			String insert = "INSERT INTO PERMISSION (USER_ID, SCREEN_ID, R, C, U, D)"
+					+ " VALUES(" + "'" + vo.getField_1() + "', '" + vo.getField_2() + "', "
+					+ vo.getValue_1() + ", " + vo.getValue_2() + ", "
+					+ vo.getValue_3() + ", " + vo.getValue_4() + ")";
+			stmt.executeQuery(insert);
+		} catch (Exception e) {
+			e.printStackTrace();
+			b = false;
+		}
+		return b;
+	}
+	
 	// Tab_1202
 	public boolean updateOneIntFieldWhere(Vo vo) {
 		boolean b = true;
@@ -1006,6 +1102,42 @@ public class Dao {
 			String update = "UPDATE " + vo.getTableName() + " SET " + vo.getField_1() + " = '" + vo.getValue_1() + "'"
 					+ " WHERE " + vo.getField_2() + " = '" + vo.getField_3() + "'";
 			// UPDATE OFFER_LIST SET UNIT_PRICE_KRW = '20000' WHERE num = '1'
+			stmt.executeQuery(update);
+		}catch(Exception e) {
+			e.printStackTrace();
+			b = false;
+		}
+		return b;
+	}
+	
+	// Tab_1501
+	public boolean updateFourIntFieldsWhereTwoFields(Vo vo) {
+		boolean b = true;
+		checkConException();
+		try {
+			String update = "UPDATE " + vo.getTableName()
+					+ " SET " + vo.getField_1() + " = '" + vo.getValue_1() + "', "
+					+ vo.getField_2() + " = '" + vo.getValue_2() + "', "
+					+ vo.getField_3() + " = '" + vo.getValue_3() + "', "
+					+ vo.getField_4() + " = '" + vo.getValue_4() + "'"
+					+ " WHERE " + vo.getField_5() + " = '" + vo.getField_6() + "'"
+					+ " AND " + vo.getField_7() + " = '" + vo.getField_8() + "'";
+			stmt.executeQuery(update);
+		}catch(Exception e) {
+			e.printStackTrace();
+			b = false;
+		}
+		return b;
+	}
+	
+	// Tab_1201
+	public boolean updateFourFieldsWhere(Vo vo) {
+		boolean b = true;
+		checkConException();
+		try {
+			String update = "UPDATE " + vo.getTableName() + " SET " + vo.getField_1() + " = '" + vo.getField_2() + "', "
+					+ vo.getField_3() + " = '" + vo.getField_4() + "', " + vo.getField_5() + " = '" + vo.getField_6() + "', "
+					+ vo.getField_7() + " = '" + vo.getField_8() + "' WHERE " + vo.getField_9() + " = '" + vo.getField_10() + "'";
 			stmt.executeQuery(update);
 		}catch(Exception e) {
 			e.printStackTrace();
@@ -1032,22 +1164,6 @@ public class Dao {
 			// AMOUNT_KRW = 0
 			// WHERE OFFER_NUM = '22-7-3'
 			
-			stmt.executeQuery(update);
-		}catch(Exception e) {
-			e.printStackTrace();
-			b = false;
-		}
-		return b;
-	}
-	
-	// Tab_1201
-	public boolean updateFourFieldsWhere(Vo vo) {
-		boolean b = true;
-		checkConException();
-		try {
-			String update = "UPDATE " + vo.getTableName() + " SET " + vo.getField_1() + " = '" + vo.getField_2() + "', "
-					+ vo.getField_3() + " = '" + vo.getField_4() + "', " + vo.getField_5() + " = '" + vo.getField_6() + "', "
-					+ vo.getField_7() + " = '" + vo.getField_8() + "' WHERE " + vo.getField_9() + " = '" + vo.getField_10() + "'";
 			stmt.executeQuery(update);
 		}catch(Exception e) {
 			e.printStackTrace();

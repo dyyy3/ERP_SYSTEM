@@ -330,6 +330,7 @@ public class Tab_1301 implements ActionListener, ItemListener {
 		JCheckBox box = new JCheckBox();
 		box.setHorizontalAlignment(JLabel.CENTER);
 		table.getColumn("").setCellEditor(new DefaultCellEditor(box));
+		
 	}
 	
 	public void setTable(String date1, String date2, String ocp) {

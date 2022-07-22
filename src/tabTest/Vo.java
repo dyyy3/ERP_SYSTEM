@@ -34,13 +34,13 @@ public class Vo {
 		this.tableName = tableName;
 	}
 
-	// Tab_1101, Tab_1201
+	// Tab_1101, Tab_1201, Tab_1501
 	public Vo(String tableName, String field_1) {
 		this.tableName = tableName;
 		this.field_1 = field_1;
 	}
 	
-	// login
+	// login, Tab_1501
 	public Vo(String tableName, String field_1, String field_2) {
 		this.tableName = tableName;
 		this.field_1 = field_1;
@@ -68,6 +68,14 @@ public class Vo {
 		this.field_1 = field_1;
 		this.field_2 = field_2;
 		this.value_1 = value_1;
+	}
+	
+	// Tab_1501
+	public Vo(String field_1, String field_2, int value_1, String field_3) {
+		this.field_1 = field_1;
+		this.field_2 = field_2;
+		this.value_1 = value_1;
+		this.field_3 = field_3;
 	}
 	
 	// Tab_1202, Tab_1301, Tab_1302
@@ -127,6 +135,19 @@ public class Vo {
 		this.value_2 = value_2;
 	}
 	
+	// Tab_1501
+	public Vo(String field_1, String field_2,
+			int value_1, int value_2,
+			int value_3, int value_4)
+	{
+		this.field_1 = field_1;
+		this.field_2 = field_2;
+		this.value_1 = value_1;
+		this.value_2 = value_2;
+		this.value_3 = value_3;
+		this.value_4 = value_4;
+	}
+
 	// Tab_1202
 	public Vo(String field_1, int value_1,
 			int value_2, int value_3, int value_4,
@@ -231,6 +252,31 @@ public class Vo {
 		this.field_8 = field_8;
 		this.field_9 = field_9;
 		this.field_10 = field_10;
+	}
+	
+	// Tab_1501
+	public Vo(String tableName,
+			String field_1, int value_1,
+			String field_2, int value_2,
+			String field_3, int value_3,
+			String field_4, int value_4,
+			String field_5, String field_6, 
+			String field_7, String field_8 
+			)
+	{
+		this.tableName = tableName;
+		this.field_1 = field_1;
+		this.value_1 = value_1;
+		this.field_2 = field_2;
+		this.value_2 = value_2;
+		this.field_3 = field_3;
+		this.value_3 = value_3;
+		this.field_4 = field_4;
+		this.value_4 = value_4;
+		this.field_5 = field_5;
+		this.field_6 = field_6;
+		this.field_7 = field_7;
+		this.field_8 = field_8;
 	}
 	
 	// Tab_1201

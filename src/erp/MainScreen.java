@@ -77,7 +77,7 @@ public class MainScreen extends WindowAdapter implements ActionListener {
 	
 	public void setMenuItemPersonnelManagement(int startIndex, int endIndex) {
 		JMenuItem[] personnelManagement = {
-				new JMenuItem("인사관리")
+				new JMenuItem("계정 및 권한 관리")
 		};
 		for(int i=0; i<personnelManagement.length; i++) {
 			menu[4].add(personnelManagement[i]);
@@ -268,7 +268,7 @@ public class MainScreen extends WindowAdapter implements ActionListener {
 				tp.setSelectedIndex(i);
 			}
 			break;
-		case "인사관리" : 
+		case "계정 및 권한 관리" : 
 			if(i == -1) {
 				Tab_1501 tab1501 = new Tab_1501();
 				tp.addTab(menuItem, tab1501.p);

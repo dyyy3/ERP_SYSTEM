@@ -78,7 +78,7 @@ public class MainScreenTapTest extends WindowAdapter implements ActionListener {
 			costAccounting[i].addActionListener(new MainScreenTapTest());
 		}
 		JMenuItem[] personnelManagement = {
-				new JMenuItem("인사관리")
+				new JMenuItem("계정 및 권한 관리")
 		};
 		for(int i=0; i<personnelManagement.length; i++) {
 			menu[4].add(personnelManagement[i]);
@@ -155,7 +155,7 @@ public class MainScreenTapTest extends WindowAdapter implements ActionListener {
 			Tab_1402 tab1402 = new Tab_1402();
 			tp.addTab(menuItem, tab1402.p);
 			break;
-		case "인사관리" : 
+		case "계정 및 권한 관리" : 
 			Tab_1501 tab1501 = new Tab_1501();
 			tp.addTab(menuItem, tab1501.p);
 			break;
