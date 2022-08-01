@@ -24,6 +24,12 @@ public class Vo {
 	private int value_4;
 	private int value_5;
 	private int value_6;
+	private int value_7;
+	private int value_8;
+	private int value_9;
+	private int value_10;
+	private int value_11;
+	private int value_12;
 
 	public Vo() {
 
@@ -293,6 +299,31 @@ public class Vo {
 		this.field_8 = field_8;
 	}
 	
+	// Tab_1401
+	public Vo(String field_1, String field_2, String field_3, String field_4,
+			int value_1, int value_2, int value_3,
+			int value_4, int value_5, int value_6,
+			int value_7, int value_8, int value_9,
+			int value_10, int value_11, int value_12)
+	{
+		this.field_1 = field_1;
+		this.field_2 = field_2;
+		this.field_3 = field_3;
+		this.field_4 = field_4;
+		this.value_1 = value_1;
+		this.value_2 = value_2;
+		this.value_3 = value_3;
+		this.value_4 = value_4;
+		this.value_5 = value_5;
+		this.value_6 = value_6;
+		this.value_7 = value_7;
+		this.value_8 = value_8;
+		this.value_9 = value_9;
+		this.value_10 = value_10;
+		this.value_11 = value_11;
+		this.value_12 = value_12;
+	}
+	
 	// Tab_1201
 	public Vo(String tableName, String field_1, String field_2,
 			String field_3, String field_4, String field_5,
@@ -438,5 +469,29 @@ public class Vo {
 	
 	public int getValue_6() {
 		return value_6;
+	}
+	
+	public int getValue_7() {
+		return value_7;
+	}
+	
+	public int getValue_8() {
+		return value_8;
+	}
+	
+	public int getValue_9() {
+		return value_9;
+	}
+	
+	public int getValue_10() {
+		return value_10;
+	}
+	
+	public int getValue_11() {
+		return value_11;
+	}
+	
+	public int getValue_12() {
+		return value_12;
 	}
 }

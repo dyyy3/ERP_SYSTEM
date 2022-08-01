@@ -220,6 +220,7 @@ public class Tab_1401 implements ActionListener, ItemListener {
 		int rowCount = dtm.getRowCount();
 		String[][] result = getStoringAndUnStoringQuantity();
 		String selectedDate = chYear.getSelectedItem() + "-" + chMonth.getSelectedItem(); // 2022-7
+		String s = getProductLIst();
 		
 		switch(e.getActionCommand()) {
 		case "조회" :
@@ -234,7 +235,7 @@ public class Tab_1401 implements ActionListener, ItemListener {
 					}
 				}
 			}
-			String s = getProductLIst();
+//			String s = getProductLIst();
 			int count = 1;
 
 			// 테이블에 출력
@@ -265,13 +266,10 @@ public class Tab_1401 implements ActionListener, ItemListener {
 				dtm.addRow(addRow);
 			}
 			count = 1;
+
 			break;
 			
 		case "원가 계산" :
-			String year_month = ""; // 기준년월
-			String product_code = ""; // 품목코드
-			String product_name = ""; // 품목명
-			String unit = ""; // 단위
 			int beginning_unit_price = 0; // 기초단가
 			int beginning_quantity = 0; // 기초수량
 			int beginning_amount = 0; // 기초금액
@@ -418,12 +416,35 @@ public class Tab_1401 implements ActionListener, ItemListener {
 					dfs = df.format(inventory_amount);
 					dtm.setValueAt(dfs, i, 15);
 					
-					storing_amount=0; // 이 변수에 값을 더해서 합계를 구하므로, 다음 품목코드의 합계를 위해 0으로 초기화
+					storing_amount = 0; // 이 변수에 값을 더해서 합계를 구하므로, 다음 품목코드의 합계를 위해 0으로 초기화
 					
 				} // for문의 끝
 
-				// product_code_cost 테이블에 값 저장
 				
+				// product_code_cost 테이블에 값 저장
+				boolean tryInsertPcc = false;
+				for(int i=0; i<result.length; i++) {
+					if(s.equals("s")) {
+						vo = new Vo(selectedDate, result[i][0], result[i][1], result[i][2],
+								pccInt[i][0], pccInt[i][1], pccInt[i][2],
+								pccInt[i][3], pccInt[i][4], pccInt[i][5],
+								pccInt[i][6], pccInt[i][7], pccInt[i][8],
+								pccInt[i][9], pccInt[i][10], pccInt[i][11]);
+					}else if(s.equals("o")) {
+						vo = new Vo(selectedDate, result[i][0], result[i][4], result[i][5],
+								pccInt[i][0], pccInt[i][1], pccInt[i][2],
+								pccInt[i][3], pccInt[i][4], pccInt[i][5],
+								pccInt[i][6], pccInt[i][7], pccInt[i][8],
+								pccInt[i][9], pccInt[i][10], pccInt[i][11]);
+					}
+					tryInsertPcc = dao.insertProduct_code_cost(vo);
+				}
+				
+				if(tryInsertPcc == true) {
+					new ErrorMessageDialog("저장되었습니다.", "원가 계산");
+				}else {
+					new ErrorMessageDialog("저장에 실패하였습니다.", "원가 계산");
+				}
 			}
 			break;
 		}

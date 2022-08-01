@@ -2,7 +2,11 @@ package tabTest;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 //import javax.swing.event.*;
 import javax.swing.table.TableColumn;
 
@@ -15,6 +19,8 @@ public class Tab_1402 implements ActionListener, ItemListener {
 	JPanel p;
 	Choice chYear;
 	Choice chMonth;
+	DefaultTableModel dtm;
+	JTable table;
 	
 	public Tab_1402() {
 		p = new JPanel();
@@ -53,13 +59,35 @@ public class Tab_1402 implements ActionListener, ItemListener {
 		chYear = new Choice();
 		chYear.setBounds(170, 50, 130, 30);
 		chYear.addItemListener((ItemListener)this);
-		p.add(chYear);
 		
 		chMonth = new Choice();
 		chMonth.setBounds(310, 50, 60, 30);
 		chMonth.addItemListener((ItemListener)this);
-		p.add(chMonth);
 		
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		Date todayDate = new Date();
+		String today = sdf.format(todayDate);
+		String[] date = today.split("-"); // date[0] : year, date[1] : month, date[2] : day
+
+		if (date[1].charAt(0) == '0') {
+			char[] ch = date[1].toCharArray();
+			date[1] = String.valueOf(ch[1]);
+		}
+
+		for (int i = 2000; i <= Integer.parseInt(date[0]); i++) {
+			chYear.add(String.valueOf(i));
+		}
+
+		for (int i = 1; i <= 12; i++) {
+			chMonth.add(String.valueOf(i));
+		}
+
+		chYear.select(date[0]);
+		chMonth.select(date[1]);
+		
+		p.add(chYear);
+		p.add(chMonth);
+
 		// TextField 추가
 		TextField pctf = new TextField();
 		pctf.setBounds(540, 50, 200, 30);
@@ -101,13 +129,8 @@ public class Tab_1402 implements ActionListener, ItemListener {
 				"출고 수량", "출고 단가", "출고 금액", "재고 수량", "재고 단가",
 				"재고 금액"
 		};
-		String[][] contents = {
-				{"", "", "", "", "",
-				"", "", "", "", "",
-				"", "", "", "", "",
-				""}
-		};
-		JTable table = new JTable(contents, header);
+		dtm = new DefaultTableModel(header, 0);
+		table = new JTable(dtm);
 		
 		// 테이블 열 너비 자동 조정 false
 		table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
@@ -155,7 +178,13 @@ public class Tab_1402 implements ActionListener, ItemListener {
 	
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		
+		switch(e.getActionCommand()) {
+		case "조회" :
+			break;
+			
+		case "…" :
+			break;
+		}
 	}
 
 	@Override

@@ -1096,6 +1096,29 @@ public class Dao {
 		return b;
 	}
 	
+	// Tab_1401
+	public boolean insertProduct_code_cost(Vo vo) {
+		boolean b = true;
+		checkConException();
+		try {
+			String insert = "INSERT INTO PRODUCT_CODE_COST (YEAR_MONTH, PRODUCT_CODE, PRODUCT_NAME, UNIT, "
+					+ " BEGINNING_UNIT_PRICE, BEGINNING_QUANTITY, BEGINNING_AMOUNT, "
+					+ " STORING_UNIT_PRICE, STORING_QUANTITY, STORING_AMOUNT, "
+					+ " UNSTORING_UNIT_PRICE, UNSTORING_QUANTITY, UNSTORING_AMOUNT,"
+					+ " INVENTORY_UNIT_PRICE, INVENTORY_QUANTITY, INVENTORY_AMOUNT)"
+					+ " VALUES('" + vo.getField_1() + "', '" + vo.getField_2() + "', '" + vo.getField_3() + "', '" + vo.getField_4() + "', "
+					+ vo.getValue_1() + ", " + vo.getValue_2() + ", " + vo.getValue_3() + ", "
+					+ vo.getValue_4() + ", " + vo.getValue_5() + ", " + vo.getValue_6() + ", "
+					+ vo.getValue_7() + ", " + vo.getValue_8() + ", " + vo.getValue_9() + ", "
+					+ vo.getValue_10() + ", " + vo.getValue_11() + ", " + vo.getValue_12() + ")";
+			stmt.executeQuery(insert);
+		}catch(Exception e) {
+			e.printStackTrace();
+			b = false;
+		}
+		return b;
+	}
+	
 	// Tab_1501
 	public boolean insertUserInfo(Vo vo) {
 		boolean b = true;
