@@ -22,6 +22,7 @@ public class Tab_1201 implements ActionListener, ItemListener {
 	Choice[] ch;
 	Button searchButton, saveButton, addButton, deleteButton;
 	Dao dao;
+	DecimalFormat df = new DecimalFormat("###,###,###");
 	
 	public Tab_1201() {
 		p = new JPanel();
@@ -144,9 +145,29 @@ public class Tab_1201 implements ActionListener, ItemListener {
 		String[] header = {"순번", "품목코드", "품목명", "단위", "수량", "단가", "금액"};
 		dtm = new DefaultTableModel(header, 0);		
 		JTable table = new JTable(dtm);
+
+		// 열 너비 조정
+		TableColumn t0 = table.getColumnModel().getColumn(0);
+		TableColumn t1 = table.getColumnModel().getColumn(1);
+		TableColumn t2 = table.getColumnModel().getColumn(2);
+		TableColumn t3 = table.getColumnModel().getColumn(3);
+		TableColumn t4 = table.getColumnModel().getColumn(4);
+		TableColumn t5 = table.getColumnModel().getColumn(5);
+		TableColumn t6 = table.getColumnModel().getColumn(6);
+
+		t0.setPreferredWidth(50);
+		t1.setPreferredWidth(200);
+		t2.setPreferredWidth(350);
+		t3.setPreferredWidth(50);
+		t4.setPreferredWidth(150);
+		t5.setPreferredWidth(150);
+		t6.setPreferredWidth(200);
+
+		// 행 높이 조정
+		table.setRowHeight(0, 30);
 		
 		JScrollPane sp = new JScrollPane(table);
-		sp.setBounds(10, 170, 1000, 500);
+		sp.setBounds(10, 170, 1160, 500);
 		p.add(sp);
 	}
 	
@@ -207,8 +228,14 @@ public class Tab_1201 implements ActionListener, ItemListener {
 					
 					for(int i=0; i<result2.length; i++) {
 						String[] addRow = new String[7];
-						for(int j=0; j<result2[i].length - 2; j++) { 
+						for(int j=0; j<result2[i].length - 2; j++) { // j : 0~6까지 값을 1~7에 저장
 							addRow[j] = result2[i][j+1]; // 0번에는 offer_num 값이 있으므로 넣지않음 
+//							if(j == 6) {
+//								int dfi = Integer.parseInt(result2[i][j+1]);
+//								addRow[j] = df.format(dfi);
+//							}else {
+//								addRow[j] = result2[i][j+1]; // 0번에는 offer_num 값이 있으므로 넣지않음 
+//							}
 						}
 						dtm.addRow(addRow);
 					}
@@ -290,6 +317,13 @@ public class Tab_1201 implements ActionListener, ItemListener {
 								for(int i=0; i<rowCount; i++) { // 행 index : 0 ~ rowCount - 1까지
 									for(int j=0; j<grv.length; j++) {
 										grv[j] = String.valueOf(dtm.getValueAt(i, j));
+//										if(j == 0) {
+//											grv[j] = String.valueOf(Integer.parseInt(dtm.getValueAt(i, 4).toString())
+//													* Integer.parseInt(dtm.getValueAt(i, 5).toString()));
+//											System.out.println(grv[j]);
+//										}else {
+//											grv[j] = String.valueOf(dtm.getValueAt(i, j));
+//										}
 									}
 									Vo offerListVo = new Vo(tfText, grv[0], grv[1], grv[2], grv[3], grv[4], grv[5], grv[6]); // 열 길이 8. 첫번째는 OFFER_NUM, 나머지는 TABLE 값 읽어오기
 									tryInsetOfferList = dao.insertOfferList(offerListVo);
@@ -365,6 +399,12 @@ public class Tab_1201 implements ActionListener, ItemListener {
 							}
 							if(tryInsetOfferList == true) {
 								new ErrorMessageDialog("저장되었습니다.", "수입offer 등록");
+								
+//								// amount의 출력 형식을 천단위 콤마로 변경
+//								for(int i=0; i<dtm.getRowCount(); i++) {
+//									int dfi = Integer.parseInt(dtm.getValueAt(i, 6).toString());
+//									dtm.setValueAt(dfi, i, 6);
+//								}
 							}
 						}else if(checkFirstNum == true && count != 0) { // 전체 delete후 insert
 							DeleteConfirmDialog d = new DeleteConfirmDialog("이미 등록된 내용이있습니다. 수정하시겠습니까?", "수입offer 등록");
@@ -399,6 +439,12 @@ public class Tab_1201 implements ActionListener, ItemListener {
 								}
 								if(tryInsetOfferList == true) {
 									new ErrorMessageDialog("저장되었습니다.", "수입offer 등록");
+									
+//									// amount의 출력 형식을 천단위 콤마로 변경
+//									for(int i=0; i<dtm.getRowCount(); i++) {
+//										int dfi = Integer.parseInt(dtm.getValueAt(i, 6).toString());
+//										dtm.setValueAt(dfi, i, 6);
+//									}
 								}
 							} //if(b == true)문의 끝
 						} // else if(checkFirstNum == true && count != 0)

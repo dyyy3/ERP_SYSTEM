@@ -10,6 +10,7 @@ import java.util.*;
 
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumn;
 
 import net.sourceforge.jdatepicker.impl.JDatePanelImpl;
 import net.sourceforge.jdatepicker.impl.JDatePickerImpl;
@@ -185,12 +186,39 @@ public class Tab_1301 implements ActionListener, ItemListener {
 				"", "offer번호", "순번", "거래처", "품목코드",
 				"품목명", "단위", "수량"
 		};
-		
 		dtm = new DefaultTableModel(header, 0);		
 		table = new JTable(dtm);
 		
+		// 열 너비 조정
+		TableColumn t0 = table.getColumnModel().getColumn(0);
+		TableColumn t1 = table.getColumnModel().getColumn(1);
+		TableColumn t2 = table.getColumnModel().getColumn(2);
+		TableColumn t3 = table.getColumnModel().getColumn(3);
+		TableColumn t4 = table.getColumnModel().getColumn(4);
+		TableColumn t5 = table.getColumnModel().getColumn(5);
+		TableColumn t6 = table.getColumnModel().getColumn(6);
+		TableColumn t7 = table.getColumnModel().getColumn(7);
+
+		t0.setPreferredWidth(50);
+		t1.setPreferredWidth(150);
+		t2.setPreferredWidth(50);
+		t3.setPreferredWidth(200);
+		t4.setPreferredWidth(200);
+		t5.setPreferredWidth(350);
+		t6.setPreferredWidth(50);
+		t7.setPreferredWidth(110);
+
+		// 행 높이 조정
+		table.setRowHeight(0, 30);
+
 		JScrollPane sp = new JScrollPane(table);
-		sp.setBounds(10, 210, 1000, 500);
+		sp.setBounds(10, 210, 1160, 500);
+
+		// 행 높이 조정
+		for (int i = 0; i < table.getRowCount(); i++) {
+			table.setRowHeight(i, 30);
+		}
+		
 		p.add(sp);
 	}
 	
@@ -330,6 +358,7 @@ public class Tab_1301 implements ActionListener, ItemListener {
 		JCheckBox box = new JCheckBox();
 		box.setHorizontalAlignment(JLabel.CENTER);
 		table.getColumn("").setCellEditor(new DefaultCellEditor(box));
+		
 		
 	}
 	

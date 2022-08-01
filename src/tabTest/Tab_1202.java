@@ -2,9 +2,13 @@ package tabTest;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.text.DecimalFormat;
+
 import javax.swing.*;
 //import javax.swing.event.*;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumn;
+
 import java.util.*;
 
 public class Tab_1202 implements ActionListener {
@@ -21,6 +25,7 @@ public class Tab_1202 implements ActionListener {
 	DefaultTableModel dtm;
 	Dao dao = new Dao();
 	Vo vo;
+	DecimalFormat df = new DecimalFormat("###,###,###");
 	
 	public Tab_1202() {
 		p = new JPanel();
@@ -104,8 +109,34 @@ public class Tab_1202 implements ActionListener {
 		dtm = new DefaultTableModel(header, 0);		
 		JTable table = new JTable(dtm);
 		
+		// 열 너비 조정
+		TableColumn t0 = table.getColumnModel().getColumn(0);
+		TableColumn t1 = table.getColumnModel().getColumn(1);
+		TableColumn t2 = table.getColumnModel().getColumn(2);
+		TableColumn t3 = table.getColumnModel().getColumn(3);
+		TableColumn t4 = table.getColumnModel().getColumn(4);
+		TableColumn t5 = table.getColumnModel().getColumn(5);
+		TableColumn t6 = table.getColumnModel().getColumn(6);
+		TableColumn t7 = table.getColumnModel().getColumn(7);
+		TableColumn t8 = table.getColumnModel().getColumn(8);
+		TableColumn t9 = table.getColumnModel().getColumn(9);
+
+		t0.setPreferredWidth(50);
+		t1.setPreferredWidth(150);
+		t2.setPreferredWidth(150);
+		t3.setPreferredWidth(350);
+		t4.setPreferredWidth(50);
+		t5.setPreferredWidth(80);
+		t6.setPreferredWidth(70);
+		t7.setPreferredWidth(70);
+		t8.setPreferredWidth(70);
+		t9.setPreferredWidth(120);
+
+		// 행 높이 조정
+		table.setRowHeight(0, 30);
+
 		JScrollPane sp = new JScrollPane(table);
-		sp.setBounds(10, 230, 1000, 450);
+		sp.setBounds(10, 230, 1160, 450);
 		p.add(sp);
 	}
 	
@@ -163,11 +194,11 @@ public class Tab_1202 implements ActionListener {
 					// 7 금액 : offer_list테이블의 여덟번째 필드(amount)
 					
 					vo = new Vo("offer_list", "offer_num", tfText, "num");
-					String[][] selectResult3 = dao.selectAllOfferListWhere(vo);
+					String[][] selectResult3 = dao.selectAllOfferListWhere(vo); // 길이 : 9
 					
 					for(int i=0; i<selectResult3.length; i++) {
 						String[] addRow = new String[6];
-						for(int j=0; j<selectResult3[i].length - 3; j++) {
+						for(int j=0; j<selectResult3[i].length - 3; j++) { // j : 0~6까지를 2~8에 저장
 							addRow[j] = selectResult3[i][j+2];
 							dtm.setValueAt(addRow[j], i, j+2);
 						}
@@ -191,14 +222,18 @@ public class Tab_1202 implements ActionListener {
 				tf[2].setText(offerCost[5]); // 기타비용
 				tf[3].setText(offerCost[2]); // 송금수수료
 				tf[4].setText(offerCost[4]); // 운반비
-				tf[5].setText(offerCost[6]); // 총 금액
+				int dfi = Integer.parseInt(offerCost[6]);
+				tf[5].setText(df.format(dfi)); // 총 금액
+//				tf[5].setText(offerCost[6]); // 총 금액
 				
 				// 테이블 (n, 8)에 offer_list 테이블에 저장된 값으로 set
 				vo = new Vo("offer_list", "unit_price_krw", "offer_num", tfText, "num");
 				String[] unitPriceKrw = dao.selectOneFieldWhereOrderBy(vo);
 				
 				for(int i=0; i<unitPriceKrw.length; i++) {
-					dtm.setValueAt(unitPriceKrw[i], i, 8);
+					int dfi2 = Integer.parseInt(unitPriceKrw[i]);
+					dtm.setValueAt(df.format(dfi2), i, 8);
+//					dtm.setValueAt(unitPriceKrw[i], i, 8);
 				}
 				
 				// (n, 9)에 단가 * 수량 값
@@ -206,7 +241,9 @@ public class Tab_1202 implements ActionListener {
 				String[] quantities = dao.selectOneFieldWhereOrderBy(vo); // 수량
 				
 				for(int i=0; i<quantities.length; i++) {
-					dtm.setValueAt(Integer.parseInt(unitPriceKrw[i]) * Integer.parseInt(quantities[i]), i, 9);
+					int dfi2 = Integer.parseInt(unitPriceKrw[i]) * Integer.parseInt(quantities[i]);
+					dtm.setValueAt(df.format(dfi2), i, 9);
+//					dtm.setValueAt(Integer.parseInt(unitPriceKrw[i]) * Integer.parseInt(quantities[i]), i, 9);
 				}
 				
 			}
@@ -228,10 +265,15 @@ public class Tab_1202 implements ActionListener {
 				
 				try {
 					s = tf[3].getText();
-				}catch(NullPointerException e1) {
+				}catch(NullPointerException e1){
 					s = "0";
 				}finally {
-					remittance_charge = Integer.parseInt(s); // 송금수수료
+					try {
+						remittance_charge = Integer.parseInt(s); // 송금수수료
+					}catch(NumberFormatException e2) {
+						remittance_charge = Integer.parseInt("0");
+					}
+					
 				}
 				
 				try {
@@ -239,7 +281,11 @@ public class Tab_1202 implements ActionListener {
 				}catch(NullPointerException e1) {
 					s = "0";
 				}finally {
-					custom_clearance_fee = Integer.parseInt(s); // 통관비
+					try {
+						custom_clearance_fee = Integer.parseInt(s); // 통관비
+					}catch(NumberFormatException e2) {
+						custom_clearance_fee = Integer.parseInt("0");
+					}
 				}
 				
 				try {
@@ -247,7 +293,11 @@ public class Tab_1202 implements ActionListener {
 				}catch(NullPointerException e1) {
 					s = "0";
 				}finally {
-					freight_charge = Integer.parseInt(s); // 운반비
+					try {
+						freight_charge = Integer.parseInt(s); // 운반비
+					}catch(NumberFormatException e2) {
+						freight_charge = Integer.parseInt("0");
+					}
 				}
 				
 				try {
@@ -255,7 +305,11 @@ public class Tab_1202 implements ActionListener {
 				}catch(NullPointerException e1) {
 					s = "0";
 				}finally {
-					other_cost = Integer.parseInt(s); // 기타비용
+					try {
+						other_cost = Integer.parseInt(s); // 기타비용
+					}catch(NumberFormatException e2) {
+						other_cost = Integer.parseInt("0");
+					}
 				}
 				
 				// 1. 금액(USD) 구하기
@@ -266,7 +320,7 @@ public class Tab_1202 implements ActionListener {
 				// 2. 총금액(KRW)을 구한후 TextField에 출력
 				// : 총금액(KRW) = 금액(USD) * 송금환율 + 송금수수료 + 통관비 + 운반비 + 기타비용
 				int amount_krw = amount * currency_exchange + remittance_charge + custom_clearance_fee + freight_charge + other_cost;
-				tf[5].setText(String.valueOf(amount_krw));
+				tf[5].setText(String.valueOf(df.format(amount_krw)));
 
 				// 3. offer_cost 테이블에 송금환율 ~ 총금액까지 6가지 값 저장
 				vo = new Vo("offer_cost", "offer_num", "offer_num", tfText);
@@ -306,12 +360,17 @@ public class Tab_1202 implements ActionListener {
 					unit_price_krw = Integer.parseInt(unit_price_arr[i]) * currency_exchange
 							+ (remittance_charge + custom_clearance_fee + freight_charge + other_cost) / quantity_sum;
 					// 테이블에 단가(KRW) 출력
-					dtm.setValueAt(unit_price_krw, i, 8);
+					int dfi2 = unit_price_krw;
+					dtm.setValueAt(df.format(unit_price_krw), i, 8);
+//					dtm.setValueAt(unit_price_krw, i, 8);
 					// offer_list에 단가(KRW) 저장
-					vo = new Vo("offer_list", "unit_price_krw", unit_price_krw, "num", String.valueOf(i+1));
-					tryUpdateUnitPriceKrw = dao.updateOneIntFieldWhere(vo);
+					vo = new Vo("offer_list", "unit_price_krw", unit_price_krw,
+							"num", String.valueOf(i+1), "offer_num", tfText);
+					tryUpdateUnitPriceKrw = dao.updateOneIntFieldWhereTwoFields(vo);
 					// 테이블에 단가(KRW) * 수량 출력
-					dtm.setValueAt(unit_price_krw * Integer.parseInt(quantities[i]), i, 9);
+					int dfi3 = unit_price_krw * Integer.parseInt(quantities[i]);
+					dtm.setValueAt(df.format(dfi3), i, 9);
+//					dtm.setValueAt(unit_price_krw * Integer.parseInt(quantities[i]), i, 9);
 				}
 				
 				// 결과 출력

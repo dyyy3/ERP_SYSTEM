@@ -852,6 +852,41 @@ public class Dao {
 		return code;
 	}
 	
+	// Tab_1401
+	public String[][] selectTwoFieldsWhereTwoFieldsLike(Vo vo) {
+		ArrayList<String> list = new ArrayList<String>();
+		String[][] result = null; // list로 받은 값을 String 2차원 배열로 바꿔서 return
+		checkConException();
+		try {
+			String select = "SELECT " + vo.getField_2() + "," + vo.getField_3()
+				+ " FROM " + vo.getField_1()
+				+ " WHERE " + vo.getField_4() + " LIKE '" + vo.getField_5() + "%'"
+				+ " AND " + vo.getField_6() + " = '" + vo.getField_7() + "'";
+			//	SELECT QUANTITY , UNIT_PRICE_KRW
+			// FROM OFFER_list
+			// WHERE OFFER_NUM LIKE '22-7%'
+			// AND PRODUCT_CODE = '1-M009-CES006-020'
+			rs = stmt.executeQuery(select);
+			
+			while(rs.next()){
+				list.add(rs.getString(1));
+				list.add(rs.getString(2));
+			}
+			// list를 String[][] result로
+			result = new String[list.size() / 2][2];
+			int a = 0;
+			for(int i=0; i<list.size()/2; i++) {
+				for(int j=0; j<2; j++) {
+					result[i][j] = list.get(a);
+					a++;
+				}
+			}
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
+	
 	// Tab_1301
 	public int selectMaxWhere(Vo vo) {
 		int result = 0;
@@ -1110,6 +1145,23 @@ public class Dao {
 		return b;
 	}
 	
+	// Tab_1202
+	public boolean updateOneIntFieldWhereTwoFields(Vo vo) {
+		boolean b = true;
+		checkConException();
+		try {
+			String update = "UPDATE " + vo.getTableName() + " SET " + vo.getField_1() + " = '" + vo.getValue_1() + "'"
+					+ " WHERE " + vo.getField_2() + " = '" + vo.getField_3() + "'"
+					+ " AND " + vo.getField_4() + " = '" + vo.getField_5() + "'";
+			// UPDATE OFFER_LIST SET UNIT_PRICE_KRW = '20000' WHERE num = '1' AND offer_num = '22-7-1'
+			stmt.executeQuery(update);
+		}catch(Exception e) {
+			e.printStackTrace();
+			b = false;
+		}
+		return b;
+	}
+	
 	// Tab_1501
 	public boolean updateFourIntFieldsWhereTwoFields(Vo vo) {
 		boolean b = true;
@@ -1258,5 +1310,26 @@ public class Dao {
 				e.printStackTrace();
 			}
 			return sum;
+		}
+		
+		// Tab_1401
+		public String sumWhereTwoFieldsLike(Vo vo) {
+			String result = "";
+			checkConException();
+			try {
+				String select = "SELECT SUM(" + vo.getField_1() + ") FROM " + vo.getTableName()
+					+ " WHERE " + vo.getField_2() + " LIKE '" + vo.getField_3() + "%'"
+					+ " AND " + vo.getField_4() + " = '" + vo.getField_5() + "'";
+				//SELECT SUM(QUANTITY) FROM offer_list
+				// WHERE OFFER_NUM LIKE '22-7%'
+				// AND PRODUCT_CODE = '1-G002-CNO006-020'4
+				rs = stmt.executeQuery(select);
+				while (rs.next()) {
+					result = rs.getString(1);
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			return result;
 		}
 }

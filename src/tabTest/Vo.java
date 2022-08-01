@@ -111,7 +111,7 @@ public class Vo {
 		this.field_4 = field_4;
 	}
 
-	// Tab_1301
+	// Tab_1301, Tabl_1401
 	public Vo(String tableName, String field_1, String field_2,
 			String field_3, String field_4, String field_5)
 	{
@@ -162,7 +162,7 @@ public class Vo {
 		this.value_6 = value_6;
 	}
 	
-	// Tab_1301, Tab_1303
+	// Tab_1301, Tab_1303, Tab_1401
 	public Vo(String field_1, String field_2, String field_3,
 			String field_4, String field_5, String field_6,
 			String field_7)
@@ -174,6 +174,20 @@ public class Vo {
 		this.field_5 = field_5;
 		this.field_6 = field_6;
 		this.field_7 = field_7;
+	}
+	
+	// Tab_1202
+	public Vo(String tableName, String field_1, int value_1,
+			String field_2, String field_3,
+			String field_4, String field_5)
+	{
+		this.tableName = tableName;
+		this.field_1 = field_1;
+		this.value_1 = value_1;
+		this.field_2 = field_2;
+		this.field_3 = field_3;
+		this.field_4 = field_4;
+		this.field_5 = field_5;
 	}
 	
 	// Tab_1201

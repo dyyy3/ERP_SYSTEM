@@ -4,14 +4,17 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 //import javax.swing.event.*;
+import javax.swing.table.TableColumn;
 
-public class Tab_1402 implements ActionListener {
+public class Tab_1402 implements ActionListener, ItemListener {
 //	폴더 그림:40,40
 //	Label 사이즈:150,30
 //	TextField 사이즈:200,30
 //	Button 사이즈:50,30
 //	가로 여백 30, 세로 여백 10
 	JPanel p;
+	Choice chYear;
+	Choice chMonth;
 	
 	public Tab_1402() {
 		p = new JPanel();
@@ -47,9 +50,15 @@ public class Tab_1402 implements ActionListener {
 		label[2].setBounds(380, 90, 150, 30);
 		
 		// Choice 추가
-		Choice ch = new Choice();
-		ch.setBounds(170, 50, 200, 30);
-		p.add(ch);
+		chYear = new Choice();
+		chYear.setBounds(170, 50, 130, 30);
+		chYear.addItemListener((ItemListener)this);
+		p.add(chYear);
+		
+		chMonth = new Choice();
+		chMonth.setBounds(310, 50, 60, 30);
+		chMonth.addItemListener((ItemListener)this);
+		p.add(chMonth);
 		
 		// TextField 추가
 		TextField pctf = new TextField();
@@ -100,14 +109,58 @@ public class Tab_1402 implements ActionListener {
 		};
 		JTable table = new JTable(contents, header);
 		
+		// 테이블 열 너비 자동 조정 false
+		table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+
+		// 열 너비 조정
+		TableColumn t0 = table.getColumnModel().getColumn(0);
+		TableColumn t1 = table.getColumnModel().getColumn(1);
+		TableColumn t2 = table.getColumnModel().getColumn(2);
+		TableColumn t3 = table.getColumnModel().getColumn(3);
+		TableColumn t4 = table.getColumnModel().getColumn(4);
+		TableColumn t5 = table.getColumnModel().getColumn(5);
+		TableColumn t6 = table.getColumnModel().getColumn(6);
+		TableColumn t7 = table.getColumnModel().getColumn(7);
+		TableColumn t8 = table.getColumnModel().getColumn(8);
+		TableColumn t9 = table.getColumnModel().getColumn(9);
+		TableColumn t10 = table.getColumnModel().getColumn(9);
+		TableColumn t11 = table.getColumnModel().getColumn(9);
+		TableColumn t12 = table.getColumnModel().getColumn(9);
+		TableColumn t13 = table.getColumnModel().getColumn(9);
+		TableColumn t14 = table.getColumnModel().getColumn(9);
+		TableColumn t15 = table.getColumnModel().getColumn(9);
+
+		t0.setPreferredWidth(50);
+		t1.setPreferredWidth(150);
+		t2.setPreferredWidth(300);
+		t3.setPreferredWidth(50);
+		t4.setPreferredWidth(80);
+		t5.setPreferredWidth(80);
+		t6.setPreferredWidth(100);
+		t7.setPreferredWidth(80);
+		t8.setPreferredWidth(80);
+		t9.setPreferredWidth(100);
+		t10.setPreferredWidth(80);
+		t11.setPreferredWidth(80);
+		t12.setPreferredWidth(100);
+		t13.setPreferredWidth(80);
+		t14.setPreferredWidth(80);
+		t15.setPreferredWidth(100);
+
 		JScrollPane sp = new JScrollPane(table);
-		sp.setBounds(10, 170, 1000, 500);
+		sp.setBounds(10, 170, 1160, 500);
 		p.add(sp);
 		
 	}
 	
 	@Override
 	public void actionPerformed(ActionEvent e) {
+		
+	}
+
+	@Override
+	public void itemStateChanged(ItemEvent e) {
+		// TODO Auto-generated method stub
 		
 	}
 }

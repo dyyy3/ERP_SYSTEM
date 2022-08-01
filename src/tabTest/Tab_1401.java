@@ -2,12 +2,14 @@ package tabTest;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import javax.swing.*;
 //import javax.swing.event.*;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumn;
 
 public class Tab_1401 implements ActionListener, ItemListener {
 //	폴더 그림:40,40
@@ -22,6 +24,7 @@ public class Tab_1401 implements ActionListener, ItemListener {
 	Button b1, b2;
 	Dao dao = new Dao();
 	Vo vo;
+	DecimalFormat df = new DecimalFormat("###,###,###");
 	
 	public Tab_1401() {
 		p = new JPanel();
@@ -102,7 +105,45 @@ public class Tab_1401 implements ActionListener, ItemListener {
 		};
 		dtm = new DefaultTableModel(header, 0);
 		table = new JTable(dtm);
+
+		// 테이블 열 너비 자동 조정 false
+		table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		
+		// 열 너비 조정
+		TableColumn t0 = table.getColumnModel().getColumn(0);
+		TableColumn t1 = table.getColumnModel().getColumn(1);
+		TableColumn t2 = table.getColumnModel().getColumn(2);
+		TableColumn t3 = table.getColumnModel().getColumn(3);
+		TableColumn t4 = table.getColumnModel().getColumn(4);
+		TableColumn t5 = table.getColumnModel().getColumn(5);
+		TableColumn t6 = table.getColumnModel().getColumn(6);
+		TableColumn t7 = table.getColumnModel().getColumn(7);
+		TableColumn t8 = table.getColumnModel().getColumn(8);
+		TableColumn t9 = table.getColumnModel().getColumn(9);
+		TableColumn t10 = table.getColumnModel().getColumn(9);
+		TableColumn t11 = table.getColumnModel().getColumn(9);
+		TableColumn t12 = table.getColumnModel().getColumn(9);
+		TableColumn t13 = table.getColumnModel().getColumn(9);
+		TableColumn t14 = table.getColumnModel().getColumn(9);
+		TableColumn t15 = table.getColumnModel().getColumn(9);
+
+		t0.setPreferredWidth(50);
+		t1.setPreferredWidth(150);
+		t2.setPreferredWidth(300);
+		t3.setPreferredWidth(50);
+		t4.setPreferredWidth(80);
+		t5.setPreferredWidth(80);
+		t6.setPreferredWidth(100);
+		t7.setPreferredWidth(80);
+		t8.setPreferredWidth(80);
+		t9.setPreferredWidth(100);
+		t10.setPreferredWidth(80);
+		t11.setPreferredWidth(80);
+		t12.setPreferredWidth(100);
+		t13.setPreferredWidth(80);
+		t14.setPreferredWidth(80);
+		t15.setPreferredWidth(100);
+
 		JScrollPane sp = new JScrollPane(table);
 		sp.setBounds(0, 130, 1160, 500);
 		p.add(sp);
@@ -173,9 +214,12 @@ public class Tab_1401 implements ActionListener, ItemListener {
 		return returnValue;
 	}
 
+
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		int rowCount = dtm.getRowCount();
+		String[][] result = getStoringAndUnStoringQuantity();
+		String selectedDate = chYear.getSelectedItem() + "-" + chMonth.getSelectedItem(); // 2022-7
 		
 		switch(e.getActionCommand()) {
 		case "조회" :
@@ -190,31 +234,7 @@ public class Tab_1401 implements ActionListener, ItemListener {
 					}
 				}
 			}
-			
-//			// storing, unstoring 테이블 중 품목코드 수가 더 많은쪽의 품목코드 리스트를 기준으로 정한다
-//			String s;
-//			
-//			vo = new Vo("storing", "product_code");
-//			String[] storingProductList = dao.selectOneFieldDistinct(vo);
-//			
-//			vo = new Vo("unstoring", "product_code");
-//			String[] unstoringProductList = dao.selectOneFieldDistinct(vo);
-//			
-//			if(storingProductList.length >= unstoringProductList.length) {
-//				s = "s"; // s.PRODUCT_CODE
-//			}else {
-//				s = "u"; // u.PRODUCT_CODE
-//			}
-//			
-//			// storing, unstoring 각 테이블의 품목코드별 수량 합계를 구한 결과의 full outer join 결과를 2차원 배열에 저장
-//			String year_month = chYear.getSelectedItem() + "-" + chMonth.getSelectedItem();
-//			int count = 1;
-//			
-//			vo = new Vo(year_month);
-//			String[][] result = dao.selectAllStroingAndUnStoringFullOuterJoin(vo);
-			
 			String s = getProductLIst();
-			String[][] result = getStoringAndUnStoringQuantity();
 			int count = 1;
 
 			// 테이블에 출력
@@ -248,6 +268,30 @@ public class Tab_1401 implements ActionListener, ItemListener {
 			break;
 			
 		case "원가 계산" :
+			String year_month = ""; // 기준년월
+			String product_code = ""; // 품목코드
+			String product_name = ""; // 품목명
+			String unit = ""; // 단위
+			int beginning_unit_price = 0; // 기초단가
+			int beginning_quantity = 0; // 기초수량
+			int beginning_amount = 0; // 기초금액
+			int storing_unit_price = 0;
+			int storing_quantity = 0;
+			int storing_amount = 0;
+			int unstoring_unit_price = 0; // 출고단가
+			int unstoring_quantity = 0; // 출고수량
+			int unstoring_amount = 0; // 출고금액
+			int inventory_unit_price;
+			int inventory_quantity = 0;
+			int inventory_amount = 0;
+			
+			String dfs = df.format(0);
+			
+			// PRODUCT_CODE_COST : year_month, product_code, product_name, unit
+//			String[][] pccString = new String[result.length][4]; -> result 배열의 값을 재활용
+			
+			int[][] pccInt = new int[result.length][12]; // PRODUCT_CODE_COST에 insert되는 12개 row
+			
 			if(rowCount == 0) {
 				new ErrorMessageDialog("기준년월 입력 후 수량을 조회해주세요.", "원가 계산");
 			}else {
@@ -257,54 +301,129 @@ public class Tab_1401 implements ActionListener, ItemListener {
 				// addRow[13] = (Integer.parseInt(addRow[4].toString()) + Integer.parseInt(addRow[7].toString()) - Integer.parseInt(addRow[10].toString())); // 재고수량
 				
 				String s2 = getProductLIst();
-				String[][] result2 = getStoringAndUnStoringQuantity();
 				
-				for(int i=0; i<result2.length; i++) {
-					int unitPrice = 0; // 단가
-					int amount = 0; // 금액
-
+				for(int i=0; i<result.length; i++) {
 					// 기초금액 = 전월의 재고금액
-					String beginning_amount;
+					String ba;
 					String lastMonth = getLastMonth();
-					vo = new Vo("product_code_cost", "inventory_amount", "year_month", lastMonth, "product_code", result2[i][0]);
-					beginning_amount = dao.selectOneFieldWhereTwoFields(vo);
+					vo = new Vo("product_code_cost", "inventory_amount", "year_month", lastMonth, "product_code", result[i][0]);
+					ba = dao.selectOneFieldWhereTwoFields(vo);
 					
-					if(beginning_amount == null || beginning_amount.equals("")) { // 전월 재고금액이 없을때
-						amount = 0;
+					// 기초수량, 단가, 금액
+					if(ba == null || ba.equals("")) { // 전월 재고금액이 없을때
+						beginning_unit_price = 0; // 기초단가
+						beginning_quantity = 0; // 기초수량
+						beginning_amount = 0; // 기초금액
 					}else { // 전월 재고금액이 있을때
-						amount = Integer.parseInt(beginning_amount);
+						beginning_amount = Integer.parseInt(ba);
+						beginning_quantity = getBeginningQuantity(lastMonth, result[i][0]);
+						beginning_unit_price = beginning_amount / beginning_quantity; // 기초단가 = 전월 재고금액 / 전월 재고수량
 					}
-					dtm.setValueAt(amount, i, 6);
 					
-					// 기초단가
-					if(amount == 0) {
-						unitPrice = 0; // 기초단가 = 0
+					pccInt[i][0] = beginning_quantity;
+					pccInt[i][1] = beginning_unit_price;
+					pccInt[i][2] = beginning_amount;					
+					
+					dfs = df.format(beginning_quantity);
+					dtm.setValueAt(dfs, i, 4);
+					
+					dfs = df.format(beginning_unit_price);
+					dtm.setValueAt(dfs, i, 5);
+
+					dfs = df.format(beginning_amount);
+					dtm.setValueAt(dfs, i, 6);
+					
+					
+					// 입고수량, 단가, 금액
+					char[] chArr = selectedDate.toCharArray(); // 2,0,2,2,-,0,7
+					String s3 = String.valueOf(chArr[2]) + String.valueOf(chArr[3]) + "-" + chMonth.getSelectedItem(); // 22-7
+					
+					vo = new Vo("offer_list", "quantity", "offer_num", s3, "product_code", result[i][0]);
+					String sq = dao.sumWhereTwoFieldsLike(vo);
+					
+					if(sq == null || sq.equals("")) { // 입고수량 0일떄
+						storing_quantity = 0;
+						storing_unit_price = 0;
+						storing_amount = 0;
+					}else { // 입고수량 0이 아닐때
+						storing_quantity = Integer.parseInt(sq);
+						vo = new Vo("offer_list", "quantity", "unit_price_krw", "offer_num", s3, "product_code", result[i][0]);
+						String[][] result2 = dao.selectTwoFieldsWhereTwoFieldsLike(vo);
+						
+						for(int j=0; j<result2.length; j++) {
+							int m = Integer.parseInt(result2[j][0]) * Integer.parseInt(result2[j][1]);
+							storing_amount += m;
+						}
+						storing_unit_price = storing_amount / storing_quantity;
+					}
+					pccInt[i][3] = storing_quantity;
+					pccInt[i][4] = storing_unit_price;
+					pccInt[i][5] = storing_amount;
+
+					dfs = df.format(storing_quantity);
+					dtm.setValueAt(dfs, i, 7);
+
+					dfs = df.format(storing_unit_price);
+					dtm.setValueAt(dfs, i, 8);
+
+					dfs = df.format(storing_amount);
+					dtm.setValueAt(dfs, i, 9);
+					
+					
+					// 출고수량, 단가, 금액
+					vo = new Vo("unstoring", "quantity", "unstoring_date", selectedDate, "product_code", result[i][0]);
+					String usq = dao.sumWhereTwoFieldsLike(vo);
+					
+					if(usq == null || usq.equals("")) { // 출고수량 0일떄
+						unstoring_quantity = 0;
+						unstoring_unit_price = 0;
+						unstoring_amount = 0;
+					}else { // 출고수량 0이 아닐때
+						unstoring_quantity = Integer.parseInt(usq);
+						unstoring_unit_price = (beginning_amount + storing_amount) / (beginning_quantity + storing_quantity);
+						unstoring_amount = unstoring_quantity * unstoring_unit_price;
+					}
+					pccInt[i][6] = unstoring_quantity;
+					pccInt[i][7] = unstoring_unit_price;
+					pccInt[i][8] = unstoring_amount;
+
+					dfs = df.format(unstoring_quantity);
+					dtm.setValueAt(dfs, i, 10);
+
+					dfs = df.format(unstoring_unit_price);
+					dtm.setValueAt(dfs, i, 11);
+					
+					dfs = df.format(unstoring_amount);
+					dtm.setValueAt(dfs, i, 12);
+					
+					// 재고수량, 단가, 금액
+					inventory_quantity = beginning_quantity + storing_quantity - unstoring_quantity;
+					if(inventory_quantity == 0) {
+						inventory_unit_price = 0;
+						inventory_amount = 0;
 					}else {
-						unitPrice = amount / getBeginningQuantity(lastMonth, result2[i][0]); // 기초단가 = 전월 재고금액 / 전월 재고수량
+						inventory_amount = beginning_amount + storing_amount - unstoring_amount;
+						inventory_unit_price = inventory_amount / inventory_quantity;
 					}
-					dtm.setValueAt(unitPrice, i, 5);
+					pccInt[i][9] = inventory_quantity;
+					pccInt[i][10] = inventory_unit_price;
+					pccInt[i][11] = inventory_amount;
+
+					dfs = df.format(inventory_quantity);
+					dtm.setValueAt(dfs, i, 13);
+
+					dfs = df.format(inventory_unit_price);
+					dtm.setValueAt(dfs, i, 14);
+
+					dfs = df.format(inventory_amount);
+					dtm.setValueAt(dfs, i, 15);
 					
-					// 입고금액
+					storing_amount=0; // 이 변수에 값을 더해서 합계를 구하므로, 다음 품목코드의 합계를 위해 0으로 초기화
 					
-					
-				}
-				
-//				int returnValue = 0; // 반환할 값
-//				
-//				// product_code_cost 테이블에서 기초수량(전월 재고수량)을 구한다
-//				String getBeginningQuantity; // 기초수량
-//				vo = new Vo("product_code_cost", "inventory_quantity", "year_month", lastMonth, "product_code", product_code);
-//				getBeginningQuantity = dao.selectOneFieldWhereTwoFields(vo);
-//							
-//				if(getBeginningQuantity == null || getBeginningQuantity.equals("")) { // 전월 재고수량이 없을때
-//					returnValue = 0;
-//				}else { // 전월 재고수량이 있을때
-//					returnValue = Integer.parseInt(getBeginningQuantity);
-//				}
-				
-				
-				// 테이블에 setValueAt
+				} // for문의 끝
+
 				// product_code_cost 테이블에 값 저장
+				
 			}
 			break;
 		}

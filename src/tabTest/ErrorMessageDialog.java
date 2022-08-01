@@ -14,7 +14,7 @@ public class ErrorMessageDialog implements ActionListener {
 		
 		result = new Dialog(result, title, true);
 		result.setBackground(Color.WHITE);
-		result.setSize(300, 200);
+		result.setSize(500, 200);
 		result.setResizable(false); // frame 크기 변경 불가능
 		result.setLayout(null);
 		
@@ -25,10 +25,10 @@ public class ErrorMessageDialog implements ActionListener {
 		Label loginRsMsg = new Label(this.message);
 		loginRsMsg.setAlignment(Label.CENTER);
 		loginRsMsg.setBackground(Color.WHITE);
-		loginRsMsg.setBounds(25, 50, 250, 50);
+		loginRsMsg.setBounds(25, 50, 450, 50);
 		
 		Button ok = new Button("Ok");
-		ok.setBounds(115, 140, 70, 30);
+		ok.setBounds(215, 140, 70, 30);
 		ok.addActionListener(this);
 		
 		result.add(loginRsMsg);

@@ -6,8 +6,6 @@ import javax.swing.*;
 //import javax.swing.event.*;
 import javax.swing.table.*;
 
-import tabTest.TableCheckBoxTest2.TableCell2;
-
 public class Tab_1501 implements ActionListener {
 //	폴더 그림 : 40, 40
 //	Label 사이즈 : 150, 30
@@ -121,9 +119,10 @@ public class Tab_1501 implements ActionListener {
 		p.add(l2);
 		
 		// Button
-		Button[] button = new Button[4];
+		Button[] button = new Button[2];
 		String[] buttonName = {
-				"등록", "부서코드 조회", "조회", "수정"
+				"등록", "조회"
+//				"등록", "부서코드 조회", "조회", "수정"
 		};
 
 		for(int i=0; i<button.length; i++) {
@@ -133,28 +132,47 @@ public class Tab_1501 implements ActionListener {
 		}
 		
 		button[0].setBounds(750, 50, 50, 30);
-		button[1].setBounds(750, 90, 100, 30);
-		button[2].setBounds(10, 170, 50, 30);
-		button[3].setBounds(70, 170, 50, 30);
+//		button[1].setBounds(750, 90, 100, 30); // 부서코드 조회
+		button[1].setBounds(10, 170, 50, 30);
+//		button[2].setBounds(10, 170, 50, 30);
+//		button[3].setBounds(70, 170, 50, 30); // 수정
 		
 		// 조회 table 추가
 		String[] header1 = {"사원코드(ID)", "부서코드", "부서명", "이름", "password"};
 		dtm1 = new DefaultTableModel(header1, 0);
 		table1 = new JTable(dtm1);
+		table1.setFillsViewportHeight(true); //컨테이너의 전체 높이를 테이블이 전부 사용하도록 설정
 
 		JScrollPane sp1 = new JScrollPane(table1);
-		sp1.setBounds(10, 210, 1160, 50);
+		sp1.setBounds(10, 210, 1000, 55);
 		
 		String[] contents1 = {"", "", "", "", ""};
 		dtm1.addRow(contents1);
+
+		// 열 너비 조정
+		TableColumn t0 = table1.getColumnModel().getColumn(0);
+		TableColumn t1 = table1.getColumnModel().getColumn(1);
+		TableColumn t2 = table1.getColumnModel().getColumn(2);
+		TableColumn t3 = table1.getColumnModel().getColumn(3);
+		TableColumn t4 = table1.getColumnModel().getColumn(4);
+
+		t0.setPreferredWidth(200);
+		t1.setPreferredWidth(200);
+		t2.setPreferredWidth(200);
+		t3.setPreferredWidth(200);
+		t4.setPreferredWidth(200);
+
+		// 행 높이 조정
+		table1.setRowHeight(0, 30);
 		
 		p.add(sp1);
 		
 		// 권한 table 추가
 		table2 = new JTable(model);
+		table2.setFillsViewportHeight(true); //컨테이너의 전체 높이를 테이블이 전부 사용하도록 설정
 		
 		JScrollPane sp2 = new JScrollPane(table2);
-		sp2.setBounds(10, 270, 1160, 400);
+		sp2.setBounds(10, 270, 1000, 295);
 		
 		String[] header2 = {"대메뉴", "중메뉴", "읽기", "쓰기", "수정", "삭제"};
 		
@@ -182,10 +200,28 @@ public class Tab_1501 implements ActionListener {
 			}
 			model.addRow(addRow);
 		}
+		
+		// 열 너비 조정
+		TableColumn c0 = table2.getColumnModel().getColumn(0); 
+		TableColumn c1 = table2.getColumnModel().getColumn(1); 
+		TableColumn c2 = table2.getColumnModel().getColumn(2); 
+		TableColumn c3 = table2.getColumnModel().getColumn(3); 
+		TableColumn c4 = table2.getColumnModel().getColumn(4); 
+		TableColumn c5 = table2.getColumnModel().getColumn(5); 
+		
+		c0.setPreferredWidth(150);
+		c1.setPreferredWidth(250);
+		c2.setPreferredWidth(150);
+		c3.setPreferredWidth(150);
+		c4.setPreferredWidth(150);
+		c5.setPreferredWidth(150);
+		 
+		// 행 높이 조정
+		for(int i=0; i<table2.getRowCount(); i++) {
+			table2.setRowHeight(i, 30);
+		}
+		
 		p.add(sp2);
-		
-//		model.setValueAt(true, 0, 4);
-		
 	}
 	
 	@Override
@@ -232,21 +268,150 @@ public class Tab_1501 implements ActionListener {
 			if(tryInsertUserInfo == true) {
 				new ErrorMessageDialog("사원 정보가 등록되었습니다.", "계정 및 권한 관리");
 				
-				// 다음에 수행할 작업이 권한 설정이므로 권한 테이블에 저장된 정보 set
-				vo = new Vo("user_id", tf[0].getText());
-				String[] result = dao.selectAllUserInfoAndDepartmentInfoWheretwoFields(vo);
-
-				dtm1.setValueAt(result[0], 0, 0);
-				dtm1.setValueAt(result[2], 0, 1);
-				dtm1.setValueAt(result[5], 0, 2);
-				dtm1.setValueAt(result[3], 0, 3);
-				dtm1.setValueAt(result[1], 0, 4);
+//				// 다음에 수행할 작업이 권한 설정이므로 권한 테이블에 저장된 정보 set
+//				vo = new Vo("user_id", tf[0].getText());
+//				String[] result = dao.selectAllUserInfoAndDepartmentInfoWheretwoFields(vo);
+//
+//				dtm1.setValueAt(result[0], 0, 0);
+//				dtm1.setValueAt(result[2], 0, 1);
+//				dtm1.setValueAt(result[5], 0, 2);
+//				dtm1.setValueAt(result[3], 0, 3);
+//				dtm1.setValueAt(result[1], 0, 4);
 				
 				// 메인 화면에 대한 접근 권한 1로 설정
 				String user_id = tf[0].getText(); // 사원코드(ID)
 				vo = new Vo(user_id, "UI-A-1000", 1, 1, 1, 1);
 //				INSERT INTO PERMISSION (USER_ID, SCREEN_ID, R, C, U, D) VALUES ('201804003', 'UI-A-1000', 1, 1, 1, 1)
 				dao.insertPermission(vo);
+				
+				// dept_id에 따라 부서별 기본 접근 권한 설정
+				int dept_id = Integer.parseInt(tf[3].getText()); // 부서코드
+				switch(dept_id) {
+				case 0 : // 마스터
+					vo = new Vo(user_id, "UI-A-1101", 1, 1, 1, 1); // 품목코드 등록
+					dao.insertPermission(vo);
+					vo = new Vo(user_id, "UI-A-1201", 1, 1, 1, 1); // 수입offer 등록
+					dao.insertPermission(vo);
+					vo = new Vo(user_id, "UI-A-1202", 1, 1, 1, 1); // 수입원가 등록
+					dao.insertPermission(vo);
+					vo = new Vo(user_id, "UI-A-1301", 1, 1, 1, 1); // 입고 등록
+					dao.insertPermission(vo);
+					vo = new Vo(user_id, "UI-A-1302", 1, 1, 1, 1); // 출고 등록
+					dao.insertPermission(vo);
+					vo = new Vo(user_id, "UI-A-1303", 1, 0, 1, 1); // 재고 현황
+					dao.insertPermission(vo);
+					vo = new Vo(user_id, "UI-A-1401", 1, 0, 1, 1); // 원가 계산
+					dao.insertPermission(vo);
+					vo = new Vo(user_id, "UI-A-1402", 1, 0, 1, 1); // 품목수불부
+					dao.insertPermission(vo);
+					vo = new Vo(user_id, "UI-A-1501", 1, 1, 1, 1); // 인사관리
+					dao.insertPermission(vo);
+					break;
+				case 10 : // 구매
+					vo = new Vo(user_id, "UI-A-1101", 1, 1, 1, 1); // 품목코드 등록
+					dao.insertPermission(vo);
+					vo = new Vo(user_id, "UI-A-1201", 1, 1, 1, 1); // 수입offer 등록
+					dao.insertPermission(vo);
+					vo = new Vo(user_id, "UI-A-1202", 1, 1, 1, 1); // 수입원가 등록
+					dao.insertPermission(vo);
+					vo = new Vo(user_id, "UI-A-1301", 1, 1, 1, 1); // 입고 등록
+					dao.insertPermission(vo);
+					vo = new Vo(user_id, "UI-A-1302", 1, 0, 0, 0); // 출고 등록
+					dao.insertPermission(vo);
+					vo = new Vo(user_id, "UI-A-1303", 1, 0, 0, 0); // 재고 현황
+					dao.insertPermission(vo);
+					vo = new Vo(user_id, "UI-A-1401", 1, 0, 0, 0); // 원가 계산
+					dao.insertPermission(vo);
+					vo = new Vo(user_id, "UI-A-1402", 1, 0, 0, 0); // 품목수불부
+					dao.insertPermission(vo);
+					vo = new Vo(user_id, "UI-A-1501", 0, 0, 0, 0); // 인사관리
+					dao.insertPermission(vo);
+					break;
+				case 20 : // 물류 
+					vo = new Vo(user_id, "UI-A-1101", 0, 0, 0, 0); // 품목코드 등록
+					dao.insertPermission(vo);
+					vo = new Vo(user_id, "UI-A-1201", 0, 0, 0, 0); // 수입offer 등록
+					dao.insertPermission(vo);
+					vo = new Vo(user_id, "UI-A-1202", 0, 0, 0, 0); // 수입원가 등록
+					dao.insertPermission(vo);
+					vo = new Vo(user_id, "UI-A-1301", 1, 0, 0, 0); // 입고 등록
+					dao.insertPermission(vo);
+					vo = new Vo(user_id, "UI-A-1302", 1, 1, 1, 1); // 출고 등록
+					dao.insertPermission(vo);
+					vo = new Vo(user_id, "UI-A-1303", 1, 0, 0, 0); // 재고 현황
+					dao.insertPermission(vo);
+					vo = new Vo(user_id, "UI-A-1401", 0, 0, 0, 0); // 원가 계산
+					dao.insertPermission(vo);
+					vo = new Vo(user_id, "UI-A-1402", 0, 0, 0, 0); // 품목수불부
+					dao.insertPermission(vo);
+					vo = new Vo(user_id, "UI-A-1501", 0, 0, 0, 0); // 인사관리
+					dao.insertPermission(vo);
+					break;
+				case 30 : // 결산
+					vo = new Vo(user_id, "UI-A-1101", 0, 0, 0, 0); // 품목코드 등록
+					dao.insertPermission(vo);
+					vo = new Vo(user_id, "UI-A-1201", 0, 0, 0, 0); // 수입offer 등록
+					dao.insertPermission(vo);
+					vo = new Vo(user_id, "UI-A-1202", 0, 0, 0, 0); // 수입원가 등록
+					dao.insertPermission(vo);
+					vo = new Vo(user_id, "UI-A-1301", 1, 0, 0, 0); // 입고 등록
+					dao.insertPermission(vo);
+					vo = new Vo(user_id, "UI-A-1302", 0, 0, 0, 0); // 출고 등록
+					dao.insertPermission(vo);
+					vo = new Vo(user_id, "UI-A-1303", 1, 0, 0, 0); // 재고 현황
+					dao.insertPermission(vo);
+					vo = new Vo(user_id, "UI-A-1401", 1, 0, 0, 0); // 원가 계산
+					dao.insertPermission(vo);
+					vo = new Vo(user_id, "UI-A-1402", 1, 0, 0, 0); // 품목수불부
+					dao.insertPermission(vo);
+					vo = new Vo(user_id, "UI-A-1501", 0, 0, 0, 0); // 인사관리
+					dao.insertPermission(vo);
+					break;
+				case 40 : // 인사
+					vo = new Vo(user_id, "UI-A-1101", 0, 0, 0, 0); // 품목코드 등록
+					dao.insertPermission(vo);
+					vo = new Vo(user_id, "UI-A-1201", 0, 0, 0, 0); // 수입offer 등록
+					dao.insertPermission(vo);
+					vo = new Vo(user_id, "UI-A-1202", 0, 0, 0, 0); // 수입원가 등록
+					dao.insertPermission(vo);
+					vo = new Vo(user_id, "UI-A-1301", 0, 0, 0, 0); // 입고 등록
+					dao.insertPermission(vo);
+					vo = new Vo(user_id, "UI-A-1302", 0, 0, 0, 0); // 출고 등록
+					dao.insertPermission(vo);
+					vo = new Vo(user_id, "UI-A-1303", 1, 0, 0, 0); // 재고 현황
+					dao.insertPermission(vo);
+					vo = new Vo(user_id, "UI-A-1401", 0, 0, 0, 0); // 원가 계산
+					dao.insertPermission(vo);
+					vo = new Vo(user_id, "UI-A-1402", 0, 0, 0, 0); // 품목수불부
+					dao.insertPermission(vo);
+					vo = new Vo(user_id, "UI-A-1501", 1, 1, 1, 0); // 인사관리
+					dao.insertPermission(vo);
+					break;
+				case 50 : // 영업
+					vo = new Vo(user_id, "UI-A-1101", 0, 0, 0, 0); // 품목코드 등록
+					dao.insertPermission(vo);
+					vo = new Vo(user_id, "UI-A-1201", 0, 0, 0, 0); // 수입offer 등록
+					dao.insertPermission(vo);
+					vo = new Vo(user_id, "UI-A-1202", 0, 0, 0, 0); // 수입원가 등록
+					dao.insertPermission(vo);
+					vo = new Vo(user_id, "UI-A-1301", 0, 0, 0, 0); // 입고 등록
+					dao.insertPermission(vo);
+					vo = new Vo(user_id, "UI-A-1302", 0, 0, 0, 0); // 출고 등록
+					dao.insertPermission(vo);
+					vo = new Vo(user_id, "UI-A-1303", 1, 0, 0, 0); // 재고 현황
+					dao.insertPermission(vo);
+					vo = new Vo(user_id, "UI-A-1401", 0, 0, 0, 0); // 원가 계산
+					dao.insertPermission(vo);
+					vo = new Vo(user_id, "UI-A-1402", 0, 0, 0, 0); // 품목수불부
+					dao.insertPermission(vo);
+					vo = new Vo(user_id, "UI-A-1501", 0, 0, 0, 0); // 인사관리
+					dao.insertPermission(vo);
+					break;
+				}
+				
+				vo = new Vo();
+				
+				
 				
 			}else {
 				new ErrorMessageDialog("이미 등록된 사원 코드입니다.", "계정 및 권한 관리");
@@ -295,65 +460,65 @@ public class Tab_1501 implements ActionListener {
 			
 			break;
 			
-		case "수정" :
-			boolean tryInsertPermission = false;
-			boolean tryUpdatePermission = false;
-			
-			// screen id
-			vo = new Vo("screen", "screen_id", "screen_id");
-			String[] screenID = dao.selectOneFieldOrderBy(vo);
-			String[] checkBox = new String[4];
-			
-			for(int i=1; i<=9; i++ ) {
-				String user_id = dtm1.getValueAt(0, 0).toString();
-				String screen_id = screenID[i];
-				
-				// permission 테이블에서 screen_id와 user_id로 select
-				vo = new Vo("permission", "user_id", "user_id", user_id, "screen_id", screenID[i]);
-				String result = dao.selectOneFieldWhereTwoFields(vo);
-				
-				// 결과값이 없으면 insert
-				if(result == null || result.equals("")) {
-					for(int j=2; j<=5; j++) {
-						String s = model.getValueAt(i-1, j).toString();
-						
-						System.out.println("s : " + s);
-						
-						if(s.equals("true")) {
-							checkBox[j-2] = "1";
-						}else if(s.equals("false")) {
-							checkBox[j-2] = "0";
-						}
-					}
-					
-					vo = new Vo(user_id, screen_id, Integer.parseInt(checkBox[0]), Integer.parseInt(checkBox[1]),
-							Integer.parseInt(checkBox[2]), Integer.parseInt(checkBox[3]));
-					tryInsertPermission = dao.insertPermission(vo);
-					
-				// 결과값이 있으면 update
-				}else {
-					for(int j=2; j<=5; j++) {
-						String s = model.getValueAt(i-1, j).toString();
-						if(s.equals("true")) {
-							checkBox[j-2] = "1";
-						}else if(s.equals("false")) {
-							checkBox[j-2] = "0";
-						}
-					}
-					vo = new Vo("permission",
-								"r", Integer.parseInt(checkBox[0]), "c", Integer.parseInt(checkBox[1]),
-							 	"u", Integer.parseInt(checkBox[2]), "d", Integer.parseInt(checkBox[3]),
-							 	"user_id", user_id, "screen_id", screenID[i]);
-					tryUpdatePermission = dao.updateFourIntFieldsWhereTwoFields(vo);
-				}
-			}
-			
-			if(tryInsertPermission == true || tryUpdatePermission == true) {
-				new ErrorMessageDialog("수정되었습니다.", "계정 및 권한 관리");
-			}else {
-				new ErrorMessageDialog("수정 실패하였습니다.", "계정 및 권한 관리");
-			}
-			break;
+//		case "수정" :
+//			boolean tryInsertPermission = false;
+//			boolean tryUpdatePermission = false;
+//			
+//			// screen id
+//			vo = new Vo("screen", "screen_id", "screen_id");
+//			String[] screenID = dao.selectOneFieldOrderBy(vo);
+//			String[] checkBox = new String[4];
+//			
+//			for(int i=1; i<=9; i++ ) {
+//				String user_id = dtm1.getValueAt(0, 0).toString();
+//				String screen_id = screenID[i];
+//				
+//				// permission 테이블에서 screen_id와 user_id로 select
+//				vo = new Vo("permission", "user_id", "user_id", user_id, "screen_id", screenID[i]);
+//				String result = dao.selectOneFieldWhereTwoFields(vo);
+//				
+//				// 결과값이 없으면 insert
+//				if(result == null || result.equals("")) {
+//					for(int j=2; j<=5; j++) {
+//						String s = model.getValueAt(i-1, j).toString();
+//						
+//						System.out.println("s : " + s);
+//						
+//						if(s.equals("true")) {
+//							checkBox[j-2] = "1";
+//						}else if(s.equals("false")) {
+//							checkBox[j-2] = "0";
+//						}
+//					}
+//					
+//					vo = new Vo(user_id, screen_id, Integer.parseInt(checkBox[0]), Integer.parseInt(checkBox[1]),
+//							Integer.parseInt(checkBox[2]), Integer.parseInt(checkBox[3]));
+//					tryInsertPermission = dao.insertPermission(vo);
+//					
+//				// 결과값이 있으면 update
+//				}else {
+//					for(int j=2; j<=5; j++) {
+//						String s = model.getValueAt(i-1, j).toString();
+//						if(s.equals("true")) {
+//							checkBox[j-2] = "1";
+//						}else if(s.equals("false")) {
+//							checkBox[j-2] = "0";
+//						}
+//					}
+//					vo = new Vo("permission",
+//								"r", Integer.parseInt(checkBox[0]), "c", Integer.parseInt(checkBox[1]),
+//							 	"u", Integer.parseInt(checkBox[2]), "d", Integer.parseInt(checkBox[3]),
+//							 	"user_id", user_id, "screen_id", screenID[i]);
+//					tryUpdatePermission = dao.updateFourIntFieldsWhereTwoFields(vo);
+//				}
+//			}
+//			
+//			if(tryInsertPermission == true || tryUpdatePermission == true) {
+//				new ErrorMessageDialog("수정되었습니다.", "계정 및 권한 관리");
+//			}else {
+//				new ErrorMessageDialog("수정 실패하였습니다.", "계정 및 권한 관리");
+//			}
+//			break;
 		}
 	}
 }

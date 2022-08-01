@@ -107,7 +107,13 @@ public class Tab_1101 implements ActionListener, ItemListener {
 //			Vo vo = new Vo(tableName[i]);
 //			String[] result = dao.selectAll(vo);
 			for(int j=0; j<result.length; j++) {
+//			for(int j=-1; j<result.length; j++) {
 				ch[i].add(result[j]);
+//				if(j == -1) {
+//					ch[i].add("");
+//				}else {
+//					ch[i].add(result[j]);
+//				}
 			}
 		}
 		
@@ -205,7 +211,7 @@ public class Tab_1101 implements ActionListener, ItemListener {
 	public boolean checkProductNameArrayisEmpty() {
 		boolean b = true;
 		for(int i=0; i<pn.length; i++) {
-			if(pn[i] == null) { // 첫번째 조건 : pn[] != null
+			if(pn[i] == null || pn[i].equals("")) { // 첫번째 조건 : pn[] != null
 				b = false;
 				return b; // false 반환
 			}

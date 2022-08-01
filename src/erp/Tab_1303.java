@@ -8,6 +8,7 @@ import java.util.Date;
 import javax.swing.*;
 //import javax.swing.event.*;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumn;
 
 import net.sourceforge.jdatepicker.impl.JDatePanelImpl;
 import net.sourceforge.jdatepicker.impl.JDatePickerImpl;
@@ -85,9 +86,25 @@ public class Tab_1303 implements ActionListener {
 		String[] header = {"순번", "품목코드", "품목명", "단위", "재고 수량"};
 		dtm = new DefaultTableModel(header, 0);
 		table = new JTable(dtm);
-		
+
+		// 열 너비 조정
+		TableColumn t0 = table.getColumnModel().getColumn(0);
+		TableColumn t1 = table.getColumnModel().getColumn(1);
+		TableColumn t2 = table.getColumnModel().getColumn(2);
+		TableColumn t3 = table.getColumnModel().getColumn(3);
+		TableColumn t4 = table.getColumnModel().getColumn(4);
+
+		t0.setPreferredWidth(100);
+		t1.setPreferredWidth(260);
+		t2.setPreferredWidth(500);
+		t3.setPreferredWidth(100);
+		t4.setPreferredWidth(200);
+
+		// 행 높이 조정
+		table.setRowHeight(0, 30);
+
 		JScrollPane sp = new JScrollPane(table);
-		sp.setBounds(10, 130, 1000, 500);
+		sp.setBounds(10, 130, 1160, 500);
 		p.add(sp);
 	}
 	

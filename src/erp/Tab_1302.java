@@ -9,6 +9,7 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 //import javax.swing.event.*;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumn;
 
 import net.sourceforge.jdatepicker.impl.JDatePanelImpl;
 import net.sourceforge.jdatepicker.impl.JDatePickerImpl;
@@ -125,8 +126,28 @@ public class Tab_1302 implements ActionListener {
 		dtm = new DefaultTableModel(header, 0);
 		table = new JTable(dtm);
 
+		// 열 너비 조정
+		TableColumn t0 = table.getColumnModel().getColumn(0);
+		TableColumn t1 = table.getColumnModel().getColumn(1);
+		TableColumn t2 = table.getColumnModel().getColumn(2);
+		TableColumn t3 = table.getColumnModel().getColumn(3);
+		TableColumn t4 = table.getColumnModel().getColumn(4);
+		TableColumn t5 = table.getColumnModel().getColumn(5);
+		TableColumn t6 = table.getColumnModel().getColumn(6);
+
+		t0.setPreferredWidth(75);
+		t1.setPreferredWidth(75);
+		t2.setPreferredWidth(225);
+		t3.setPreferredWidth(400);
+		t4.setPreferredWidth(75);
+		t5.setPreferredWidth(155);
+		t6.setPreferredWidth(155);
+
+		// 행 높이 조정
+		table.setRowHeight(0, 30);
+
 		JScrollPane sp = new JScrollPane(table);
-		sp.setBounds(10, 170, 1000, 500);
+		sp.setBounds(10, 170, 1160, 500);
 		p.add(sp);
 	}
 
